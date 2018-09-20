@@ -18,15 +18,21 @@ You activate the XCK by embedding it into your site via `<script>` tags. In addi
 
 Some of these include:
 
-- your campaign
+- your campaignId
 - position of the hover button
 - 
+
+A `campaignId` is needed for the XCK to communicate with XcooBee and allow management of consents. Please visit [XcooBee](https://www.xcoobee.com) if you need to create an account. Without it the XCK will work in offline mode.
 
 ## Program Hooks
 
 - [events]
 - [parameters]
 
-## Use
+## Examples of script tag
 
 [Examples of script tags will bee added later]
+
+## CSS Reference
+
+All of the display elements can be overriden, however, we can not support non-standard CSS values.
