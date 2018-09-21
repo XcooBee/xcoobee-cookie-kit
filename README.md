@@ -20,7 +20,6 @@ Some of these include:
 
 - your campaignId
 - position of the hover button
-- 
 
 A `campaignId` is needed for the XCK to communicate with XcooBee and allow management of consents. Please visit [XcooBee](https://www.xcoobee.com) if you need to create an account. Without it the XCK will work in offline mode.
 
