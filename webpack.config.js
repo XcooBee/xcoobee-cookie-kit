@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ENV = process.env.NODE_ENV || 'development';
 const CONFIG = require('./config');
@@ -92,6 +93,10 @@ module.exports = Object.assign({}, WEBPACK_CONFIG, {
         React: 'react',
         config: CONFIG.config(ENV),
       }),
+      new CopyWebpackPlugin([{
+        from: `${CONFIG.entry}/assets`,
+        to: CONFIG.dest
+      }]),
     ],
     WEBPACK_CONFIG.plugins || [],
   )
