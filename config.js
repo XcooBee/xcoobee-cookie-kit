@@ -8,5 +8,6 @@ module.exports = {
   config: env => `${__dirname}/app/config/${env}.json`,
   entry: `${__dirname}/app`,
   dest: `${__dirname}/dist`,
-  publicPath: '/'
+  publicPath: '/',
+  devOnly: `${__dirname}/app/devOnly.js`
 };

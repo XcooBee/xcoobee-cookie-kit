@@ -1,15 +1,19 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import ReactCountryFlag from 'react-country-flag';
+
+import Campaign from '../model/Campaign';
+import { cookieTypes, locales, tokenKey, links } from '../utils';
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
-    isAuthorized: PropTypes.bool,
+    data: PropTypes.object,
     isOffline: PropTypes.bool,
     onClose: PropTypes.func
   };
 
   static defaultProps = {
-    isAuthorized: false,
+    data: new Campaign(),
     isOffline: false,
     onClose: () => {}
   };
@@ -17,21 +21,32 @@ export default class CookieKitPopup extends Component {
   constructor(props) {
     super(props);
 
+    const { data, isOffline } = this.props;
+
     this.state = {
-      cookies: [
-        { id: 0, name: 'necessary', amount: 1, checked: true },
-        { id: 1, name: 'user', amount: 1, checked: false },
-        { id: 2, name: 'statistics', amount: 2, checked: false },
-        { id: 3, name: 'marketing', amount: 1, checked: false }
-      ],
       checked: [],
       selectedLocale: 'EN',
-      isShown: false
+      isShown: false,
+      countryCode: 'US',
+      cookies: isOffline ? cookieTypes : cookieTypes.filter(type => data.dataTypes.includes(type.key)),
+      isAuthorized: !!localStorage[tokenKey]
     };
+
+    this.onMessage = this.onMessage.bind(this);
+    window.addEventListener('message', this.onMessage);
+
+    fetch('http://ip-api.com/json')
+      .then(res => res.json())
+      .then(res => this.setState({ countryCode: res.countryCode }));
   }
 
-  componentDidMount() {
-    this.setState({ checked: this.state.cookies.filter(cookie => cookie.checked).map(cookie => cookie.id) });
+  onMessage(event) {
+    const { accessToken } = event.data;
+
+    if (accessToken) {
+      localStorage.setItem(tokenKey, accessToken);
+      this.setState({ isAuthorized: true });
+    }
   }
 
   handleLocaleChange(locale) {
@@ -51,7 +66,7 @@ export default class CookieKitPopup extends Component {
   }
 
   handleCheckAll() {
-    const { cookies, checked } = this.state;
+    const { checked, cookies } = this.state;
 
     if (cookies.length === checked.length) {
       this.setState({ checked: [] });
@@ -60,14 +75,30 @@ export default class CookieKitPopup extends Component {
     }
   }
 
+  handleLogin() {
+    window.open(`${links.login}?targetUrl=${window.location.origin}`);
+  }
+
+  handleSubmit() {
+    const { cookies, checked } = this.state;
+
+    cookies.forEach(cookie => {
+      if (checked.includes(cookie.id)) {
+        Xcoobee.cookies[cookie.model].allowed = true;
+      }
+    });
+
+    localStorage.setItem('xcoobeeCookies', JSON.stringify(Xcoobee.cookies));
+    this.props.onClose(true);
+  }
+
   render() {
-    const { isAuthorized, isOffline, onClose } = this.props;
-    const { cookies, checked, selectedLocale, isShown } = this.state;
-    const locales = ['EN', 'DE', 'FR', 'ES'];
+    const { data, isOffline, onClose } = this.props;
+    const { checked, isAuthorized, selectedLocale, isShown, cookies, countryCode } = this.state;
 
     return <div className="cookie-kit-popup">
       <div className="header">
-        <div className="logo"><img src="logo.svg" /></div>
+        <div className="logo"><img src={Xcoobee.config.companyLogoUrl} /></div>
         <div className="title">COOKIE PREFERENCES</div>
         <div className="closeBtn" onClick={() => onClose()}>&#215;</div>
       </div>
@@ -81,7 +112,9 @@ export default class CookieKitPopup extends Component {
               { selectedLocale }
             </div>
             <div className="block block-sm block-img">
-              <img src="https://cdn.countryflags.com/thumbs/united-states-of-america/flag-square-500.png" />
+              <div>
+                <ReactCountryFlag code={countryCode} svg styleProps={{ width: '25px', height: '25px' }} />
+              </div>
             </div>
           </div>
           { isShown && <div className="custom-select">
@@ -102,7 +135,7 @@ export default class CookieKitPopup extends Component {
             </div>
             <div>{`COOKIE${cookie.amount > 1 ? 'S' : ''}`}</div>
           </div>
-          {cookie.name.toUpperCase()}
+          {cookie.title.toUpperCase()}
         </div>) }
       </div>
       <div className="check-all" onClick={() => this.handleCheckAll()}>
@@ -110,25 +143,24 @@ export default class CookieKitPopup extends Component {
       </div>
       <div className="actions">
         <div>
-          <a href="https://www.xcoobee.com" target="_blank">
+          <a href={links.poweredBy} target="_blank">
             <div className="privacy-partner">
               Powered by
-              <img src="logo-full.svg" />
+              <img src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`} />
             </div>
           </a>
         </div>
         <div className="button-container">
-          <div className="button">OK</div>
+          <div className="button" onClick={() => this.handleSubmit()}>OK</div>
         </div>
       </div>
       <div className="links">
-        { !isOffline && (isAuthorized ? <a href="">Manage</a> :
-          <a href="https://testapp.xcoobee.net/auth/minlogin?targetUrl=http://localhost:3001"
-             target="_blank">
+        { !isOffline && (isAuthorized ? <a href={links.manage}>Manage</a> :
+          <a onClick={() => this.handleLogin()}>
             Login
           </a>) }
-        <a href="">Terms</a>
-        <a href="">Cookie Policy</a>
+        <a href={data.termsUrl}>Terms</a>
+        <a href={data.privacyUrl}>Cookie Policy</a>
       </div>
     </div>;
   }
