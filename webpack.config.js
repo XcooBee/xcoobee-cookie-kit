@@ -1,19 +1,22 @@
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ENV = process.env.NODE_ENV || 'development';
 const CONFIG = require('./config');
 const WEBPACK_CONFIG = require('./webpack.' + ENV + '.config.js');
 
+const xcoobeeConfig = require(CONFIG.config(ENV));
+
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
-  entry: Object.assign({}, WEBPACK_CONFIG.entry || {}, {
-    app: ['core-js/shim', 'core-js/es6/promise', 'core-js/es6/symbol', CONFIG.entry]
-  }),
+  entry: Object.assign({}, {
+    'xcoobee-cookie-kit': ['core-js/shim', 'core-js/es6/promise', 'core-js/es6/symbol', CONFIG.entry]
+  }, WEBPACK_CONFIG.entry || {}),
   output: {
     path: CONFIG.dest,
-    filename: 'xcoobee-cookie-kit.min.js',
+    filename: '[name].min.js',
     chunkFilename: '[chunkhash].min.js',
-    publicPath: CONFIG.publicPath
+    publicPath: `${xcoobeeConfig.domain}${CONFIG.publicPath}`
   },
   module: {
     rules: [].concat(
@@ -90,8 +93,12 @@ module.exports = Object.assign({}, WEBPACK_CONFIG, {
       new webpack.HashedModuleIdsPlugin(),
       new webpack.ProvidePlugin({
         React: 'react',
-        config: CONFIG.config(ENV),
+        xcoobeeConfig: CONFIG.config(ENV),
       }),
+      new CopyWebpackPlugin([{
+        from: `${CONFIG.entry}/assets`,
+        to: CONFIG.dest
+      }]),
     ],
     WEBPACK_CONFIG.plugins || [],
   )

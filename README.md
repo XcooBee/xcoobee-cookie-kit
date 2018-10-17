@@ -14,12 +14,18 @@ The XCK does not require a XcooBee connection to work for your website. You will
 
 ## Install
 
-You activate the XCK by embedding it into your site via `<script>` tags. In addition, during invocation you provide additional paramaters to the script tag.
+You activate the XCK by embedding it into your site via `<script>` tags. In addition, during invocation you provide additional parameters to the script tag.
 
 Some of these include:
 
 - your campaignId
 - position of the hover button
+- terms url
+- cookie policy url
+- expiration time for the widget
+- company logo
+- text message
+- cookie handle function
 
 A `campaignId` is needed for the XCK to communicate with XcooBee and allow management of consents. Please visit [XcooBee](https://www.xcoobee.com) if you need to create an account. Without it the XCK will work in offline mode.
 
@@ -30,8 +36,20 @@ A `campaignId` is needed for the XCK to communicate with XcooBee and allow manag
 
 ## Examples of script tag
 
-[Examples of script tags will bee added later]
+<script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/xcoobee-cookie-kit.min.js"></script>
+<script type="text/javascript">
+  Xcoobee.initialize({
+    campaignId: <String>,
+    position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
+    termsUrl: <String>,
+    privacyUrl: <String>,
+    expirationTime: <Number> (in seconds),
+    companyLogoUrl: <String>,
+    cookieHandler: <Function>
+    textMessage: <String>, <JSON>
+  });
+</script>
 
 ## CSS Reference
 
-All of the display elements can be overriden, however, we can not support non-standard CSS values.
+All of the display elements can be overridden, however, we can not support non-standard CSS values.

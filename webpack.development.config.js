@@ -12,6 +12,7 @@ const WEBPACK_PORT = CONFIG.port + 1;
 const ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
+  entry: { devOnly: CONFIG.devOnly },
   module: {
     rules: [
       {
