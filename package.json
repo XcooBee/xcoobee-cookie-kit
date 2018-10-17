@@ -1,14 +1,15 @@
 {
   "name": "xcoobee-cookie-kit",
   "version": "1.0.0",
-  "description": "",
+  "description": "Cookie Consent Management for Websites",
   "main": "index.js",
-  "author": "",
+  "author": "Bilal Soylu, Vladimir Maklyakov",
   "scripts": {
     "build": "cross-env-shell NODE_ENV=production cross-env-shell NODE_ENV=production webpack",
     "dev": "cross-env-shell NODE_ENV=development webpack-dev-server --progress",
     "security-check": "nsp check"
   },
+  "license": "APACHE-2.0",
   "dependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.4.0",
