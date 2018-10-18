@@ -27,5 +27,6 @@ const animations = {
   defaultOptions: 'blue',
   crowdIntelligence: 'yellow'
 };
+const apiUrl = 'https://api.xcoobee.net';
 
-export { cookieTypes, locales, tokenKey, links, xcoobeeCookiesKey, defaultConfig, defaultMessage, animations };
+export { cookieTypes, locales, tokenKey, links, xcoobeeCookiesKey, defaultConfig, defaultMessage, animations, apiUrl };
