@@ -1,5 +1,5 @@
 hooks:
-  pre: npm install npm@6.4.1 && npm install && npm update
+  pre: npm install npm@6.4.1 && npm install cross-env -g && npm install && npm update
   post_build: npm run build && npm prune --production && npm run clear
 nodejs:
   version: '8.10.0'
