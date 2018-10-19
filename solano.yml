@@ -1,8 +1,8 @@
 hooks:
-  pre: npm install npm@6.4.1 && npm install cross-env -g && npm install && npm update
+  pre: npm install && npm update
   post_build: npm run build && npm prune --production && npm run clear
 nodejs:
-  version: '8.10.0'
+  version: '6.10.0'
 tests:
   - npm test
 environment:
@@ -10,4 +10,4 @@ environment:
   XBEE_STAGE: 'test'
   NODE_ENV: 'production'
   CI: 'true'
-timeout_hook: 900 
+timeout_hook: 900
