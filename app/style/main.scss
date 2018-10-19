@@ -3,6 +3,10 @@
 $color1: #f37026;
 $color2: #fdb81a;
 
+$blue-cookie: #01a4e9;
+$green-cookie: #7acf77;
+$yellow-cookie: #faf376;
+
 // Checkbox constants
 
 $checked-color: $color1;
@@ -46,7 +50,6 @@ $duration: .2s;
   }
 
   .animated-cookie-icon {
-    background-image: url(../assets/cookie-blue.svg);
     background-repeat: no-repeat;
     background-position: left top;
     position: relative;
@@ -64,7 +67,6 @@ $duration: .2s;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       border-radius: 50%;
-      background-color: #01a4e9;
       -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
       animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
@@ -76,6 +78,30 @@ $duration: .2s;
       80%, 100% {
         opacity: 0;
       }
+    }
+  }
+
+  .animated-cookie-icon.blue {
+    background-image: url(../assets/cookie-blue.svg);
+
+    &:before {
+      background-color: $blue-cookie;
+    }
+  }
+
+  .animated-cookie-icon.green {
+    background-image: url(../assets/cookie-green.svg);
+
+    &:before {
+      background-color: $green-cookie;
+    }
+  }
+
+  .animated-cookie-icon.yellow {
+    background-image: url(../assets/cookie-yellow.svg);
+
+    &:before {
+      background-color: $yellow-cookie;
     }
   }
 

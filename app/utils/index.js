@@ -23,8 +23,8 @@ const defaultConfig = {
 const defaultMessage = 'This site uses cookies. Use this panel to adjust your preferences.';
 const animations = {
   noAnimation: null,
-  knownSite: 'green',
   defaultOptions: 'blue',
+  knownSite: 'green',
   crowdIntelligence: 'yellow'
 };
 const apiUrl = 'https://api.xcoobee.net';

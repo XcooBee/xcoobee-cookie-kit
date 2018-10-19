@@ -8,7 +8,7 @@ import {
 
 import CookieKitPopup from './component/CookieKitPopup';
 import Campaign from './model/Campaign';
-import { xcoobeeCookiesKey, animations } from './utils';
+import { xcoobeeCookiesKey, animations, tokenKey } from './utils';
 import { graphQLRequest } from './utils/graphql';
 
 const testCampaign = {
@@ -31,15 +31,22 @@ export class App extends Component {
       isOpen: false,
       isOffline: !Xcoobee.config.campaignId,
       isKnown: !!localStorage[xcoobeeCookiesKey],
-      animation: !!localStorage[xcoobeeCookiesKey] ? animations.knownSite : animations.noAnimation
+      animation: this.setAnimation()
     };
 
-    localStorage.removeItem(xcoobeeCookiesKey)
+    setTimeout(() => this.setState({ isShown: false, isOpen: false }), Xcoobee.config.expirationTime * 1000 || 60000);
+  }
 
+  setAnimation() {
     if (!!localStorage[xcoobeeCookiesKey]) {
       setTimeout(() => this.setState({ animation: animations.noAnimation }), 3000);
+      return animations.knownSite;
+    } else if (!!localStorage[tokenKey]) {
+      setTimeout(() => this.setState({ animation: animations.noAnimation }), 3000);
+      return animations.defaultOptions;
+    } else {
+      return animations.noAnimation;
     }
-    setTimeout(() => this.setState({ isShown: false, isOpen: false }), Xcoobee.config.expirationTime * 1000 || 60000);
   }
 
   fetchCampaign() {
