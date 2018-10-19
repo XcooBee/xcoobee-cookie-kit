@@ -1,0 +1,11 @@
+hooks:
+  pre: npm install npm@6.4.1 && npm install && npm update
+  post_build: npm run build && npm prune --production && npm run clear
+nodejs:
+  version: '8.10.0'
+environment:
+  PORT: '3000'
+  XBEE_STAGE: 'test'
+  NODE_ENV: 'production'
+  CI: 'true'
+timeout_hook: 900 
