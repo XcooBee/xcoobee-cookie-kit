@@ -3,7 +3,8 @@ hooks:
   post_build: npm run build && npm prune --production && npm run clear
 nodejs:
   version: '8.10.0'
-test: "node ./scripts/test-not-implemented.js"  
+tests:
+  - npm test
 environment:
   PORT: '3000'
   XBEE_STAGE: 'test'
