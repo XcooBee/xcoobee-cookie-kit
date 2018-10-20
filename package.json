@@ -9,9 +9,10 @@
     "dev": "cross-env-shell NODE_ENV=development webpack-dev-server --progress",
     "security-check": "nsp check",
     "clear": "node scripts/clear.js",
-    "test": "node ./scripts/test-not-implemented.js"
+    "test": "node ./scripts/test-not-implemented.js",
+    "solanobuild": "node  ./node_modules/webpack/bin/webpack.js"
   },
-  "license": "APACHE-2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "prop-types": "^15.6.0",
     "react": "^16.4.0",

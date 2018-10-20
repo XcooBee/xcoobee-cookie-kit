@@ -1,7 +1,6 @@
 hooks:
-  pre: npm install && npm update
-  post_setup: export PATH=$TDDIUM_REPO_ROOT/node_modules/.bin:$PATH && echo $PATH
-  post_build: npm run build && npm prune --production && npm run clear
+  pre: npm install && npm update  
+  post_build: npm run solanobuild && npm prune --production && npm run clear
 nodejs:
   version: '6.10.0'
 tests:
