@@ -1,5 +1,5 @@
 hooks:
-  post_setup: npm install
+  pre_setup: npm install
   post_build: npm run solanobuild
 nodejs:
   version: '6.10.0'
