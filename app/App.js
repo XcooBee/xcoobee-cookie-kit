@@ -8,7 +8,7 @@ import {
 
 import CookieKitPopup from './component/CookieKitPopup';
 import Campaign from './model/Campaign';
-import { xcoobeeCookiesKey, animations, tokenKey } from './utils';
+import { xcoobeeCookiesKey, animations, tokenKey, euCountries } from './utils';
 import { graphQLRequest } from './utils/graphql';
 
 const testCampaign = {
@@ -31,22 +31,38 @@ export class App extends Component {
       isOpen: false,
       isOffline: !Xcoobee.config.campaignId,
       isKnown: !!localStorage[xcoobeeCookiesKey],
-      animation: this.setAnimation()
+      animation: animations.noAnimation,
+      pulsing: false,
+      countryCode: 'US'
     };
+
+    fetch('http://ip-api.com/json')
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        this.setState({ countryCode: res.countryCode });
+        this.setAnimation(res.countryCode);
+      });
 
     setTimeout(() => this.setState({ isShown: false, isOpen: false }), Xcoobee.config.expirationTime * 1000 || 60000);
   }
 
-  setAnimation() {
-    if (!!localStorage[xcoobeeCookiesKey]) {
-      setTimeout(() => this.setState({ animation: animations.noAnimation }), 3000);
-      return animations.knownSite;
+  setAnimation(countryCode) {
+    if (euCountries.includes(countryCode)) {
+      this.startPulsing(animations.euTraffic);
+    } else if (!!localStorage[xcoobeeCookiesKey]) {
+      this.startPulsing(animations.knownSite);
     } else if (!!localStorage[tokenKey]) {
-      setTimeout(() => this.setState({ animation: animations.noAnimation }), 3000);
-      return animations.defaultOptions;
+      this.startPulsing(animations.defaultOptions);
     } else {
       return animations.noAnimation;
     }
+  }
+
+  startPulsing(animation) {
+    this.setState({ animation });
+    setTimeout(() => this.setState({ pulsing: true }), 1000);
+    setTimeout(() => this.setState({ pulsing: false }), 4500);
   }
 
   fetchCampaign() {
@@ -65,19 +81,20 @@ export class App extends Component {
   }
 
   render() {
-    const { isShown, isOpen, isOffline, animation, isKnown } = this.state;
+    const { isShown, isOpen, isOffline, animation, isKnown, pulsing, countryCode } = this.state;
     const position = isOffline ? Xcoobee.config.position : testCampaign.position;
 
     return isShown && <div className={`container ${position || 'left_bottom'}`}
                            style={{ width: isOpen ? 'auto' : '80px' }}>
-        { animation ? <div className={`animated-cookie-icon ${animation ? animation : ''}`} /> :
+        { animation ?
+          <div className={`animated-cookie-icon ${animation ? `${animation}` : ''} ${pulsing ? 'pulsing' : ''}`} /> :
             isOpen ?
             <CookieKitPopup data={isOffline ? Xcoobee.config : new Campaign(testCampaign)}
                             onClose={submit => this.setState({ isOpen: false, isShown: !submit })}
-                            isOffline={isOffline} /> :
+                            isOffline={isOffline} countryCode={countryCode} /> :
             <img src={`${xcoobeeConfig.domain}/cookie.svg`}
                  className="cookie-icon"
-                 onClick={() => this.setState({ isOpen: !isKnown })}/> }
+                 onClick={() => this.setState({ isOpen: true })}/> }
     </div>;
   }
 }

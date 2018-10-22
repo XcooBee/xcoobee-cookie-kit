@@ -6,6 +6,7 @@ $color2: #fdb81a;
 $blue-cookie: #01a4e9;
 $green-cookie: #7acf77;
 $yellow-cookie: #faf376;
+$red-cookie: #f37026;
 
 // Checkbox constants
 
@@ -21,7 +22,7 @@ $duration: .2s;
 
   .container {
     position: fixed;
-    //width: 80px;
+    z-index: 100000;
 
     &.left_top {
       top: 8px;
@@ -55,7 +56,9 @@ $duration: .2s;
     position: relative;
     width: 60px;
     height: 60px;
+  }
 
+  .pulsing {
     &:before {
       content: '';
       position: absolute;
@@ -82,7 +85,24 @@ $duration: .2s;
   }
 
   .animated-cookie-icon.blue {
-    background-image: url(../assets/cookie-blue.svg);
+    -webkit-animation: blue-cookie 5s;
+    animation: blue-cookie 5s;
+    background-image: url(../assets/cookie.svg);
+
+    @keyframes blue-cookie {
+      30%, 90% {
+        background-image: url(../assets/cookie-blue.svg);
+      }
+
+      100% {
+        background-image: url(../assets/cookie.svg);
+
+        &:before {
+          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+        }
+      }
+    }
 
     &:before {
       background-color: $blue-cookie;
@@ -90,18 +110,77 @@ $duration: .2s;
   }
 
   .animated-cookie-icon.green {
-    background-image: url(../assets/cookie-green.svg);
+    -webkit-animation: green-cookie 5s;
+    animation: green-cookie 5s;
+    background-image: url(../assets/cookie.svg);
 
     &:before {
       background-color: $green-cookie;
     }
+
+    @keyframes green-cookie {
+      30%, 90% {
+        background-image: url(../assets/cookie-green.svg);
+      }
+
+      100% {
+        background-image: url(../assets/cookie.svg);
+
+        &:before {
+          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+        }
+      }
+    }
   }
 
   .animated-cookie-icon.yellow {
-    background-image: url(../assets/cookie-yellow.svg);
+    -webkit-animation: yellow-cookie 5s;
+    animation: yellow-cookie 5s;
+    background-image: url(../assets/cookie.svg);
 
     &:before {
       background-color: $yellow-cookie;
+    }
+
+    @keyframes yellow-cookie {
+      30%, 90% {
+        background-image: url(../assets/cookie-yellow.svg);
+      }
+
+      100% {
+        background-image: url(../assets/cookie.svg);
+
+        &:before {
+          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+        }
+      }
+    }
+  }
+
+  .animated-cookie-icon.red {
+    -webkit-animation: red-cookie 5s;
+    animation: red-cookie 5s;
+    background-image: url(../assets/cookie.svg);
+
+    &:before {
+      background-color: $red-cookie;
+    }
+
+    @keyframes red-cookie {
+      30%, 90% {
+        background-image: url(../assets/cookie-red.svg);
+      }
+
+      100% {
+        background-image: url(../assets/cookie.svg);
+
+        &:before {
+          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+        }
+      }
     }
   }
 
@@ -250,10 +329,14 @@ $duration: .2s;
       justify-content: space-around;
 
       .cookie {
-        font-size: 12px;
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        > .cookie-title {
+          font-size: 14px;
+          text-align: center;
+        }
       }
     }
 
