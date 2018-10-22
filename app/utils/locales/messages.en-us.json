@@ -1,0 +1,15 @@
+{
+	"CookieKit.AdvertisingCookieName": "Marketing",
+	"CookieKit.ApplicationCookieName": "Necessary",
+	"CookieKit.CheckAllButton": "Check All",
+	"CookieKit.LoginLink": "Login",
+	"CookieKit.ManageLink": "Manage",
+	"CookieKit.PolicyLink": "Cookie Policy",
+	"CookieKit.PopupMessage": "This site uses cookies. Use this panel to adjust your preferences.",
+	"CookieKit.PoweredByText": "Powered by",
+	"CookieKit.StatisticsCookieName": "Statistics",
+	"CookieKit.TermsLink": "Terms",
+	"CookieKit.Title": "COOKIE PREFERENCES",
+	"CookieKit.UncheckButton": "Uncheck All",
+	"CookieKit.UsageCookieName": "User"
+}
