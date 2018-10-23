@@ -3,7 +3,7 @@ import de from "./messages.de-de.json";
 import es from "./messages.es-419.json";
 import fr from "./messages.fr-fr.json";
 
-export function renderText(key, locale) {
+export default function renderText(key, locale) {
   switch (locale) {
     case "EN":
       return en[key];

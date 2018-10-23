@@ -1,7 +1,21 @@
 {
     "extends": "airbnb",
-    "rules":{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "globals": {
+        "React": true,
+        "xcoobeeConfig": true,
+        "Xcoobee": true
+    },
+    "rules": {
         "linebreak-style": ["off", "unix"],
-        "quotes": ["error", "double", { "avoidEscape": true }]
-    }
+        "quotes": ["error", "double", { "avoidEscape": true }],
+        "no-underscore-dangle": [0],
+        "react/jsx-filename-extension": [0],
+        "object-curly-newline": [0],
+        "max-len": ["error", { "code": 120, "ignoreUrls": true }]
+    },
+    "parser": "babel-eslint"
 }

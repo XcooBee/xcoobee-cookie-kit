@@ -1,11 +1,18 @@
 export default class Campaign {
   _id = null;
+
   _name = null;
+
   _description = null;
+
   _privacyUrl = null;
+
   _termsUrl = false;
+
   _position = "left_bottom";
+
   _customCss = null;
+
   _dataTypes = [];
 
   constructor(campaign) {

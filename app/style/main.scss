@@ -20,6 +20,16 @@ $duration: .2s;
 #xcoobee-cookie-kit {
   font-family: Arial, Helvetica, sans-serif;
 
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+
   .container {
     position: fixed;
     z-index: 100000;
@@ -45,9 +55,19 @@ $duration: .2s;
     }
   }
 
-  .cookie-icon {
-    width: 60px;
+  .cookie-icon-container {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
     cursor: pointer;
+    outline: inherit;
+
+    > .cookie-icon {
+      width: 60px;
+      cursor: pointer;
+    }
   }
 
   .animated-cookie-icon {
@@ -293,7 +313,7 @@ $duration: .2s;
           background: $color2;
           border-radius: 10px;
 
-          > div {
+          > button {
             cursor: pointer;
             background: $color2;
             color: #fff;
@@ -400,13 +420,13 @@ $duration: .2s;
       align-items: center;
       padding: 0 24px 8px;
 
-      a {
+      a, button {
         color: $color1;
         text-decoration: none;
         cursor: pointer;
       }
 
-      a:hover {
+      a:hover, button:hover {
         color: $color2;
       }
     }

@@ -1,12 +1,13 @@
 import ReactDOM from "react-dom";
 
-import { App } from "../App";
+import App from "../App";
 import XcoobeeCookies from "./XcoobeeCookies";
 
-import { defaultConfig, cookieTypes } from "../utils"
+import { defaultConfig, cookieTypes } from "../utils";
 
 export default class Xcoobee {
   _cookies = new XcoobeeCookies();
+
   __config = null;
 
   get cookies() {
@@ -20,9 +21,9 @@ export default class Xcoobee {
   initialize(config) {
     const defaultCookies = {};
 
-    cookieTypes.forEach(cookie => {
+    cookieTypes.forEach((cookie) => {
       defaultCookies[cookie.model] = {
-        name: cookie.key
+        name: cookie.key,
       };
     });
 
