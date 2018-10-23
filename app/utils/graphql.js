@@ -1,14 +1,14 @@
-import fetch from 'isomorphic-fetch';
+import fetch from "isomorphic-fetch";
 
-import { apiUrl } from '../utils';
+import { apiUrl } from "../utils";
 
 export function graphQLRequest(query, variables) {
   const init = {
-    method: 'post',
-    mode: 'cors',
+    method: "post",
+    mode: "cors",
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({
       query,

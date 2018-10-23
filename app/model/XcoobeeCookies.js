@@ -1,9 +1,12 @@
-import XcoobeeCookie from './XcoobeeCookie';
+import XcoobeeCookie from "./XcoobeeCookie";
 
 export default class XcoobeeCookies {
   _application = new XcoobeeCookie();
+
   _usage = new XcoobeeCookie();
+
   _statistics = new XcoobeeCookie();
+
   _advertising = new XcoobeeCookie();
 
   constructor(cookies = {}) {

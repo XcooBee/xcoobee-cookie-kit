@@ -1,10 +1,10 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactCountryFlag from 'react-country-flag';
+import { Component } from "react";
+import PropTypes from "prop-types";
+import ReactCountryFlag from "react-country-flag";
 
-import Campaign from '../model/Campaign';
-import { cookieTypes, locales, tokenKey, links, xcoobeeCookiesKey } from '../utils';
-import { renderText } from '../utils/locales/renderText'
+import Campaign from "../model/Campaign";
+import { cookieTypes, locales, tokenKey, links, xcoobeeCookiesKey } from "../utils";
+import { renderText } from "../utils/locales/renderText"
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
@@ -16,7 +16,8 @@ export default class CookieKitPopup extends Component {
   static defaultProps = {
     data: new Campaign(),
     isOffline: false,
-    onClose: () => {}
+    onClose: () => {
+    }
   };
 
   constructor(props) {
@@ -26,14 +27,14 @@ export default class CookieKitPopup extends Component {
 
     this.state = {
       checked: [],
-      selectedLocale: 'EN',
+      selectedLocale: "EN",
       isShown: false,
       cookies: isOffline ? cookieTypes : cookieTypes.filter(type => data.dataTypes.includes(type.key)),
       isAuthorized: !!localStorage[tokenKey]
     };
 
     this.onMessage = this.onMessage.bind(this);
-    window.addEventListener('message', this.onMessage);
+    window.addEventListener("message", this.onMessage);
   }
 
   onMessage(event) {
@@ -84,7 +85,7 @@ export default class CookieKitPopup extends Component {
       }
     });
 
-    localStorage.setItem('xcoobeeCookies', JSON.stringify(Xcoobee.cookies));
+    localStorage.setItem("xcoobeeCookies", JSON.stringify(Xcoobee.cookies));
     this.props.onClose(true);
   }
 
@@ -109,7 +110,7 @@ export default class CookieKitPopup extends Component {
             </div>
             <div className="block block-sm block-img">
               <div>
-                <ReactCountryFlag code={countryCode} svg styleProps={{ width: '25px', height: '25px' }} />
+                <ReactCountryFlag code={countryCode} svg styleProps={{ width: "25px", height: "25px" }} />
               </div>
             </div>
           </div>
@@ -126,10 +127,10 @@ export default class CookieKitPopup extends Component {
               <input id={`checkbox-${cookie.id}`}
                      type="checkbox"
                      checked={checked.includes(cookie.id)}
-                     onChange={e => this.handleCookieCheck(e, cookie.id)}/>
+                     onChange={e => this.handleCookieCheck(e, cookie.id)} />
               <label htmlFor={`checkbox-${cookie.id}`} className="check-box" />
             </div>
-            <div>{`COOKIE${cookie.amount > 1 ? 'S' : ''}`}</div>
+            <div>{`COOKIE${cookie.amount > 1 ? "S" : ""}`}</div>
           </div>
           <div className="cookie-title">{renderText(cookie.localeKey, selectedLocale)}</div>
         </div>) }
@@ -152,7 +153,8 @@ export default class CookieKitPopup extends Component {
         </div>
       </div>
       <div className="links">
-        { !isOffline && (isAuthorized ? <a href={links.manage}>{renderText("CookieKit.ManageLink", selectedLocale)}</a> :
+        { !isOffline && (isAuthorized ?
+          <a href={links.manage}>{renderText("CookieKit.ManageLink", selectedLocale)}</a> :
           <a onClick={() => this.handleLogin()}>
             {renderText("CookieKit.LoginLink", selectedLocale)}
           </a>) }

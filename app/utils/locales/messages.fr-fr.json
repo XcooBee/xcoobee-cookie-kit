@@ -1,15 +1,15 @@
 {
-	"CookieKit.AdvertisingCookieName": "Marketing (fr-fr)",
-	"CookieKit.ApplicationCookieName": "Necessary (fr-fr)",
-	"CookieKit.CheckAllButton": "Check All (fr-fr)",
-	"CookieKit.LoginLink": "Login (fr-fr)",
-	"CookieKit.ManageLink": "Manage (fr-fr)",
-	"CookieKit.PolicyLink": "Cookie Policy (fr-fr)",
-	"CookieKit.PopupMessage": "This site uses cookies. Use this panel to adjust your preferences. (fr-fr)",
-	"CookieKit.PoweredByText": "Powered by (fr-fr)",
-	"CookieKit.StatisticsCookieName": "Statistics (fr-fr)",
-	"CookieKit.TermsLink": "Terms (fr-fr)",
-	"CookieKit.Title": "COOKIE PREFERENCES (fr-fr)",
-	"CookieKit.UncheckButton": "Uncheck All (fr-fr)",
-	"CookieKit.UsageCookieName": "User (fr-fr)"
+  "CookieKit.AdvertisingCookieName": "Marketing (fr-fr)",
+  "CookieKit.ApplicationCookieName": "Necessary (fr-fr)",
+  "CookieKit.CheckAllButton": "Check All (fr-fr)",
+  "CookieKit.LoginLink": "Login (fr-fr)",
+  "CookieKit.ManageLink": "Manage (fr-fr)",
+  "CookieKit.PolicyLink": "Cookie Policy (fr-fr)",
+  "CookieKit.PopupMessage": "This site uses cookies. Use this panel to adjust your preferences. (fr-fr)",
+  "CookieKit.PoweredByText": "Powered by (fr-fr)",
+  "CookieKit.StatisticsCookieName": "Statistics (fr-fr)",
+  "CookieKit.TermsLink": "Terms (fr-fr)",
+  "CookieKit.Title": "COOKIE PREFERENCES (fr-fr)",
+  "CookieKit.UncheckButton": "Uncheck All (fr-fr)",
+  "CookieKit.UsageCookieName": "User (fr-fr)"
 }

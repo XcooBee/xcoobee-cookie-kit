@@ -1,15 +1,15 @@
-import { Component } from 'react';
+import { Component } from "react";
 import {
   graphql,
   GraphQLSchema,
   GraphQLObjectType,
   GraphQLString
-} from 'graphql';
+} from "graphql";
 
-import CookieKitPopup from './component/CookieKitPopup';
-import Campaign from './model/Campaign';
-import { xcoobeeCookiesKey, animations, tokenKey, euCountries } from './utils';
-import { graphQLRequest } from './utils/graphql';
+import CookieKitPopup from "./component/CookieKitPopup";
+import Campaign from "./model/Campaign";
+import { xcoobeeCookiesKey, animations, tokenKey, euCountries } from "./utils";
+import { graphQLRequest } from "./utils/graphql";
 
 const testCampaign = {
   id: `${Date.now()}-${Math.random()}`,
@@ -33,13 +33,12 @@ export class App extends Component {
       isKnown: !!localStorage[xcoobeeCookiesKey],
       animation: animations.noAnimation,
       pulsing: false,
-      countryCode: 'US'
+      countryCode: "US"
     };
 
-    fetch('http://ip-api.com/json')
+    fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         this.setState({ countryCode: res.countryCode });
         this.setAnimation(res.countryCode);
       });
@@ -84,17 +83,17 @@ export class App extends Component {
     const { isShown, isOpen, isOffline, animation, isKnown, pulsing, countryCode } = this.state;
     const position = isOffline ? Xcoobee.config.position : testCampaign.position;
 
-    return isShown && <div className={`container ${position || 'left_bottom'}`}
-                           style={{ width: isOpen ? 'auto' : '80px' }}>
+    return isShown && <div className={`container ${position || "left_bottom"}`}
+                           style={{ width: isOpen ? "auto" : "80px" }}>
         { animation ?
-          <div className={`animated-cookie-icon ${animation ? `${animation}` : ''} ${pulsing ? 'pulsing' : ''}`} /> :
-            isOpen ?
+          <div className={`animated-cookie-icon ${animation ? `${animation}` : ""} ${pulsing ? "pulsing" : ""}`} /> :
+          isOpen ?
             <CookieKitPopup data={isOffline ? Xcoobee.config : new Campaign(testCampaign)}
                             onClose={submit => this.setState({ isOpen: false, isShown: !submit })}
                             isOffline={isOffline} countryCode={countryCode} /> :
             <img src={`${xcoobeeConfig.domain}/cookie.svg`}
                  className="cookie-icon"
-                 onClick={() => this.setState({ isOpen: true })}/> }
-    </div>;
+                 onClick={() => this.setState({ isOpen: true })} /> }
+      </div>;
   }
 }
