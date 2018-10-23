@@ -18,6 +18,7 @@ const defaultConfig = {
   termsUrl: "https://lviv.com/terms",
   privacyUrl: "https://lviv.com/policy",
   expirationTime: 120,
+  externalCss: null,
   companyLogoUrl: "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_120,w_120,f_auto,b_white,q_auto:eco/v1506455567/rzmsg3oyifgkbl1ywrql.png",
 };
 const defaultMessage = "This site uses cookies. Use this panel to adjust your preferences.";

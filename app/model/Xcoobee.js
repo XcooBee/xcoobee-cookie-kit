@@ -30,9 +30,18 @@ export default class Xcoobee {
     this.__config = config || defaultConfig;
     this._cookies = new XcoobeeCookies(defaultCookies);
 
+    if (config.externalCss) {
+      let fileRef = document.createElement("link");
+
+      fileRef.setAttribute("rel", "stylesheet");
+      fileRef.setAttribute("type", "text/css");
+      fileRef.setAttribute("href", config.externalCss.toString());
+    }
+
     const CONTAINER = document.createElement("div");
 
     CONTAINER.id = "xcoobee-cookie-kit";
+
     ReactDOM.render(<App />, CONTAINER);
     document.body.appendChild(CONTAINER);
   }
