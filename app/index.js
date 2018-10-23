@@ -1,5 +1,5 @@
-import './style/main.scss';
+import "./style/main.scss";
 
-import Xcoobee from './model/Xcoobee';
+import Xcoobee from "./model/Xcoobee";
 
 window.Xcoobee = new Xcoobee();

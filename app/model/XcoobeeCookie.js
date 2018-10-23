@@ -1,12 +1,16 @@
 export default class XcoobeeCookie {
   _name = null;
+
   _allowed = false;
-  _cookieHandler = () => {};
+
+  _cookieHandler = () => {
+  };
 
   constructor({ name, allowed, cookieHandler } = {}) {
     this._name = name;
     this._allowed = allowed || false;
-    this._cookieHandler = cookieHandler || (() => {});
+    this._cookieHandler = cookieHandler || (() => {
+    });
   }
 
   get name() {
@@ -25,7 +29,7 @@ export default class XcoobeeCookie {
     return {
       name: this._name,
       allowed: this._allowed,
-      cookieHandler: this._cookieHandler
+      cookieHandler: this._cookieHandler,
     };
   }
 

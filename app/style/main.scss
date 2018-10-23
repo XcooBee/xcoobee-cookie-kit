@@ -20,6 +20,16 @@ $duration: .2s;
 #xcoobee-cookie-kit {
   font-family: Arial, Helvetica, sans-serif;
 
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+
   .container {
     position: fixed;
     z-index: 100000;
@@ -45,9 +55,19 @@ $duration: .2s;
     }
   }
 
-  .cookie-icon {
-    width: 60px;
+  .cookie-icon-container {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
     cursor: pointer;
+    outline: inherit;
+
+    > .cookie-icon {
+      width: 60px;
+      cursor: pointer;
+    }
   }
 
   .animated-cookie-icon {
@@ -293,7 +313,7 @@ $duration: .2s;
           background: $color2;
           border-radius: 10px;
 
-          > div {
+          > button {
             cursor: pointer;
             background: $color2;
             color: #fff;
@@ -400,13 +420,13 @@ $duration: .2s;
       align-items: center;
       padding: 0 24px 8px;
 
-      a {
+      a, button {
         color: $color1;
         text-decoration: none;
         cursor: pointer;
       }
 
-      a:hover {
+      a:hover, button:hover {
         color: $color2;
       }
     }
@@ -414,8 +434,8 @@ $duration: .2s;
 
   // Input styles
 
-  input[type=checkbox]{
-    display:none;
+  input[type=checkbox] {
+    display: none;
   }
 
   .check-box {
@@ -458,7 +478,7 @@ $duration: .2s;
     }
 
     &::before {
-      top:$checkbox-height * .72;
+      top: $checkbox-height * .72;
       left: $checkbox-height * .41;
       -moz-transform: rotate(-135deg);
       -ms-transform: rotate(-135deg);
@@ -479,10 +499,10 @@ $duration: .2s;
   }
 
   input[type=checkbox]:checked + .check-box,
-  .check-box.checked{
-    border-color:$checked-color;
+  .check-box.checked {
+    border-color: $checked-color;
 
-    &::after{
+    &::after {
       height: $checkbox-height * .5;
       -moz-animation: dothabottomcheck $duration/2 ease 0s forwards;
       -o-animation: dothabottomcheck $duration/2 ease 0s forwards;
@@ -490,7 +510,7 @@ $duration: .2s;
       animation: dothabottomcheck $duration/2 ease 0s forwards;
     }
 
-    &::before{
+    &::before {
       height: $checkbox-height * 1.2;
       -moz-animation: dothatopcheck $duration ease 0s forwards;
       -o-animation: dothatopcheck $duration ease 0s forwards;
@@ -501,34 +521,64 @@ $duration: .2s;
 
   // Checkbox animation
 
-  @-moz-keyframes dothabottomcheck{
-    0% { height: 0; }
-    100% { height: $checkbox-height/2; }
+  @-moz-keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
   }
 
-  @-webkit-keyframes dothabottomcheck{
-    0% { height: 0; }
-    100% { height: $checkbox-height/2; }
+  @-webkit-keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
   }
 
-  @keyframes dothabottomcheck{
-    0% { height: 0; }
-    100% { height: $checkbox-height/2;  }
+  @keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
   }
 
-  @keyframes dothatopcheck{
-    0% { height: 0; }
-    50% { height: 0; }
-    100% { height: $checkbox-height * 1.2; }
+  @keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
   }
-  @-webkit-keyframes dothatopcheck{
-    0% { height: 0; }
-    50% { height: 0; }
-    100% { height: $checkbox-height * 1.2; }
+  @-webkit-keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
   }
-  @-moz-keyframes dothatopcheck{
-    0% { height: 0; }
-    50% { height: 0; }
-    100% { height: $checkbox-height * 1.2; }
+  @-moz-keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
   }
 }
