@@ -114,8 +114,6 @@ $duration: .2s;
   }
 
   .animated-cookie-icon.blue {
-    -webkit-animation: blue-cookie 5s;
-    -moz-animation: blue-cookie 5s;
     animation: blue-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -128,8 +126,6 @@ $duration: .2s;
         background-image: url(../assets/cookie.svg);
 
         &:before {
-          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
-          -moz-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
           animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
         }
       }
@@ -164,8 +160,6 @@ $duration: .2s;
   }
 
   .animated-cookie-icon.yellow {
-    -webkit-animation: yellow-cookie 5s;
-    -moz-animation: yellow-cookie 5s;
     animation: yellow-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -182,8 +176,6 @@ $duration: .2s;
         background-image: url(../assets/cookie.svg);
 
         &:before {
-          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
-          -moz-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
           animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
         }
       }
@@ -191,8 +183,6 @@ $duration: .2s;
   }
 
   .animated-cookie-icon.red {
-    -webkit-animation: red-cookie 5s;
-    -moz-animation: red-cookie 5s;
     animation: red-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -209,8 +199,6 @@ $duration: .2s;
         background-image: url(../assets/cookie.svg);
 
         &:before {
-          -webkit-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
-          -moz-animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
           animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
         }
       }
