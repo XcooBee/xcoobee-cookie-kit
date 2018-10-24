@@ -10,7 +10,7 @@ const xcoobeeConfig = require(CONFIG.config(ENV));
 
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
   entry: Object.assign({}, {
-    'xcoobee-cookie-kit': ['core-js/shim', 'core-js/es6/promise', 'core-js/es6/symbol', CONFIG.entry]
+    'xcoobee-cookie-kit': ['core-js/shim', 'core-js/es6/promise', 'core-js/es6/symbol', 'fetch-polyfill', CONFIG.entry]
   }, WEBPACK_CONFIG.entry || {}),
   output: {
     path: CONFIG.dest,

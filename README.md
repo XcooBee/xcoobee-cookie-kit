@@ -52,7 +52,7 @@ A `campaignId` is needed for the XCK to communicate with XcooBee and allow manag
     companyLogoUrl: <String>,
     cookieHandler: <Function>
     textMessage: <String>, <JSON>,
-    externalCss: <String>
+    cssAutoLoad: <Boolean>
   });
 </script>
 ```
@@ -61,7 +61,7 @@ A `campaignId` is needed for the XCK to communicate with XcooBee and allow manag
 
 <link rel="stylesheet" href="{URL}/xcoobee-cookie-kit.min.css">
 
-All of the display elements can be overridden, however, we can not support non-standard CSS values. For that define a css file name in the initial config.
+All of the display elements can be overridden, however, we can not support non-standard CSS values.
 
 # How to Use the XcooBee Cookie Kit
 

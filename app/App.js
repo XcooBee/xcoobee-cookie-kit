@@ -16,6 +16,13 @@ const testCampaign = {
 };
 
 export default class App extends Component {
+  // Remove cookies preferences and auth token from local storage (for easier testing)
+  static refresh() {
+    localStorage.removeItem(tokenKey);
+    localStorage.removeItem(xcoobeeCookiesKey);
+    window.location.reload();
+  }
+
   constructor(props) {
     super(props);
 
@@ -39,14 +46,14 @@ export default class App extends Component {
   }
 
   setAnimation(countryCode) {
-    if (euCountries.includes(countryCode)) {
-      return this.startPulsing(animations.euTraffic);
-    }
     if (localStorage[xcoobeeCookiesKey]) {
       return this.startPulsing(animations.knownSite);
     }
-    if (localStorage[tokenKey]) {
+    if (localStorage[tokenKey] && Xcoobee.config.campaignId) {
       return this.startPulsing(animations.defaultOptions);
+    }
+    if (euCountries.includes(countryCode)) {
+      return this.startPulsing(animations.euTraffic);
     }
     return animations.noAnimation;
   }
@@ -97,6 +104,17 @@ export default class App extends Component {
           animation
             ? <div className={`animated-cookie-icon ${animation ? `${animation}` : ""} ${pulsing ? "pulsing" : ""}`} />
             : this.renderCookieKitPopUp()
+        }
+        {
+          (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && (
+            <button
+              type="button"
+              className="refresh-button"
+              onClick={() => App.refresh()}
+            >
+              Refresh
+            </button>
+          )
         }
       </div>
     );
