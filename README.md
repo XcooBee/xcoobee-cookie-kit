@@ -30,6 +30,7 @@ When you subscribe to XcooBee you can also specify:
 
 - your campaignId
 - company logo
+- cssAutoLoad
 
 A `campaignId` is needed for the XCK to communicate with XcooBee and allow management of consents. Please visit [XcooBee](https://www.xcoobee.com) if you need to create an account. Without it the XCK will work in offline mode.
 
@@ -69,6 +70,23 @@ All of the display elements can be overridden, however, we can not support non-s
 
 [TODO: provide example]
 
+XCK will call target handler with JSON object as function parameter
+
+
 ## How to use Cookie Kit with Request/Response systems like PHP, JSP, etc.
 
 [TODO: provide example]
+
+- specify target url
+- XCK will POST with json body content after user completes selection or cookie types can be determined
+
+Example JSON body
+```json
+{
+  "application": true,
+  "user": true,
+  "statistics": false,
+  "marketing": false 
+}
+
+```
