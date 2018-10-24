@@ -51,12 +51,15 @@ A `campaignId` is needed for the XCK to communicate with XcooBee and allow manag
     expirationTime: <Number> (in seconds),
     companyLogoUrl: <String>,
     cookieHandler: <Function>
-    textMessage: <String>, <JSON>
+    textMessage: <String>, <JSON>,
+    cssAutoLoad: <Boolean>
   });
 </script>
 ```
 
 ## CSS Reference
+
+<link rel="stylesheet" href="{URL}/xcoobee-cookie-kit.min.css">
 
 All of the display elements can be overridden, however, we can not support non-standard CSS values.
 
