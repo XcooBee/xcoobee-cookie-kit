@@ -246,7 +246,7 @@ For example if your handler function is named `cookieHandler` and the  object is
 
 ```
 
-Sampe function for cookieHandler function process flow:
+Sample cookieHandler function:
 
 ```JavaScript
 
@@ -267,7 +267,6 @@ function cookieHandler(cookieObject) {
       // ...
     };
 
-
     if (cookieObject.statistics) {
       // set site statistics gathering cookies here
       // ...
@@ -275,7 +274,6 @@ function cookieHandler(cookieObject) {
       // remove site statistics gathering cookies here
       // ...
     };
-
 
     if (cookieObject.advertising) {
       // set advertising and marketing and tracking cookies here
@@ -290,7 +288,9 @@ function cookieHandler(cookieObject) {
 ```
 
 
-## How to use Cookie Kit with Request/Response systems like PHP, JSP, etc.
+## How to use Cookie Kit with Request/Response systems like PHP, JSP, .net, CFML etc.
+
+The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need an web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
 
 [TODO: provide example. We should make this like the SDK so they can use the same page for both. The following example does not match SDK pattern and is simplified. Use POST example ask Volodymyr].
 
@@ -314,15 +314,17 @@ The possible types are:
 
 ## How use the XCK with XcooBee subscription and high security data exchange
 
-When you have a XcooBee subscription your website can also receive updates regarding the granted consent when the user if not directly online via the XcooBee network. This communication will occur through webhooks and higher level of encryption.
+When you have a XcooBee subscription your website can also receive updates regarding the granted consent when the user if not directly online via the XcooBee network. This communication will occur through webhooks and higher level of encryption. 
+
+As an alternative to direct HTTP POST, your subscription to the XcooBee network also allows event polling so you can use the XCK for sites that are not directly accessible via the internet, i.e. intranet sites or sites under development.
 
 You need to be able to process messages from XcooBee that are using PGP encryption on top of HTTPS/TLS. 
-The message pattern is the same as described above in PHP, JSP examples. 
+The message pattern is the same as described previous section. 
 
-You can use one of the XcooBee SDKs for this:
+You can use one of the XcooBee SDKs for simplifying this interaction:
 
 - [XcooBee JavaScript SDK](https://github.com/XcooBee/xcoobee-js-sdk)
 - [XcooBee PHP SDK](https://github.com/XcooBee/xcoobee-php-sdk)
 
-This is not a required interaction. Users will update your site when they visit next and are interacting with your XCK pop-up transparently.
+The use of the XcooBee network is not a required interaction. Users will transparently update their cookie preferences with your site every time they visit. 
 
