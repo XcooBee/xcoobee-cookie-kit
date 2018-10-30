@@ -1,9 +1,7 @@
+import Cookie from "./Cookie";
+
 export default class Campaign {
-  _id = null;
-
-  _name = null;
-
-  _description = null;
+  _reference = null;
 
   _privacyUrl = null;
 
@@ -11,35 +9,22 @@ export default class Campaign {
 
   _position = "left_bottom";
 
-  _customCss = null;
+  _cookies = [];
 
-  _dataTypes = [];
-
-  constructor(campaign) {
-    if (!campaign) {
+  constructor(config) {
+    if (!config) {
       return;
     }
 
-    this._id = campaign.id;
-    this._name = campaign.name;
-    this._description = campaign.description;
-    this._privacyUrl = campaign.privacyUrl;
-    this._termsUrl = campaign.termsUrl;
-    this._position = campaign.position;
-    this._customCss = campaign.customCss;
-    this._dataTypes = campaign.dataTypes;
+    this._reference = config.campaignReference;
+    this._privacyUrl = config.privacyUrl;
+    this._termsUrl = config.termsUrl;
+    this._position = config.position;
+    this._cookies = config.cookiesDisplayOptions.map(item => new Cookie(item));
   }
 
-  get id() {
-    return this._id;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get description() {
-    return this._description;
+  get reference() {
+    return this._reference;
   }
 
   get privacyUrl() {
@@ -54,11 +39,7 @@ export default class Campaign {
     return this._position;
   }
 
-  get customCss() {
-    return this._customCss;
-  }
-
-  get dataTypes() {
-    return this._dataTypes;
+  get cookies() {
+    return this._cookies;
   }
 }

@@ -2,18 +2,8 @@ import { Component } from "react";
 
 import CookieKitPopup from "./component/CookieKitPopup";
 import Campaign from "./model/Campaign";
-import { xcoobeeCookiesKey, animations, tokenKey, euCountries } from "./utils";
-
-const testCampaign = {
-  id: `${Date.now()}-${Math.random()}`,
-  name: "https://lviv.com/",
-  position: "left_bottom",
-  description: "",
-  privacyUrl: "https://lviv.com/policy",
-  termsUrl: "https://lviv.com/terms",
-  customCss: "css",
-  dataTypes: ["application_cookie", "usage_cookie", "statistics_cookie"],
-};
+import { xcoobeeCookiesKey, animations, tokenKey, euCountries, cookieTypes } from "./utils";
+import graphQLRequest from "./utils/graphql";
 
 export default class App extends Component {
   // Remove cookies preferences and auth token from local storage (for easier testing)
@@ -27,83 +17,144 @@ export default class App extends Component {
     super(props);
 
     this.state = {
+      loading: true,
       isShown: true,
       isOpen: false,
-      isOffline: !Xcoobee.config.campaignId,
+      isOffline: !Xcoobee.config.campaignReference,
       animation: animations.noAnimation,
       pulsing: false,
       countryCode: "US",
+      campaign: new Campaign(Xcoobee.config),
     };
 
+    this.timer = null;
+
+    this.fetchCrowdAI();
+  }
+
+  setAnimation(countryCode, crowdAI) {
+    const { campaign } = this.state;
+    const savedPreferences = localStorage[xcoobeeCookiesKey];
+
+    if (crowdAI) {
+      return this.startPulsing(animations.crowdIntelligence);
+    }
+    if (savedPreferences) {
+      campaign.cookies.forEach((cookie) => {
+        const cookieType = cookieTypes.find(type => type.key === cookie.type);
+
+        cookie.checked = JSON.parse(savedPreferences)[cookieType.id];
+      });
+
+      return this.startPulsing(animations.knownSite);
+    }
+    if (!euCountries.includes(countryCode) && !localStorage[tokenKey]) {
+      return this.startPulsing(animations.euTraffic);
+    }
+    if (localStorage[tokenKey] && Xcoobee.config.campaignReference) {
+      return this.startPulsing(animations.defaultOptions);
+    }
+    return animations.noAnimation;
+  }
+
+  fetchCrowdAI() {
+    const { campaignName, campaignReference } = Xcoobee.config;
+
+    if (campaignName && campaignReference && localStorage[tokenKey]) {
+      const query = `query CrowdRating($campaign_name: String!) {
+        crowd_rating(campaign_name: $campaign_name) {
+          cookie_type value
+        }
+      }`;
+
+      graphQLRequest(query, { campaign_name: campaignName }, localStorage[tokenKey])
+        .then((res) => {
+          const { campaign } = this.state;
+
+          campaign.cookies.forEach((cookie) => {
+            cookie.checked = res.crowd_rating.find(item => item.cookie_type === cookie.type).value >= 0.8;
+          });
+          this.fetchLocation(true);
+        });
+    } else {
+      this.fetchLocation();
+    }
+  }
+
+  fetchLocation(crowdAI) {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
-        this.setState({ countryCode: res.countryCode });
-        this.setAnimation(res.countryCode);
+        this.setState({ countryCode: res.countryCode, loading: false });
+        this.setAnimation(res.countryCode, crowdAI);
+        this.startTimer();
       });
-
-    setTimeout(() => this.setState({ isShown: false, isOpen: false }), Xcoobee.config.expirationTime * 1000 || 60000);
-  }
-
-  setAnimation(countryCode) {
-    if (localStorage[xcoobeeCookiesKey]) {
-      return this.startPulsing(animations.knownSite);
-    }
-    if (localStorage[tokenKey] && Xcoobee.config.campaignId) {
-      return this.startPulsing(animations.defaultOptions);
-    }
-    if (euCountries.includes(countryCode)) {
-      return this.startPulsing(animations.euTraffic);
-    }
-    return animations.noAnimation;
   }
 
   startPulsing(animation) {
     this.setState({ animation });
     setTimeout(() => this.setState({ pulsing: true }), 1000);
     setTimeout(() => this.setState({ pulsing: false }), 4500);
+    setTimeout(() => this.setState({ animation: animation.noAnimation }), 6000);
   }
 
-  renderCookieKitPopUp() {
-    const { isOpen, isOffline, countryCode } = this.state;
+  startTimer() {
+    const timeOut = Xcoobee.config.expirationTime;
 
-    return isOpen
-      ? (
-        <CookieKitPopup
-          data={isOffline ? Xcoobee.config : new Campaign(testCampaign)}
-          onClose={submit => this.setState({ isOpen: false, isShown: !submit })}
-          isOffline={isOffline}
-          countryCode={countryCode}
-        />
-      )
-      : (
-        <button
-          type="button"
-          className="cookie-icon-container"
-          onClick={() => this.setState({ isOpen: true })}
-        >
-          <img
-            src={`${xcoobeeConfig.domain}/cookie.svg`}
-            alt="cookie"
-            className="cookie-icon"
-          />
-        </button>
-      );
+    if (timeOut && timeOut > 0) {
+      this.timer = setTimeout(() => this.setState({ isShown: false }), timeOut * 1000);
+    }
+  }
+
+  handleOpen(animation) {
+    if (animation) {
+      return;
+    }
+
+    this.setState({ isOpen: true });
+    clearTimeout(this.timer);
+  }
+
+  handleClose(xcoobeeCookies) {
+    const { campaign } = this.state;
+
+    if (xcoobeeCookies) {
+      campaign.cookies.forEach((cookie) => {
+        const cookieType = cookieTypes.find(type => type.key === cookie.type);
+
+        cookie.checked = xcoobeeCookies[cookieType.id];
+      });
+    }
+    this.setState({ isOpen: false });
+    this.startTimer();
   }
 
   render() {
-    const { isShown, isOpen, isOffline, animation, pulsing } = this.state;
-    const position = isOffline ? Xcoobee.config.position : testCampaign.position;
+    const { isShown, isOpen, animation, pulsing, isOffline, countryCode, campaign, loading } = this.state;
 
-    return isShown && (
+    return !loading && (
       <div
-        className={`container ${position || "left_bottom"}`}
+        className={`container ${Xcoobee.config.position || "left_bottom"} ${!isShown ? "transparent" : ""}`}
         style={{ width: isOpen ? "auto" : "80px" }}
       >
         {
-          animation
-            ? <div className={`animated-cookie-icon ${animation ? `${animation}` : ""} ${pulsing ? "pulsing" : ""}`} />
-            : this.renderCookieKitPopUp()
+          isOpen
+            ? (
+              <CookieKitPopup
+                data={campaign}
+                onClose={cookies => this.handleClose(cookies)}
+                isOffline={isOffline}
+                countryCode={countryCode}
+              />
+            )
+            : (
+              <button
+                type="button"
+                onClick={() => this.handleOpen(pulsing)}
+              >
+                <div className={`cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
+              </button>
+            )
         }
         {
           (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && (

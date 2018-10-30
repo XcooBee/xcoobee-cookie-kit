@@ -3,20 +3,14 @@ import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
 
 import Campaign from "../model/Campaign";
+
 import { cookieTypes, locales, tokenKey, links } from "../utils";
 import renderText from "../utils/locales/renderText";
+import graphQLRequest from "../utils/graphql";
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
-    data: PropTypes.shape({
-      id: PropTypes.any,
-      name: PropTypes.string,
-      position: PropTypes.string,
-      description: PropTypes.string,
-      privacyUrl: PropTypes.string,
-      termsUrl: PropTypes.string,
-      dataTypes: PropTypes.array,
-    }),
+    data: Campaign,
     isOffline: PropTypes.bool,
     countryCode: PropTypes.string,
     onClose: PropTypes.func,
@@ -34,12 +28,20 @@ export default class CookieKitPopup extends Component {
     super(props);
 
     const { data, isOffline } = this.props;
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (data.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
 
     this.state = {
-      checked: [],
+      checked,
       selectedLocale: "EN",
       isShown: false,
-      cookies: isOffline ? cookieTypes : cookieTypes.filter(type => data.dataTypes.includes(type.key)),
+      cookies: isOffline
+        ? cookieTypes : cookieTypes.filter(type => data.cookies.map(cookie => cookie.type).includes(type.key)),
       isAuthorized: !!localStorage[tokenKey],
     };
 
@@ -48,10 +50,10 @@ export default class CookieKitPopup extends Component {
   }
 
   onMessage(event) {
-    const { accessToken } = event.data;
+    const { token } = event.data;
 
-    if (accessToken) {
-      localStorage.setItem(tokenKey, accessToken);
+    if (token) {
+      localStorage.setItem(tokenKey, token);
       this.setState({ isAuthorized: true });
     }
   }
@@ -83,17 +85,51 @@ export default class CookieKitPopup extends Component {
   }
 
   handleSubmit() {
-    const { cookies, checked } = this.state;
-    const { onClose } = this.props;
+    const { checked, isAuthorized } = this.state;
+    const { data, onClose, isOffline } = this.props;
 
-    cookies.forEach((cookie) => {
-      if (checked.includes(cookie.id)) {
-        Xcoobee.cookies[cookie.model].allowed = true;
+    const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
+      add_consents(campaign_reference: $campaign_reference) {
+        consent_cursor
       }
-    });
+    }`;
+    const modifyConsentQuery = `mutation ModifyConsents($config: ConsentConfig) {
+      modify_consents(config: $config) {
+        data {
+            consent_cursor
+          }
+      }
+    }`;
+    const xcoobeeCookies = [];
 
-    localStorage.setItem("xcoobeeCookies", JSON.stringify(Xcoobee.cookies));
-    onClose(true);
+    cookieTypes.forEach(type => xcoobeeCookies.push(checked.includes(type.id)));
+    localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
+
+    if (!isOffline && isAuthorized) {
+      graphQLRequest(addConsentQuery, { campaign_reference: data.reference }, localStorage[tokenKey])
+        .then((res) => {
+          if (!res) {
+            return;
+          }
+
+          const consentCursor = res.add_consents[0].consent_cursor;
+          const dataTypes = cookieTypes.filter(cookie => checked.includes(cookie.id)).map(cookie => cookie.key);
+          const config = {
+            consents: {
+              consent_cursor: consentCursor,
+              response: "approved",
+              is_data_request: false,
+              data: {
+                data_types: dataTypes,
+              },
+            },
+          };
+
+          graphQLRequest(modifyConsentQuery, { config }, localStorage[tokenKey]);
+        });
+    }
+
+    onClose(xcoobeeCookies);
   }
 
   render() {
@@ -104,10 +140,14 @@ export default class CookieKitPopup extends Component {
       <div className="cookie-kit-popup">
         <div className="header">
           <div className="logo">
-            <img
-              src={Xcoobee.config.companyLogoUrl}
-              alt="company-logo"
-            />
+            {
+              !isOffline && (
+                <img
+                  src={Xcoobee.config.companyLogoUrl}
+                  alt="company-logo"
+                />
+              )
+            }
           </div>
           <div className="title">{renderText("CookieKit.Title", selectedLocale)}</div>
           <button
@@ -120,7 +160,7 @@ export default class CookieKitPopup extends Component {
         </div>
         <div className="text-container">
           <div className="text">
-            {renderText("CookieKit.PopupMessage", selectedLocale)}
+            {Xcoobee.config.textMessage || renderText("CookieKit.PopupMessage", selectedLocale)}
           </div>
           <div className="locale-container">
             <div className="locale">
@@ -155,7 +195,6 @@ export default class CookieKitPopup extends Component {
             <div className="cookie">
               <div className="block block-lg">
                 <div>
-                  {cookie.amount}
                   <input
                     id={`checkbox-${cookie.id}`}
                     type="checkbox"
@@ -167,9 +206,17 @@ export default class CookieKitPopup extends Component {
                     className="check-box"
                   />
                 </div>
-                <div>{`COOKIE${cookie.amount > 1 ? "S" : ""}`}</div>
+                <div>СOOKIE</div>
               </div>
-              <div className="cookie-title">{renderText(cookie.localeKey, selectedLocale)}</div>
+              <div className="cookie-title">
+                <a
+                  href={cookie.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {renderText(cookie.localeKey, selectedLocale)}
+                </a>
+              </div>
             </div>
           ))}
         </div>
@@ -209,7 +256,7 @@ export default class CookieKitPopup extends Component {
           </div>
         </div>
         <div className="links">
-          { isOffline && (isAuthorized
+          { !isOffline && (isAuthorized
             ? (
               <a
                 href={links.manage}
