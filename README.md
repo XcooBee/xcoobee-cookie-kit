@@ -44,9 +44,34 @@ The XCK is initialized with a set of parameters that determine the behavior of t
 The following is a list of parameters the XCK can process:
 
 
+### cookiesDisplayOptions
+
+This is an array of objects of cookie types and subparameters for each one used on your sites for which you wish to obtain the users' consent before using them. 
+
+#### type `string`
+
+This is one or more of [application|usage|statistics|advertising]. The default is `application`.
+If a cookie type is not defined it will not be shown.
+
+#### checked `boolean`
+
+Whether the cookie type option is checked by default for the user to accept.
+
+
+```json
+cookiesDisplayOptions: [
+       { type: "application",  checked: true },       
+       { type: "usage", checked: false },
+       { type: "advertising", checked: false }
+]
+```
+
+Default to only ask `application` cookie consent: `{ type: "application",  checked: false }`
+
+
 ### cookieHandler
 
-If you are using a single page application or a JavaScript based solution for setting cookies you need to specify a cookie handler function, e.g.  `handleCookies(<array>)`. The XCK will call this function with the user's preferences or defaults as needed. This function should either remove or set the cookies based on the categories allowed by user.
+If you are using a single page application or a JavaScript based solution for setting cookies you need to specify a cookie handler function, e.g.  `handleCookies(<object>)`. The XCK will call this function with the user's preferences or defaults as needed. This function should either remove or set the cookies based on the categories allowed by user.
 
 This is related to `targetUrl`. One of `cookieHandler` or `targetUrl` is required to be specified for XCK to start.
 
@@ -56,18 +81,9 @@ See more information in section `How to Use the XcooBee Cookie Kit` in this docu
 cookieHandler: handleCookies
 ```
 
-### cookieTypes
+### expirationTime `integer`
 
-This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
-
-```json
-  cookieTypes: ["application"]
-```
-
-
-### expirationTime
-
-This is the time in ms we will display the floating cookie icon. After the expiration time has been reached the floating cookie icon will be removed from display. This time resets every time the icon is clicked and a pop-up dialog is displayed.
+This is the time in seconds we will display the floating cookie icon. After the expiration time has been reached the floating cookie icon will be removed from display. This time resets every time the icon is clicked and a pop-up dialog is displayed.
 
 When set to zero, the icon will not be removed.
 
@@ -78,7 +94,7 @@ expirationTime: 0
 
 ```
 
-### position
+### position `list`
 
 The position parameter is one of [left_bottom|left_top|right_bottom|right_top] and indicates the position from which the XCK displays its window or floating cookie icon. Default: left_bottom
 
@@ -86,7 +102,7 @@ The position parameter is one of [left_bottom|left_top|right_bottom|right_top] a
 position: "left_bottom"
 ```
 
-### privacyUrl
+### privacyUrl `string` `required`
 
 This is the page the user will be directed to to review your Privacy Policy. The cookie kit will not start without data for Privacy Policy.
 
@@ -95,7 +111,7 @@ termsUrl: "https://mysite.com/privacy"
 ```
 
 
-### targetUrl
+### targetUrl `string`
 
 If you are using Request/Response technology based site, for example PHP, JSP, CFML and you set the cookies in your code, the XCK will make a call via HTTP GET to the targetUrl you specify and a URL parameter payload with the user's preferences for cookies. 
 
@@ -110,7 +126,7 @@ targetUrl: "https://mysite.com/setCookies"
 ```
 
 
-### termsUrl
+### termsUrl `string` `required`
 
 This is the page the user will be directed to to review your Terms of Service. The cookie kit will not start without valid terms of service.
 
@@ -119,9 +135,9 @@ termsUrl: "https://mysite.com/terms"
 ```
 
 
-### textMessage
+### textMessage `string` `required`
 
-This is the message we will display to the user when asking for cookie preferences. This message can be formatted as string or as JSON. When using JSON you can specify the message in different languages. The XCK will make an attempt to determine the default language based on browser settings and fallback to US English if it cannot make a determination.
+This is the message we will display to the user when asking for cookie preferences. This message can be formatted as string or as JSON. When using JSON you can specify the message in different languages. The XCK will make an attempt to determine the default language based on browser settings and fallback to US English if it cannot make a determination. The cookie kit will not start without a consent message to display to users.
 
 Example of text entry in single language:
 
@@ -138,7 +154,7 @@ Example of text entry in multiple languages:
 
 ## Initialization Parameters with XcooBee subscription
 
-### campaignId
+### campaignReference
 
 This connects your campaignId to the XCK. The XcooBee campaign wizard will generate it for you.
 
@@ -147,10 +163,15 @@ This connects your campaignId to the XCK. The XcooBee campaign wizard will gener
 The XCK can display your company logo. Your cookie campaign options will have the ability to upload a logo and will make available to the XCK.
 This parameter is only available when subscripting to XcooBee.
 
-
-### CSS override
+### CSS override 
 
 If you wish to use your own CSS, the XcooBee code generator will set this based on your selection for your Cookie Campaign. Your campaign wizard will guide you through the process.
+
+
+### campaignName
+
+Your campaign name in XcooBee needs to match your website name that is hosting the XCK.
+
 
 
 
@@ -167,7 +188,7 @@ If you wish to use your own CSS, the XcooBee code generator will set this based 
 <script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/xcoobee-cookie-kit.min.js"></script>
 <script type="text/javascript">
   Xcoobee.initialize({
-    campaignId: <String>,
+    campaignReference: <String>,
     companyLogo: <String>,
     cssAutoLoad: <Boolean>,
     position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
@@ -193,18 +214,17 @@ All of the display elements can be overridden, however, we can not support non-s
 
 ## How to use Cookie Kit in Single Page Application (SPA)
 
-When using a SPA you can specify a JavaScript handler that can receive the result of the user interaction for cookie consent. Thereafter you need to load the scripts and/or set the cookies directly based on the interaction.
+When using a SPA you can specify a JavaScript handler that can receive the result of the user interaction for cookie consent. Thereafter you need to load the scripts and/or set the cookies directly based on the user's interaction.
 
-Since this can change, you also need to be able to remove the cookies when the user changes their mind.
+Since this can change, you also need to be able to remove the cookies when users change their mind.
 
-When using a XcooBee subscription your application will also receive 
+In both cases, the XCK will invoke your handler function after the user has completed their interaction with XCK.
 
+XCK will call target handler with JSON object as function parameter. Users preferences are in the first function argument.
 
-XCK will call target handler with JSON object as function parameter. You specify this 
+The function argument object will be a JS Object.
 
-The function argument object will be a JSON.
-
-Example JSON object:
+Example JS object:
 
 ```json
 {
@@ -216,24 +236,68 @@ Example JSON object:
 
 ```
 
-Thus the call signature will be: `handlerFunction(jsonObject)`.
+Thus the call signature will be: `handlerFunction(cookieObject)`.
 
-For example if your handler function is named `cookieHandler` and the JSON object is named `userCookiePreferences` this would be the call:
+For example if your handler function is named `cookieHandler` and the  object is named `userCookiePreferences` this would be the call:
 
 ```JavaScript
 
-  return cookieHandler(userCookiePreferences)
+  cookieHandler(userCookiePreferences);
+
+```
+
+Sampe function for cookieHandler function process flow:
+
+```JavaScript
+
+function cookieHandler(cookieObject) {
+    if (cookieObject.application) {
+      // set required cookies here
+      // ...
+    } else {
+      // remove required cookie here
+      // ...
+    };
+
+    if (cookieObject.usage) {
+      // set user personalization cookies here
+      // ...
+    } else {
+      // remove user personalization cookies here
+      // ...
+    };
+
+
+    if (cookieObject.statistics) {
+      // set site statistics gathering cookies here
+      // ...
+    } else {
+      // remove site statistics gathering cookies here
+      // ...
+    };
+
+
+    if (cookieObject.advertising) {
+      // set advertising and marketing and tracking cookies here
+      // ...
+    } else {
+      // remove advertising and marketing and tracking cookies here
+      // ...
+    };
+
+}
 
 ```
 
 
-
 ## How to use Cookie Kit with Request/Response systems like PHP, JSP, etc.
 
-[TODO: provide example. We should make this like the SDK so they can use the same page for both. The following example does not match SDK pattern and is simplified. Use POST example ask Volodymyr]
+[TODO: provide example. We should make this like the SDK so they can use the same page for both. The following example does not match SDK pattern and is simplified. Use POST example ask Volodymyr].
+
+[Will be a webhook post HTTP POST]
 
 - specify target url
-- XCK will use an HTTP GET with URL parameter for each cookie type and true or false as value
+- XCK will use an HTTP POST with URL parameter for each cookie type and true or false as value
 
 The possible types are:
   - application
