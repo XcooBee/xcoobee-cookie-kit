@@ -18,19 +18,18 @@ You activate the XCK by embedding it into your site via `<script>` tags. In addi
 
 Some of these include:
 
-
 - position of the hover button
 - terms url
 - cookie policy url
 - expiration time for the widget
 - text message
 - cookie handling function
-- siteDefaults
+- site defaults
 - target Url
 
 When you subscribe to XcooBee you can also specify:
 
-- your campaignId
+- your campaign reference
 - company logo
 - cssAutoLoad
 
@@ -43,31 +42,15 @@ The XCK is initialized with a set of parameters that determine the behavior of t
 
 The following is a list of parameters the XCK can process:
 
+### checkByDefaultTypes
 
-### cookiesDisplayOptions
+This is an array of strings of cookie types used on your sites by default. This is one or more of [application_cookie|usage_cookie|statistics_cookie|advertising_cookie]. The default is empty array.
 
-This is an array of objects of cookie types and subparameters for each one used on your sites for which you wish to obtain the users' consent before using them. 
-
-#### type `string`
-
-This is one or more of [application|usage|statistics|advertising]. The default is `application`.
-If a cookie type is not defined it will not be shown.
-
-#### checked `boolean`
-
-Whether the cookie type option is checked by default for the user to accept.
-
+Example:
 
 ```json
-cookiesDisplayOptions: [
-       { type: "application",  checked: true },       
-       { type: "usage", checked: false },
-       { type: "advertising", checked: false }
-]
+  checkByDefaultTypes: ["application_cookie"]
 ```
-
-Default to only ask `application` cookie consent: `{ type: "application",  checked: false }`
-
 
 ### cookieHandler
 
@@ -110,6 +93,12 @@ This is the page the user will be directed to to review your Privacy Policy. The
 termsUrl: "https://mysite.com/privacy"
 ```
 
+### requestDataTypes
+ This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application_cookie|usage_cookie|statistics_cookie|advertising_cookie]. The default is `application_cookie`.
+
+ ```json
+  requestDataTypes: ["application_cookie"]
+```
 
 ### targetUrl `string`
 
@@ -134,7 +123,6 @@ This is the page the user will be directed to to review your Terms of Service. T
 termsUrl: "https://mysite.com/terms"
 ```
 
-
 ### textMessage `string` `required`
 
 This is the message we will display to the user when asking for cookie preferences. This message can be formatted as string or as JSON. When using JSON you can specify the message in different languages. The XCK will make an attempt to determine the default language based on browser settings and fallback to US English if it cannot make a determination. The cookie kit will not start without a consent message to display to users.
@@ -148,8 +136,14 @@ textMessage: "This site uses cookies. Please select the cookie types that you wi
 
 Example of text entry in multiple languages:
 
-[need json example]
-
+```json
+{
+  "en-us": "English text",
+  "de-de": "German text",
+  "es-419": "Spanish text",
+  "fr-fr": "French text",
+}
+```
 
 
 ## Initialization Parameters with XcooBee subscription
@@ -167,11 +161,9 @@ This parameter is only available when subscripting to XcooBee.
 
 If you wish to use your own CSS, the XcooBee code generator will set this based on your selection for your Cookie Campaign. Your campaign wizard will guide you through the process.
 
-
 ### campaignName
 
 Your campaign name in XcooBee needs to match your website name that is hosting the XCK.
-
 
 
 
@@ -189,16 +181,19 @@ Your campaign name in XcooBee needs to match your website name that is hosting t
 <script type="text/javascript">
   Xcoobee.initialize({
     campaignReference: <String>,
-    companyLogo: <String>,
-    cssAutoLoad: <Boolean>,
-    position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
-    termsUrl: <String>,
-    privacyUrl: <String>,
-    expirationTime: <Number> (in seconds),    
+    campaignName: <String>,
+    checkByDefaultTypes: <Array>[application_cookie|usage_cookie|statistics_cookie|advertising_cookie]
+    companyLogo: <Base64>,
     cookieHandler: <Function>
-    textMessage: <String>, <JSON>,
-    cookieTypes: <Array>[application|usage|statistics|advertising]    
-    siteDefaults: <Array> [false,true,false,true]
+    cssAutoLoad: <Boolean>,
+    expirationTime: <Number> (in seconds),
+    position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
+    privacyUrl: <String>,
+    requestDataTypes: <Array>[application_cookie|usage_cookie|statistics_cookie|advertising_cookie],
+    targetUrl: <String>,
+    termsUrl: <String>,
+    testMode: <Boolean>,
+    textMessage: <String>, <JSON>
   });
 </script>
 ```
@@ -282,7 +277,6 @@ function cookieHandler(cookieObject) {
       // remove advertising and marketing and tracking cookies here
       // ...
     };
-
 }
 
 ```
