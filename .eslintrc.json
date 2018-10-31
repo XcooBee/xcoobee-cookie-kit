@@ -17,6 +17,7 @@
         "object-curly-newline": [0],
         "jsx-a11y/label-has-associated-control": [0],
         "jsx-a11y/label-has-for": [0],
+        "no-param-reassign": [0],
         "max-len": ["error", { "code": 120, "ignoreUrls": true }]
     },
     "parser": "babel-eslint"

@@ -44,6 +44,8 @@ $duration: .2s;
   .container {
     position: fixed;
     z-index: 100000;
+    opacity: 1;
+    transition: opacity 1s ease-out;
 
     &.left_top {
       top: 8px;
@@ -64,6 +66,10 @@ $duration: .2s;
       bottom: 8px;
       left: 8px;
     }
+
+    &.transparent {
+      opacity: 0;
+    }
   }
 
   .cookie-icon-container {
@@ -74,14 +80,9 @@ $duration: .2s;
     font: inherit;
     cursor: pointer;
     outline: inherit;
-
-    > .cookie-icon {
-      width: 60px;
-      cursor: pointer;
-    }
   }
 
-  .animated-cookie-icon {
+  .cookie-icon {
     background-repeat: no-repeat;
     background-position: left top;
     position: relative;
@@ -90,6 +91,8 @@ $duration: .2s;
   }
 
   .pulsing {
+    cursor: default;
+
     &:before {
       content: '';
       position: absolute;
@@ -113,7 +116,11 @@ $duration: .2s;
     }
   }
 
-  .animated-cookie-icon.blue {
+  .cookie-icon.default {
+    background-image: url(../assets/cookie.svg);
+  }
+
+  .cookie-icon.blue {
     animation: blue-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -136,7 +143,30 @@ $duration: .2s;
     }
   }
 
-  .animated-cookie-icon.green {
+  .cookie-icon.blue {
+    animation: blue-cookie 5s;
+    background-image: url(../assets/cookie.svg);
+
+    @keyframes blue-cookie {
+      30%, 90% {
+        background-image: url(../assets/cookie-blue.svg);
+      }
+
+      100% {
+        background-image: url(../assets/cookie.svg);
+
+        &:before {
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+        }
+      }
+    }
+
+    &:before {
+      background-color: $blue-cookie;
+    }
+  }
+
+  .cookie-icon.green {
     animation: green-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -159,7 +189,7 @@ $duration: .2s;
     }
   }
 
-  .animated-cookie-icon.yellow {
+  .cookie-icon.yellow {
     animation: yellow-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -182,7 +212,7 @@ $duration: .2s;
     }
   }
 
-  .animated-cookie-icon.red {
+  .cookie-icon.red {
     animation: red-cookie 5s;
     background-image: url(../assets/cookie.svg);
 
@@ -357,6 +387,12 @@ $duration: .2s;
         > .cookie-title {
           font-size: 14px;
           text-align: center;
+
+          a {
+            color: inherit;
+            text-decoration: none;
+            cursor: help;
+          }
         }
       }
     }

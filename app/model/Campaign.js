@@ -1,9 +1,9 @@
+import Cookie from "./Cookie";
+
 export default class Campaign {
-  _id = null;
+  _reference = null;
 
   _name = null;
-
-  _description = null;
 
   _privacyUrl = null;
 
@@ -11,35 +11,38 @@ export default class Campaign {
 
   _position = "left_bottom";
 
-  _customCss = null;
+  _cookies = [];
 
-  _dataTypes = [];
+  _targetUrl = null;
 
-  constructor(campaign) {
-    if (!campaign) {
+  _companyLogo = null;
+
+  _cookieHandler = () => null;
+
+  _textMessage = "";
+
+  constructor(config) {
+    if (!config) {
       return;
     }
 
-    this._id = campaign.id;
-    this._name = campaign.name;
-    this._description = campaign.description;
-    this._privacyUrl = campaign.privacyUrl;
-    this._termsUrl = campaign.termsUrl;
-    this._position = campaign.position;
-    this._customCss = campaign.customCss;
-    this._dataTypes = campaign.dataTypes;
+    this._reference = config.campaignReference;
+    this._name = config.campaignName;
+    this._privacyUrl = config.privacyUrl;
+    this._termsUrl = config.termsUrl;
+    this._position = config.position;
+    this._targetUrl = config.targetUrl;
+    this._companyLogo = config.companyLogo;
+    this._textMessage = config.textMessage;
+    this._cookieHandler = config.cookieHandler || (() => null);
+    this._cookies = config.requestDataTypes.map(type => new Cookie({
+      type,
+      checked: config.checkByDefaultTypes.includes(type),
+    }));
   }
 
-  get id() {
-    return this._id;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get description() {
-    return this._description;
+  get reference() {
+    return this._reference;
   }
 
   get privacyUrl() {
@@ -54,11 +57,23 @@ export default class Campaign {
     return this._position;
   }
 
-  get customCss() {
-    return this._customCss;
+  get cookies() {
+    return this._cookies;
   }
 
-  get dataTypes() {
-    return this._dataTypes;
+  get targetUrl() {
+    return this._targetUrl;
+  }
+
+  get companyLogo() {
+    return this._companyLogo;
+  }
+
+  get textMessage() {
+    return this._textMessage;
+  }
+
+  get cookieHandler() {
+    return this._cookieHandler;
   }
 }

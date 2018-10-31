@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "../App";
 import XcoobeeCookies from "./XcoobeeCookies";
 
-import { cookieTypes, cssHref } from "../utils";
+import { cookieTypes, cssHref, defaultConfig } from "../utils";
 
 export default class Xcoobee {
   _cookies = new XcoobeeCookies();
@@ -27,10 +27,12 @@ export default class Xcoobee {
       };
     });
 
-    this.__config = config;
+    const CONFIG = Object.assign(defaultConfig, config);
+
+    this.__config = CONFIG;
     this._cookies = new XcoobeeCookies(defaultCookies);
 
-    if (config && config.cssAutoLoad) {
+    if (CONFIG.cssAutoLoad) {
       const fileRef = document.createElement("link");
 
       fileRef.setAttribute("rel", "stylesheet");

@@ -1,14 +1,13 @@
 import fetch from "isomorphic-fetch";
 
-import { apiUrl } from ".";
-
-export default function graphQLRequest(query, variables) {
+export default function graphQLRequest(query, variables, token) {
   const init = {
     method: "post",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      Authorization: token,
     },
     body: JSON.stringify({
       query,
@@ -16,7 +15,7 @@ export default function graphQLRequest(query, variables) {
     }),
   };
 
-  return fetch(`${apiUrl}/graphql`, init)
+  return fetch(`${xcoobeeConfig.apiUrl}/graphql`, init)
     .then((response) => {
       if (response.status >= 200 && response.status < 400) {
         return Promise.resolve(response);
