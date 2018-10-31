@@ -49,7 +49,7 @@ const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
 const links = {
   poweredBy: "https://www.xcoobee.com",
-  login: "http://testapp.xcoobee.net/auth/minlogin",
+  login: "https://testapp.xcoobee.net/auth/minlogin",
   manage: "https://testapp.xcoobee.net/user/consentCenter/consent",
 };
 const animations = {
