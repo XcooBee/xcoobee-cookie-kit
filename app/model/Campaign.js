@@ -3,6 +3,8 @@ import Cookie from "./Cookie";
 export default class Campaign {
   _reference = null;
 
+  _name = null;
+
   _privacyUrl = null;
 
   _termsUrl = false;
@@ -11,16 +13,32 @@ export default class Campaign {
 
   _cookies = [];
 
+  _targetUrl = null;
+
+  _companyLogo = null;
+
+  _cookieHandler = () => null;
+
+  _textMessage = "";
+
   constructor(config) {
     if (!config) {
       return;
     }
 
     this._reference = config.campaignReference;
+    this._name = config.campaignName;
     this._privacyUrl = config.privacyUrl;
     this._termsUrl = config.termsUrl;
     this._position = config.position;
-    this._cookies = config.cookiesDisplayOptions.map(item => new Cookie(item));
+    this._targetUrl = config.targetUrl;
+    this._companyLogo = config.companyLogo;
+    this._textMessage = config.textMessage;
+    this._cookieHandler = config.cookieHandler || (() => null);
+    this._cookies = config.requestDataTypes.map(type => new Cookie({
+      type,
+      checked: config.checkByDefaultTypes.includes(type),
+    }));
   }
 
   get reference() {
@@ -41,5 +59,21 @@ export default class Campaign {
 
   get cookies() {
     return this._cookies;
+  }
+
+  get targetUrl() {
+    return this._targetUrl;
+  }
+
+  get companyLogo() {
+    return this._companyLogo;
+  }
+
+  get textMessage() {
+    return this._textMessage;
+  }
+
+  get cookieHandler() {
+    return this._cookieHandler;
   }
 }

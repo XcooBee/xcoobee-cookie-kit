@@ -1,8 +1,6 @@
 export default class Cookie {
   _type = null;
 
-  _show = false;
-
   _checked = false;
 
   constructor(data) {
@@ -11,16 +9,11 @@ export default class Cookie {
     }
 
     this._type = data.type;
-    this._show = data.show;
     this._checked = data.checked;
   }
 
   get type() {
     return this._type;
-  }
-
-  get show() {
-    return this._show;
   }
 
   get checked() {

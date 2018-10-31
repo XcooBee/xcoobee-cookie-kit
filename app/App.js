@@ -2,7 +2,7 @@ import { Component } from "react";
 
 import CookieKitPopup from "./component/CookieKitPopup";
 import Campaign from "./model/Campaign";
-import { xcoobeeCookiesKey, animations, tokenKey, euCountries, cookieTypes } from "./utils";
+import { xcoobeeCookiesKey, animations, tokenKey, euCountries, cookieTypes, requiredFields } from "./utils";
 import graphQLRequest from "./utils/graphql";
 
 export default class App extends Component {
@@ -17,19 +17,21 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      loading: true,
-      isShown: true,
-      isOpen: false,
-      isOffline: !Xcoobee.config.campaignReference,
       animation: animations.noAnimation,
-      pulsing: false,
-      countryCode: "US",
       campaign: new Campaign(Xcoobee.config),
+      countryCode: "US",
+      isOffline: !Xcoobee.config.campaignReference,
+      isOpen: false,
+      isShown: true,
+      loading: true,
+      pulsing: false,
     };
 
     this.timer = null;
+    this.errors = false;
 
     this.fetchCrowdAI();
+    this.checkRequiredFields();
   }
 
   setAnimation(countryCode, crowdAI) {
@@ -55,6 +57,15 @@ export default class App extends Component {
       return this.startPulsing(animations.defaultOptions);
     }
     return animations.noAnimation;
+  }
+
+  checkRequiredFields() {
+    requiredFields.forEach((field) => {
+      if (!Xcoobee.config[field]) {
+        this.errors = true;
+        console.error(`${field} field is required as initialization parameter`);
+      }
+    });
   }
 
   fetchCrowdAI() {
@@ -95,7 +106,7 @@ export default class App extends Component {
     this.setState({ animation });
     setTimeout(() => this.setState({ pulsing: true }), 1000);
     setTimeout(() => this.setState({ pulsing: false }), 4500);
-    setTimeout(() => this.setState({ animation: animation.noAnimation }), 6000);
+    setTimeout(() => this.setState({ animation: animation.noAnimation }), 5000);
   }
 
   startTimer() {
@@ -107,7 +118,7 @@ export default class App extends Component {
   }
 
   handleOpen(animation) {
-    if (animation) {
+    if (animation || this.errors) {
       return;
     }
 
@@ -141,7 +152,7 @@ export default class App extends Component {
           isOpen
             ? (
               <CookieKitPopup
-                data={campaign}
+                campaign={campaign}
                 onClose={cookies => this.handleClose(cookies)}
                 isOffline={isOffline}
                 countryCode={countryCode}
@@ -150,7 +161,7 @@ export default class App extends Component {
             : (
               <button
                 type="button"
-                onClick={() => this.handleOpen(pulsing)}
+                onClick={() => this.handleOpen(animation)}
               >
                 <div className={`cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
               </button>

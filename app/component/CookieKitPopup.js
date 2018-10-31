@@ -10,14 +10,14 @@ import graphQLRequest from "../utils/graphql";
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
-    data: Campaign,
+    campaign: Campaign,
     isOffline: PropTypes.bool,
     countryCode: PropTypes.string,
     onClose: PropTypes.func,
   };
 
   static defaultProps = {
-    data: new Campaign(),
+    campaign: new Campaign(),
     isOffline: false,
     countryCode: "US",
     onClose: () => {
@@ -27,11 +27,11 @@ export default class CookieKitPopup extends Component {
   constructor(props) {
     super(props);
 
-    const { data, isOffline } = this.props;
+    const { campaign, isOffline } = this.props;
     const checked = [];
 
     cookieTypes.forEach((type) => {
-      if (data.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+      if (campaign.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
         checked.push(type.id);
       }
     });
@@ -41,7 +41,7 @@ export default class CookieKitPopup extends Component {
       selectedLocale: "EN",
       isShown: false,
       cookies: isOffline
-        ? cookieTypes : cookieTypes.filter(type => data.cookies.map(cookie => cookie.type).includes(type.key)),
+        ? cookieTypes : cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)),
       isAuthorized: !!localStorage[tokenKey],
     };
 
@@ -86,7 +86,7 @@ export default class CookieKitPopup extends Component {
 
   handleSubmit() {
     const { checked, isAuthorized } = this.state;
-    const { data, onClose, isOffline } = this.props;
+    const { campaign, onClose, isOffline } = this.props;
 
     const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
       add_consents(campaign_reference: $campaign_reference) {
@@ -105,8 +105,17 @@ export default class CookieKitPopup extends Component {
     cookieTypes.forEach(type => xcoobeeCookies.push(checked.includes(type.id)));
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
+    if (campaign.cookieHandler) {
+      const cookieObject = {};
+
+      cookieTypes.forEach((type) => {
+        cookieObject[type.model] = checked.includes(type.id);
+      });
+      campaign.cookieHandler(cookieObject);
+    }
+
     if (!isOffline && isAuthorized) {
-      graphQLRequest(addConsentQuery, { campaign_reference: data.reference }, localStorage[tokenKey])
+      graphQLRequest(addConsentQuery, { campaign_reference: campaign.reference }, localStorage[tokenKey])
         .then((res) => {
           if (!res) {
             return;
@@ -132,8 +141,25 @@ export default class CookieKitPopup extends Component {
     onClose(xcoobeeCookies);
   }
 
+  renderTextMessage(JSON) {
+    const { selectedLocale } = this.state;
+
+    switch (selectedLocale) {
+      case "EN":
+        return JSON["en-us"];
+      case "DE":
+        return JSON["de-de"] || JSON["en-us"];
+      case "ES":
+        return JSON["es-419"] || JSON["en-us"];
+      case "FR":
+        return JSON["fr-fr"] || JSON["en-us"];
+      default:
+        return JSON["en-us"];
+    }
+  }
+
   render() {
-    const { data, isOffline, onClose, countryCode } = this.props;
+    const { campaign, isOffline, onClose, countryCode } = this.props;
     const { checked, isAuthorized, selectedLocale, isShown, cookies } = this.state;
 
     return (
@@ -141,9 +167,9 @@ export default class CookieKitPopup extends Component {
         <div className="header">
           <div className="logo">
             {
-              !isOffline && (
+              !isOffline && campaign.companyLogo && (
                 <img
-                  src={Xcoobee.config.companyLogoUrl}
+                  src={Xcoobee.config.companyLogo}
                   alt="company-logo"
                 />
               )
@@ -160,7 +186,8 @@ export default class CookieKitPopup extends Component {
         </div>
         <div className="text-container">
           <div className="text">
-            {Xcoobee.config.textMessage || renderText("CookieKit.PopupMessage", selectedLocale)}
+            { typeof campaign.textMessage === "string"
+              ? campaign.textMessage : this.renderTextMessage(campaign.textMessage) }
           </div>
           <div className="locale-container">
             <div className="locale">
@@ -276,14 +303,14 @@ export default class CookieKitPopup extends Component {
             )
           )}
           <a
-            href={data.termsUrl}
+            href={campaign.termsUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
             {renderText("CookieKit.TermsLink", selectedLocale)}
           </a>
           <a
-            href={data.privacyUrl}
+            href={campaign.privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
