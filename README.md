@@ -44,12 +44,12 @@ The following is a list of parameters the XCK can process:
 
 ### checkByDefaultTypes
 
-This is an array of strings of cookie types used on your sites by default. This is one or more of [application_cookie|usage_cookie|statistics_cookie|advertising_cookie]. The default is empty array.
+This is an array of strings of cookie types used on your sites by default. This is one or more of [application|usage|statistics|advertising]. The default is empty array.
 
 Example:
 
 ```json
-  checkByDefaultTypes: ["application_cookie"]
+  checkByDefaultTypes: ["application"]
 ```
 
 ### cookieHandler
@@ -94,10 +94,10 @@ termsUrl: "https://mysite.com/privacy"
 ```
 
 ### requestDataTypes
- This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application_cookie|usage_cookie|statistics_cookie|advertising_cookie]. The default is `application_cookie`.
+ This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
 
  ```json
-  requestDataTypes: ["application_cookie"]
+  requestDataTypes: ["application"]
 ```
 
 ### targetUrl `string`
@@ -161,35 +161,124 @@ This parameter is only available when subscripting to XcooBee.
 
 If you wish to use your own CSS, the XcooBee code generator will set this based on your selection for your Cookie Campaign. Your campaign wizard will guide you through the process.
 
-### campaignName
 
-Your campaign name in XcooBee needs to match your website name that is hosting the XCK.
+**IMPORTANT**
 
+Your campaign name in the XcooBee campaign console needs to match your domain name (first part of the URL) for which you are using the cookie kit. If this is not the case, you will have errors returned from the XcooBee network.
+
+For example if your site runs on this url "http://www.mysite.com/product/hello" the domain is `www.mysite.com`. This has to be your campaign name in XcooBee.
 
 
 ## Program Hooks
 
-- [events]
-  - cookie scripts
-  - cookie domains by type
-- [parameters]
+
+You can use public methods of the XCK to set and retrieve parameter information. These are found under the `XcooBee.kit` object.
+
+### setParam([parameter], [value])
+
+Use the `setParam()` method to set any valid parameter for the XCK. For example to set the targetUrl parameter to a different value.
+
+```JavaScript
+
+XcooBee.kit.setParam("targetUrl","https://newsite.com/cookieProcessor");
+
+```
+
+### getParam([parameter]) `object`
+
+Retrieves the value of actively used parameter from the XCK.
+
+Example:
+
+```JavaScript
+
+let termsSite = XcooBee.kit.getParam("termsUrl");
+
+```
+
+### getConsentStatus() `string`
+
+Returns the current status of the XCK interaction with the user. Current this is one of [open|complete|closed].
+
+`open` => user is being asked for consent at the moment
+
+`complete` => we have received consent information from user
+
+`closed` => the user did not respond and the cookie consent has expired after `expirationTime`
+
+
+```JavaScript
+
+let consentStatus = XcooBee.kit.getConsentStatus();
+
+```
+
+### getCookieTypes() `object`
+
+This returns the users' decision regarding the consent for each cookie type. It will always return a full object with all types or empty object `{}`.
+Only available after `getConsentStatus() = "complete"` If you call this before we have an answer from user we will return an empty object.
+
+
+Example call:
+
+```JavaScript
+
+let cookieTypeStatus = XcooBee.kit.getCookieTypes();
+
+```
+
+Example return object:
+
+```json
+{
+  "application": true,
+  "usage": true,
+  "statistics": false,
+  "advertising": false 
+}
+
+```
+
 
 ## Examples of script tag
+
+You will embed/install the XCK via added a script tag to your site. Here is an example of what this could look like.
+
+You need to place this in the HTML of your site in between `<head>` and `<body>` tags. We suggest this as last script element.
+
+
+```javascript
+<script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/xcoobee-cookie-kit.min.js"></script>
+<script type="text/javascript">
+  XcooBee.kit.initialize({
+    requestDataTypes: ["application","usage"],
+    checkByDefaultTypes: ["application"],
+    cookieHandler: myCookieHandler,    
+    expirationTime: 0,
+    position: "left_bottom",
+    privacyUrl: "https://mysite.com/privacy",        
+    termsUrl: "https://mysite.com/terms",    
+    textMessage: "This site uses cookies to make your experience better. Please let us know which type of cookies we may use."
+  });
+</script>
+```
+
+
+
+
+Here is an example of options and values for the initialization:
 
 ```javascript
 <script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/xcoobee-cookie-kit.min.js"></script>
 <script type="text/javascript">
-  Xcoobee.initialize({
-    campaignReference: <String>,
-    campaignName: <String>,
-    checkByDefaultTypes: <Array>[application_cookie|usage_cookie|statistics_cookie|advertising_cookie]
-    companyLogo: <Base64>,
-    cookieHandler: <Function>
-    cssAutoLoad: <Boolean>,
+  XcooBee.kit.initialize({
+    campaignReference: <String>,    
+    checkByDefaultTypes: <Array>[application|usage|statistics|advertising]    
+    cookieHandler: <Function>,    
     expirationTime: <Number> (in seconds),
     position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
     privacyUrl: <String>,
-    requestDataTypes: <Array>[application_cookie|usage_cookie|statistics_cookie|advertising_cookie],
+    requestDataTypes: <Array>[application|usage|statistics|advertising],
     targetUrl: <String>,
     termsUrl: <String>,
     testMode: <Boolean>,
@@ -286,23 +375,28 @@ function cookieHandler(cookieObject) {
 
 The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need an web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
 
-[TODO: provide example. We should make this like the SDK so they can use the same page for both. The following example does not match SDK pattern and is simplified. Use POST example ask Volodymyr].
+The HTTP POST will be using `CONTENT-TYPE` = `application/json`
 
-[Will be a webhook post HTTP POST]
+The body content is a JSON object with the user selection of cookie types. Only the cookie types for which you have asked for consent will be included.
 
-- specify target url
-- XCK will use an HTTP POST with URL parameter for each cookie type and true or false as value
+```JSON
+{
+  "time": "Wed, 31 Oct 2018 16:40:28 GMT",
+  "code": 200,
+  "result": {
+    "application": true,
+    "usage": false,
+    "statistics": true
+  }
+}
+```
 
-The possible types are:
-  - application
-  - usage
-  - statistics
-  - advertising
+Where:
 
-```HTTP
-
-  https://mysite.com/process-cookies.jsp?application=true&usage=false&statistics=false&advertising=false
-
+```
+time => date of the decision in UTC
+code => 200 for success
+result => the JSON with information about cookie types
 ```
 
 
