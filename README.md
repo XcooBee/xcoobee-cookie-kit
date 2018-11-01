@@ -12,6 +12,42 @@ Website owners can easily react to data-requests, and report on privacy related 
 
 The XCK does not require a XcooBee connection to work for your website. You will still have access to the majority of user consent gathering but will not have central insight and consent management.
 
+
+## How does this Work
+
+The XCK operates in two modes. One, in disconnected mode, where the XCK and your website interact directly without the use of any other service. Two, in connected mode, where XCK interacts with the XcooBee network to allow companies to document and manage cookie consent while giving users additional tools to manage and simplify cookie handling.
+
+In the following we explain how each mode works.
+
+### Disconnected Mode
+
+![alt text](offline.png "diagram showing XCK in disconnected mode")
+
+In disconnected mode, 
+1. your web site loads and renders its content without setting cookies
+2. loads the XCK with your parameters
+3. the XCK handles user interaction for cookie consent
+4. communicates back to your site which cookie types that can be set.
+
+Your site, then, sets the cookies according to user preferences.
+
+
+### Connected Mode
+
+![alt text](online.png "diagram showing XCK in connected mode")
+
+The connected mode is similar in process with differences in each step to reflect additional tools:
+
+In connected mode, 
+1. your web site loads and renders its content without setting cookies
+2. loads the XCK with your parameters including your campaign references
+3. the XCK handles user interaction for cookie consent. For XcooBee users the XCK transparently negotiates with your site based on user preferences. XcooBee users can surf sites with little interruption.
+4. XCK communicates back to your site which cookie types that can be set.
+
+Your site, then, sets the cookies according to user preferences.
+
+5. As site owner, you can review all managed cookie consent. Report on compliance issues, take action when users' change their consent even when not visiting your site. Your site visitors (users) can actively manage cookie consent centrally, and transparently surf your site without annoying pop-ups.
+
 ## Install
 
 You activate the XCK by embedding it into your site via `<script>` tags. In addition, during invocation you provide additional parameters to the script tag.
@@ -145,6 +181,10 @@ Example of text entry in multiple languages:
 }
 ```
 
+### useCoDefaultsForNonEu `boolean`
+
+This lets the XCK know to do quick evaluation of the call context for the XCK. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time.
+
 
 ## Initialization Parameters with XcooBee subscription
 
@@ -176,12 +216,33 @@ You can use public methods of the XCK to set and retrieve parameter information.
 
 ### setParam([parameter], [value])
 
-Use the `setParam()` method to set any valid parameter for the XCK. For example to set the targetUrl parameter to a different value.
+Use the `setParam()` method to set any valid parameter for the XCK. For example to set the targetUrl parameter to a different value. Where `parameter [string]` is any of the valid parameters, and `value [any]` is data for the parameter.
 
 ```JavaScript
 
 XcooBee.kit.setParam("targetUrl","https://newsite.com/cookieProcessor");
 
+```
+
+If you are using a cookieHandler JavaScript function that is not exposed in global scope, you will need to let the XCK know via a setParam call. You should do this after loading the XCK and before calling `XcooBee.kit.initialize()`. 
+
+```JavaScript
+
+XcooBee.kit.setParam("cookieHandler", myCookieHandlerFunction);
+
+```
+
+Alternately, you can initialize with correct function reference.
+
+```HTML
+<script type="text/javascript">
+  XcooBee.kit.initialize({
+    requestDataTypes: ["application","usage"],
+    checkByDefaultTypes: ["application"],
+    cookieHandler: myCookieHandlerFunction,    
+   ...
+  });
+</script>
 ```
 
 ### getParam([parameter]) `object`
