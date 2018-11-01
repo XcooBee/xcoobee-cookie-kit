@@ -27,7 +27,7 @@ In disconnected mode,
 1. your web site loads and renders its content without setting cookies
 2. loads the XCK with your parameters
 3. the XCK handles user interaction for cookie consent
-4. communicates back to your site which cookie types that can be set.
+4. communicates back to your site which cookie types can be set.
 
 Your site, then, sets the cookies according to user preferences.
 
@@ -42,7 +42,7 @@ In connected mode,
 1. your web site loads and renders its content without setting cookies
 2. loads the XCK with your parameters including your campaign references
 3. the XCK handles user interaction for cookie consent. For XcooBee users the XCK transparently negotiates with your site based on user preferences. XcooBee users can surf sites with little interruption.
-4. XCK communicates back to your site which cookie types that can be set.
+4. XCK communicates back to your site which cookie types can be set.
 
 Your site, then, sets the cookies according to user preferences.
 
