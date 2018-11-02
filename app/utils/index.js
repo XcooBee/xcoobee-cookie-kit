@@ -1,18 +1,18 @@
 const defaultConfig = {
-  // campaignReference: "ce84ab7f7b737d",
   // campaignName: "https://lviv.com",
-  position: "left_bottom",
+  // campaignReference: "ce84ab7f7b737d",
   checkByDefaultTypes: ["application_cookie"],
   companyLogo: null,
   cookieHandler: () => {},
   cssAutoLoad: true,
   expirationTime: 0,
-  // privacyUrl: "https://lviv.com/policy",
+  position: "left_bottom",
+  privacyUrl: "https://lviv.com/policy",
   requestDataTypes: ["application_cookie", "statistics_cookie", "usage_cookie"],
-  targetUrl: null,
-  // termsUrl: "https://lviv.com/terms",
+  targetUrl: "http://requestbin.fullcontact.com/14d1s5n1",
+  termsUrl: "https://lviv.com/terms",
   testMode: true,
-  // textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
+  textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
 };
 const cookieTypes = [
   {
@@ -54,19 +54,25 @@ const links = {
 };
 const animations = {
   noAnimation: "default",
-  defaultOptions: "blue",
+  userSettings: "blue",
   knownSite: "green",
   crowdIntelligence: "yellow",
-  euTraffic: "red",
+  companySettings: "red",
 };
 const cssHref = "xcoobee-cookie-kit.min.css";
 const euCountries = ["AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT",
   "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB"];
 const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+const consentStatuses = {
+  open: "open",
+  complete: "complete",
+  closed: "closed",
+};
 
 export {
   animations,
   cookieTypes,
+  consentStatuses,
   cssHref,
   defaultConfig,
   euCountries,

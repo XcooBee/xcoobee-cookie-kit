@@ -1,3 +1,3 @@
 import { defaultConfig } from "./utils";
 
-Xcoobee.initialize(defaultConfig);
+XcooBee.kit.initialize(defaultConfig);

@@ -1,5 +1,8 @@
 import "./style/main.scss";
 
-import Xcoobee from "./model/Xcoobee";
+import CookieKit from "./model/CookieKit";
 
-window.Xcoobee = new Xcoobee();
+if (!window.XcooBee) {
+  window.XcooBee = {};
+}
+window.XcooBee.kit = new CookieKit();

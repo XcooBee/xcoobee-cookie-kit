@@ -1,23 +1,24 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
+import fetch from "isomorphic-fetch";
 
-import Campaign from "../model/Campaign";
+import Config from "../model/Config";
 
-import { cookieTypes, locales, tokenKey, links } from "../utils";
+import { cookieTypes, locales, tokenKey, links, consentStatuses } from "../utils";
 import renderText from "../utils/locales/renderText";
 import graphQLRequest from "../utils/graphql";
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
-    campaign: Campaign,
+    campaign: Config,
     isOffline: PropTypes.bool,
     countryCode: PropTypes.string,
     onClose: PropTypes.func,
   };
 
   static defaultProps = {
-    campaign: new Campaign(),
+    campaign: new Config(),
     isOffline: false,
     countryCode: "US",
     onClose: () => {
@@ -101,21 +102,43 @@ export default class CookieKitPopup extends Component {
       }
     }`;
     const xcoobeeCookies = [];
+    const cookieObject = {};
 
+    cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)).forEach((type) => {
+      cookieObject[type.model] = checked.includes(type.id);
+    });
     cookieTypes.forEach(type => xcoobeeCookies.push(checked.includes(type.id)));
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (campaign.cookieHandler) {
-      const cookieObject = {};
+      if (typeof campaign.cookieHandler === "string" && typeof window[campaign.cookieHandler] === "function") {
+        window[campaign.cookieHandler]();
+      } else {
+        campaign.cookieHandler(cookieObject);
+      }
+    }
 
-      cookieTypes.forEach((type) => {
-        cookieObject[type.model] = checked.includes(type.id);
-      });
-      campaign.cookieHandler(cookieObject);
+    if (campaign.targetUrl) {
+      const result = {
+        time: new Date().toUTCString(),
+        code: 200,
+        result: cookieObject,
+      };
+
+      fetch(campaign.targetUrl,
+        {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify(result),
+          mode: "no-cors",
+        });
     }
 
     if (!isOffline && isAuthorized) {
-      graphQLRequest(addConsentQuery, { campaign_reference: campaign.reference }, localStorage[tokenKey])
+      graphQLRequest(addConsentQuery, { campaign_reference: campaign.campaignReference }, localStorage[tokenKey])
         .then((res) => {
           if (!res) {
             return;
@@ -138,6 +161,7 @@ export default class CookieKitPopup extends Component {
         });
     }
 
+    XcooBee.kit.consentStatus = consentStatuses.complete;
     onClose(xcoobeeCookies);
   }
 
@@ -169,7 +193,7 @@ export default class CookieKitPopup extends Component {
             {
               !isOffline && campaign.companyLogo && (
                 <img
-                  src={Xcoobee.config.companyLogo}
+                  src={XcooBee.kit.config.companyLogo}
                   alt="company-logo"
                 />
               )

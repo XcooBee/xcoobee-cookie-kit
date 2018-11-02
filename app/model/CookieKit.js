@@ -1,21 +1,22 @@
 import ReactDOM from "react-dom";
 
 import App from "../App";
-import XcoobeeCookies from "./XcoobeeCookies";
 
-import { cookieTypes, cssHref, defaultConfig } from "../utils";
+import Config from "./Config";
 
-export default class Xcoobee {
-  _cookies = new XcoobeeCookies();
+import { cookieTypes, cssHref, defaultConfig, consentStatuses } from "../utils";
 
-  __config = null;
+export default class CookieKit {
+  _config = null;
+
+  _consentStatus = consentStatuses.open;
 
   get cookies() {
     return this._cookies;
   }
 
   get config() {
-    return this.__config;
+    return this._config;
   }
 
   initialize(config) {
@@ -29,8 +30,7 @@ export default class Xcoobee {
 
     const CONFIG = Object.assign(defaultConfig, config);
 
-    this.__config = CONFIG;
-    this._cookies = new XcoobeeCookies(defaultCookies);
+    this._config = new Config(CONFIG);
 
     if (CONFIG.cssAutoLoad) {
       const fileRef = document.createElement("link");
@@ -48,5 +48,29 @@ export default class Xcoobee {
 
     ReactDOM.render(<App />, CONTAINER);
     document.body.appendChild(CONTAINER);
+  }
+
+  get consentStatus() {
+    return this._consentStatus;
+  }
+
+  set consentStatus(value) {
+    this._consentStatus = value;
+  }
+
+  getParam(field) {
+    return this._config[field];
+  }
+
+  setParam(field, value) {
+    this._config[field] = value;
+  }
+
+  getConsentStatus() {
+    return this._consentStatus;
+  }
+
+  getCookieTypes() {
+    return this._config.cookies.map(cookie => ({ [cookie.type]: cookie.checked }));
   }
 }
