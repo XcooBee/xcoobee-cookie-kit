@@ -17,7 +17,7 @@ if (fs.existsSync(checkPath)) {
   for (const item in files) {
     console.log(files[item]);
   }
-    
+
 } else {
   console.log("NO node modules.. npm install must have failed");
 

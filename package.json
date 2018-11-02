@@ -9,7 +9,7 @@
     "dev": "cross-env-shell NODE_ENV=development webpack-dev-server --progress",
     "security-check": "nsp check",
     "clear": "node scripts/clear.js",
-    "test": "node ./scripts/test-not-implemented.js",
+    "test": "node test-not-implemented.js",
     "solanobuild": "node  ./node_modules/webpack/bin/webpack.js",
     "eslint": "eslint ./app"
   },
