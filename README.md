@@ -181,9 +181,9 @@ Example of text entry in multiple languages:
 }
 ```
 
-### useCoDefaultsForNonEu `boolean`
+### displayOnlyForEU `boolean`
 
-This lets the XCK know to do quick evaluation of the call context for the XCK. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time.
+This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time.
 
 
 ## Initialization Parameters with XcooBee subscription
