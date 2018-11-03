@@ -1,6 +1,6 @@
 hooks:
   pre_setup: npm install
-  post_build: npm run solanobuild
+  post_build: npm run build
 nodejs:
   version: '8.10.0'
 tests:
