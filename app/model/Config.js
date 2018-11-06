@@ -1,8 +1,6 @@
 import Cookie from "./Cookie";
 
 export default class Config {
-  _campaignName = null;
-
   _campaignReference = null;
 
   _checkByDefaultTypes = [];
@@ -12,6 +10,8 @@ export default class Config {
   _cookieHandler = () => null;
 
   _cookies = [];
+
+  _displayOnlyForEU = false;
 
   _expirationTime = 0;
 
@@ -34,12 +34,12 @@ export default class Config {
       return;
     }
 
-    this._campaignName = config.campaignName;
     this._campaignReference = config.campaignReference;
     this._checkByDefaultTypes = config.checkByDefaultTypes;
     this._companyLogo = config.companyLogo;
     this._cookieHandler = config.cookieHandler || (() => null);
     this._cssAutoLoad = config.cssAutoLoad;
+    this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
     this._position = config.position;
     this._privacyUrl = config.privacyUrl;
@@ -51,12 +51,8 @@ export default class Config {
 
     this._cookies = config.requestDataTypes.map(type => new Cookie({
       type,
-      checked: config.checkByDefaultTypes.includes(type),
+      checked: false,
     }));
-  }
-
-  get campaignName() {
-    return this._campaignName;
   }
 
   get campaignReference() {
@@ -77,6 +73,10 @@ export default class Config {
 
   get cookieHandler() {
     return this._cookieHandler;
+  }
+
+  get displayOnlyForEU() {
+    return this._displayOnlyForEU;
   }
 
   get expirationTime() {
@@ -111,20 +111,12 @@ export default class Config {
     return this._textMessage;
   }
 
-  set campaignName(value) {
-    this._campaignName = value;
-  }
-
   set campaignReference(value) {
     this._campaignReference = value;
   }
 
   set checkByDefaultTypes(value) {
     this._checkByDefaultTypes = value;
-    this._cookies = this._requestDataTypes.map(type => new Cookie({
-      type,
-      checked: value.includes(type),
-    }));
   }
 
   set companyLogo(value) {
@@ -137,6 +129,10 @@ export default class Config {
 
   set cookieHandler(value) {
     this._cookieHandler = value;
+  }
+
+  set displayOnlyForEU(value) {
+    this._displayOnlyForEU = value;
   }
 
   set expirationTime(value) {
@@ -155,7 +151,7 @@ export default class Config {
     this._requestDataTypes = value;
     this._cookies = value.map(type => new Cookie({
       type,
-      checked: this._checkByDefaultTypes.includes(type),
+      checked: false,
     }));
   }
 

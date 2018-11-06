@@ -31,37 +31,55 @@ export default class App extends Component {
       isShown: true,
       loading: true,
       pulsing: false,
+      userOptions: [],
     };
 
     this.timer = null;
     this.errors = false;
 
-    this.fetchCrowdAI();
     this.checkRequiredFields();
+    this.fetchUserSettings();
   }
 
-  setAnimation(countryCode, crowdAI) {
+  setAnimation(countryCode, crowdAI, userSettings) {
+    const { userOptions, isOffline } = this.state;
     const { config } = XcooBee.kit;
     const savedPreferences = localStorage[xcoobeeCookiesKey];
 
-    if (crowdAI) {
-      return this.startPulsing(animations.crowdIntelligence);
-    }
-    if (savedPreferences) {
+    if (savedPreferences && isOffline) {
       config.cookies.forEach((cookie) => {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
 
         cookie.checked = JSON.parse(savedPreferences)[cookieType.id];
       });
 
-      return this.startPulsing(animations.knownSite);
+      return;
     }
-    if (!euCountries.includes(countryCode) && !localStorage[tokenKey]) {
-      return this.startPulsing(animations.companySettings);
-    }
-    if (localStorage[tokenKey] && XcooBee.kit.config.campaignReference) {
+    if (userSettings && localStorage[tokenKey]) {
       return this.startPulsing(animations.userSettings);
     }
+    if (crowdAI && localStorage[tokenKey]) {
+      return this.startPulsing(animations.crowdIntelligence);
+    }
+    if (userOptions.length && localStorage[tokenKey]) {
+      config.cookies.forEach(cookie => {
+        if (userOptions.includes(cookie.type)) {
+          cookie.checked = true;
+        }
+      });
+
+      return this.startPulsing(animations.userPreference);
+    }
+    if (!euCountries.includes(countryCode) && config.displayOnlyForEU && localStorage[tokenKey]) {
+      config.cookies.forEach(cookie => {
+        if (config.checkByDefaultTypes.includes(cookie.type)) {
+          cookie.checked = true;
+        }
+      });
+
+      return this.startPulsing(animations.companyPreference);
+    }
+    this.setState({ isOpen: true });
     return animations.noAnimation;
   }
 
@@ -74,41 +92,92 @@ export default class App extends Component {
     });
   }
 
-  fetchCrowdAI() {
+  fetchUserSettings() {
     const { campaignReference } = XcooBee.kit.config;
 
     if (campaignReference && localStorage[tokenKey]) {
-      const query = `query CrowdRating($campaign_name: String!) {
-        crowd_rating(campaign_name: $campaign_name) {
-          cookie_type value
+      const query = `query UserConsentSettings {
+        user { 
+          cursor,
+          settings { 
+            consent { 
+              accept_cookies 
+            }
+          }
         }
       }`;
 
-      graphQLRequest(query, { campaign_name: window.location.host }, localStorage[tokenKey])
+      graphQLRequest(query, null, localStorage[tokenKey])
         .then((res) => {
-          if (res && res.crowd_rating) {
-            const { config } = XcooBee.kit;
+          const { accept_cookies } = res ? res.user.settings.consent : null;
 
-            config.cookies.forEach((cookie) => {
-              cookie.checked = res.crowd_rating.find(item => item.cookie_type === cookie.type).value >= 0.8;
-            });
-            this.fetchLocation(true);
-          } else {
-            console.error("Wrong campaign name.");
-            this.fetchLocation();
+          if (accept_cookies) {
+            this.setState({ userOptions: accept_cookies });
           }
+          this.fetch100Sites(res.user.cursor);
         });
     } else {
       this.fetchLocation();
     }
   }
 
-  fetchLocation(crowdAI) {
+  fetch100Sites(userCursor) {
+    const query = `query SystemUserQueries($user_cursor: String!) {
+      cookie_consents(user_cursor: $user_cursor) {
+        site,
+        cookies
+      }
+    }`;
+
+    graphQLRequest(query, { user_cursor: userCursor }, localStorage[tokenKey])
+      .then((res) => {
+        const siteSettings = res ? res.cookie_consents[0].cookies : null;
+
+        if (siteSettings && siteSettings.length) {
+          const { config } = XcooBee.kit;
+
+          config.cookies.forEach(cookie => {
+            if (siteSettings.includes(cookie.type)) {
+              cookie.checked = true;
+            }
+          });
+          this.fetchLocation(false, true);
+        } else {
+          this.fetchCrowdAI();
+        }
+      });
+  }
+
+  fetchCrowdAI() {
+    const query = `query CrowdRating($campaign_name: String!) {
+      crowd_rating(campaign_name: $campaign_name) {
+        cookie_type value
+      }
+    }`;
+
+    graphQLRequest(query, { campaign_name: window.location.host }, localStorage[tokenKey])
+      .then((res) => {
+        const crowdRating = res ? res.crowd_rating : null;
+
+        if (crowdRating) {
+          const { config } = XcooBee.kit;
+
+          config.cookies.forEach((cookie) => {
+            cookie.checked = crowdRating.find(item => item.cookie_type === cookie.type).value >= 0.8;
+          });
+          this.fetchLocation(true);
+        } else {
+          this.fetchLocation();
+        }
+      });
+  }
+
+  fetchLocation(crowdAI, userSettings) {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
         this.setState({ countryCode: res.countryCode, loading: false });
-        this.setAnimation(res.countryCode, crowdAI);
+        this.setAnimation(res.countryCode, crowdAI, userSettings);
         this.startTimer();
       });
   }
@@ -134,7 +203,7 @@ export default class App extends Component {
   }
 
   handleOpen(animation) {
-    if (animation || this.errors) {
+    if (this.errors) {
       return;
     }
 

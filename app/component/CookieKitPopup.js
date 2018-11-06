@@ -112,7 +112,7 @@ export default class CookieKitPopup extends Component {
 
     if (campaign.cookieHandler) {
       if (typeof campaign.cookieHandler === "string" && typeof window[campaign.cookieHandler] === "function") {
-        window[campaign.cookieHandler]();
+        window[campaign.cookieHandler](cookieObject);
       } else {
         campaign.cookieHandler(cookieObject);
       }
@@ -140,7 +140,7 @@ export default class CookieKitPopup extends Component {
     if (!isOffline && isAuthorized) {
       graphQLRequest(addConsentQuery, { campaign_reference: campaign.campaignReference }, localStorage[tokenKey])
         .then((res) => {
-          if (!res) {
+          if (!res || !res.add_consents) {
             return;
           }
 
@@ -257,16 +257,15 @@ export default class CookieKitPopup extends Component {
                     className="check-box"
                   />
                 </div>
-                <div>СOOKIE</div>
-              </div>
-              <div className="cookie-title">
-                <a
-                  href={cookie.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {renderText(cookie.localeKey, selectedLocale)}
-                </a>
+                <div className="cookie-title">
+                  <a
+                    href={cookie.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {renderText(cookie.localeKey, selectedLocale)}
+                  </a>
+                </div>
               </div>
             </div>
           ))}

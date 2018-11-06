@@ -384,14 +384,14 @@ $duration: .2s;
         flex-direction: column;
         align-items: center;
 
-        > .cookie-title {
+        .cookie-title {
           font-size: 14px;
           text-align: center;
 
           a {
             color: inherit;
             text-decoration: none;
-            cursor: help;
+            cursor: pointer;
           }
         }
       }
@@ -478,7 +478,6 @@ $duration: .2s;
   .check-box {
     height: $checkbox-height;
     width: $checkbox-height;
-    margin-left: 4px;
     background-color: transparent;
     border: $checkbox-height * .1 solid $unchecked-color;
     border-radius: 5px;
