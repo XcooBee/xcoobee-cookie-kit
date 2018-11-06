@@ -4,7 +4,7 @@ import App from "../App";
 
 import Config from "./Config";
 
-import { cookieTypes, cssHref, defaultConfig, consentStatuses } from "../utils";
+import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields } from "../utils";
 
 export default class CookieKit {
   _config = null;
@@ -59,10 +59,18 @@ export default class CookieKit {
   }
 
   getParam(field) {
+    if (!configFields.includes(field)) {
+      console.error(`${field} parameter is not valid.`);
+      return;
+    }
     return this._config[field];
   }
 
   setParam(field, value) {
+    if (!configFields.includes(field)) {
+      console.error(`${field} parameter is not valid.`);
+      return;
+    }
     this._config[field] = value;
   }
 
