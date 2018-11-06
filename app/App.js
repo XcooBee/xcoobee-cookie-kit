@@ -90,7 +90,9 @@ export default class App extends Component {
 
       graphQLRequest(query, null, localStorage[tokenKey])
         .then((res) => {
-          if (res && res.user.settings.consent) {
+          const { accept_cookies } = res ? res.user.settings.consent : null;
+
+          if (accept_cookies) {
             const { config } = XcooBee.kit;
 
             config.cookies.forEach(cookie => {
