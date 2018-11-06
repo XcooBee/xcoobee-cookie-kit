@@ -36,17 +36,14 @@ export default class App extends Component {
     this.timer = null;
     this.errors = false;
 
-    this.fetchCrowdAI();
     this.checkRequiredFields();
+    this.fetchUserSettings();
   }
 
-  setAnimation(countryCode, crowdAI) {
+  setAnimation(countryCode, crowdAI, userSettings) {
     const { config } = XcooBee.kit;
     const savedPreferences = localStorage[xcoobeeCookiesKey];
 
-    if (crowdAI) {
-      return this.startPulsing(animations.crowdIntelligence);
-    }
     if (savedPreferences) {
       config.cookies.forEach((cookie) => {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
@@ -56,11 +53,14 @@ export default class App extends Component {
 
       return this.startPulsing(animations.knownSite);
     }
-    if (!euCountries.includes(countryCode) && !localStorage[tokenKey]) {
-      return this.startPulsing(animations.companySettings);
-    }
-    if (localStorage[tokenKey] && XcooBee.kit.config.campaignReference) {
+    if (userSettings && localStorage[tokenKey]) {
       return this.startPulsing(animations.userSettings);
+    }
+    if (crowdAI && localStorage[tokenKey]) {
+      return this.startPulsing(animations.crowdIntelligence);
+    }
+    if (!euCountries.includes(countryCode) && config.displayOnlyForEU) {
+      return this.startPulsing(animations.companySettings);
     }
     return animations.noAnimation;
   }
@@ -74,28 +74,33 @@ export default class App extends Component {
     });
   }
 
-  fetchCrowdAI() {
+  fetchUserSettings() {
     const { campaignReference } = XcooBee.kit.config;
 
     if (campaignReference && localStorage[tokenKey]) {
-      const query = `query CrowdRating($campaign_name: String!) {
-        crowd_rating(campaign_name: $campaign_name) {
-          cookie_type value
+      const query = `query UserConsentSettings {
+        user { 
+          settings { 
+            consent { 
+              accept_cookies 
+            }
+          }
         }
       }`;
 
-      graphQLRequest(query, { campaign_name: window.location.host }, localStorage[tokenKey])
+      graphQLRequest(query, null, localStorage[tokenKey])
         .then((res) => {
-          if (res && res.crowd_rating) {
+          if (res && res.user.settings.consent) {
             const { config } = XcooBee.kit;
 
-            config.cookies.forEach((cookie) => {
-              cookie.checked = res.crowd_rating.find(item => item.cookie_type === cookie.type).value >= 0.8;
+            config.cookies.forEach(cookie => {
+              if (res.user.settings.consent.accept_cookies.includes(cookie.type)) {
+                cookie.checked = true;
+              }
             });
-            this.fetchLocation(true);
+            this.fetchLocation(false, true);
           } else {
-            console.error("Wrong campaign name.");
-            this.fetchLocation();
+            this.fetchCrowdAI();
           }
         });
     } else {
@@ -103,12 +108,35 @@ export default class App extends Component {
     }
   }
 
-  fetchLocation(crowdAI) {
+  fetchCrowdAI() {
+    const query = `query CrowdRating($campaign_name: String!) {
+      crowd_rating(campaign_name: $campaign_name) {
+        cookie_type value
+      }
+    }`;
+
+    graphQLRequest(query, { campaign_name: window.location.host }, localStorage[tokenKey])
+      .then((res) => {
+        if (res && res.crowd_rating) {
+          const { config } = XcooBee.kit;
+
+          config.cookies.forEach((cookie) => {
+            cookie.checked = res.crowd_rating.find(item => item.cookie_type === cookie.type).value >= 0.8;
+          });
+          this.fetchLocation(true);
+        } else {
+          console.error("Wrong campaign name.");
+          this.fetchLocation();
+        }
+      });
+  }
+
+  fetchLocation(crowdAI, userSettings) {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
         this.setState({ countryCode: res.countryCode, loading: false });
-        this.setAnimation(res.countryCode, crowdAI);
+        this.setAnimation(res.countryCode, crowdAI, userSettings);
         this.startTimer();
       });
   }
@@ -134,7 +162,7 @@ export default class App extends Component {
   }
 
   handleOpen(animation) {
-    if (animation || this.errors) {
+    if (this.errors) {
       return;
     }
 

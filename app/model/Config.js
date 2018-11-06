@@ -13,6 +13,8 @@ export default class Config {
 
   _cookies = [];
 
+  _displayOnlyForEU = false;
+
   _expirationTime = 0;
 
   _position = "left_bottom";
@@ -40,6 +42,7 @@ export default class Config {
     this._companyLogo = config.companyLogo;
     this._cookieHandler = config.cookieHandler || (() => null);
     this._cssAutoLoad = config.cssAutoLoad;
+    this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
     this._position = config.position;
     this._privacyUrl = config.privacyUrl;
@@ -77,6 +80,10 @@ export default class Config {
 
   get cookieHandler() {
     return this._cookieHandler;
+  }
+
+  get displayOnlyForEU() {
+    return this._displayOnlyForEU;
   }
 
   get expirationTime() {
@@ -137,6 +144,10 @@ export default class Config {
 
   set cookieHandler(value) {
     this._cookieHandler = value;
+  }
+
+  set displayOnlyForEU(value) {
+    this._displayOnlyForEU = value;
   }
 
   set expirationTime(value) {
