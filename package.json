@@ -6,6 +6,7 @@
   "author": "Bilal Soylu, Vladimir Maklyakov",
   "scripts": {
     "build": "cross-env-shell NODE_ENV=production webpack",
+    "beta": "cross-env-shell NODE_ENV=beta webpack",
     "dev": "cross-env-shell NODE_ENV=development webpack-dev-server --progress",
     "security-check": "nsp check",
     "clear": "node scripts/clear.js",
@@ -15,6 +16,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "fetch-polyfill": "^0.8.2",
     "graphql": "^14.0.2",
     "isomorphic-fetch": "^2.2.1",
