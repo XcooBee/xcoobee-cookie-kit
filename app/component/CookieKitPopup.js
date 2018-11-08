@@ -15,6 +15,7 @@ export default class CookieKitPopup extends Component {
     isOffline: PropTypes.bool,
     countryCode: PropTypes.string,
     onClose: PropTypes.func,
+    onLogin: PropTypes.func,
   };
 
   static defaultProps = {
@@ -22,6 +23,8 @@ export default class CookieKitPopup extends Component {
     isOffline: false,
     countryCode: "US",
     onClose: () => {
+    },
+    onLogin: () => {
     },
   };
 
@@ -51,11 +54,13 @@ export default class CookieKitPopup extends Component {
   }
 
   onMessage(event) {
+    const { onLogin } = this.props;
     const { token } = event.data;
 
     if (token) {
       localStorage.setItem(tokenKey, token);
       this.setState({ isAuthorized: true });
+      onLogin();
     }
   }
 
@@ -101,13 +106,23 @@ export default class CookieKitPopup extends Component {
           }
       }
     }`;
-    const xcoobeeCookies = [];
+    const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
+    const cookies = [];
     const cookieObject = {};
+
+    campaign.cookies.forEach((cookie) => {
+      const cookieType = cookieTypes.find(type => type.key === cookie.type);
+
+      cookie.checked = cookieType && checked.includes(cookieType.id);
+    });
+
+    cookieTypes.forEach(type => cookies.push(checked.includes(type.id)));
+    xcoobeeCookies.cookies = cookies;
 
     cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)).forEach((type) => {
       cookieObject[type.model] = checked.includes(type.id);
     });
-    cookieTypes.forEach(type => xcoobeeCookies.push(checked.includes(type.id)));
+
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (campaign.cookieHandler) {
@@ -128,7 +143,6 @@ export default class CookieKitPopup extends Component {
       fetch(campaign.targetUrl,
         {
           headers: {
-            "Accept": "application/json",
             "Content-Type": "application/json",
           },
           method: "POST",
@@ -203,7 +217,7 @@ export default class CookieKitPopup extends Component {
           <button
             type="button"
             className="closeBtn"
-            onClick={() => onClose()}
+            onClick={onClose}
           >
             &#215;
           </button>

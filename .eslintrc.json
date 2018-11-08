@@ -7,7 +7,7 @@
     "globals": {
         "React": true,
         "xcoobeeConfig": true,
-        "Xcoobee": true
+        "XcooBee": true
     },
     "rules": {
         "linebreak-style": ["off", "unix"],
@@ -18,7 +18,8 @@
         "jsx-a11y/label-has-associated-control": [0],
         "jsx-a11y/label-has-for": [0],
         "no-param-reassign": [0],
-        "max-len": ["error", { "code": 120, "ignoreUrls": true }]
+        "max-len": ["error", { "code": 120, "ignoreUrls": true }],
+        "no-console": ["error", { "allow": ["error"] }]
     },
     "parser": "babel-eslint"
 }
