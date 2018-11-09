@@ -305,8 +305,12 @@ $duration: .2s;
 
       > .closeBtn {
         padding: 16px;
-        font-size: 30px;
         cursor: pointer;
+
+        > img {
+          height: 15px;
+          width: 15px;
+        }
       }
     }
 
@@ -316,6 +320,8 @@ $duration: .2s;
       > .text {
         font-size: 17px;
         padding: 16px;
+        flex: 1;
+        word-break: break-all;
       }
 
       > .locale-container {
