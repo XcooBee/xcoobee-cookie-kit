@@ -219,7 +219,10 @@ export default class CookieKitPopup extends Component {
             className="closeBtn"
             onClick={onClose}
           >
-            &#215;
+            <img
+              src={`${xcoobeeConfig.domain}/close-icon.svg`}
+              alt="close-icon"
+            />
           </button>
         </div>
         <div className="text-container">
