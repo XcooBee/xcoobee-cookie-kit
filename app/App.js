@@ -101,10 +101,12 @@ export default class App extends Component {
     });
   }
 
-  fetchUserSettings() {
+  fetchUserSettings(afterLogin) {
     const { campaignReference } = XcooBee.kit.config;
 
-    this.setState({ loading: true });
+    if (afterLogin) {
+      this.setState({ loading: true });
+    }
 
     if (campaignReference && localStorage[tokenKey]) {
       const query = `query UserConsentSettings {
@@ -238,7 +240,7 @@ export default class App extends Component {
 
   handleLogin() {
     this.setState({ isOpen: false });
-    this.fetchUserSettings();
+    this.fetchUserSettings(true);
   }
 
   render() {
