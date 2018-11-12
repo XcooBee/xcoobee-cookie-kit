@@ -23,7 +23,7 @@ export default class CookieKit {
     const defaultCookies = {};
 
     cookieTypes.forEach((cookie) => {
-      defaultCookies[cookie.model] = {
+      defaultCookies[cookie.key] = {
         name: cookie.key,
       };
     });
@@ -79,6 +79,11 @@ export default class CookieKit {
   }
 
   getCookieTypes() {
-    return this._config.cookies.map(cookie => ({ [cookie.type]: cookie.checked }));
+    const cookies = {};
+
+    this._config.cookies.forEach((cookie) => {
+      cookies[cookie.type] = cookie.checked;
+    });
+    return this._consentStatus === consentStatuses.complete ? cookies : {};
   }
 }

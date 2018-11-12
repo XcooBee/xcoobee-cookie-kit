@@ -37,7 +37,7 @@ export default class Config {
     this._campaignReference = config.campaignReference;
     this._checkByDefaultTypes = config.checkByDefaultTypes;
     this._companyLogo = config.companyLogo;
-    this._cookieHandler = config.cookieHandler || (() => null);
+    this._cookieHandler = config.cookieHandler;
     this._cssAutoLoad = config.cssAutoLoad;
     this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
