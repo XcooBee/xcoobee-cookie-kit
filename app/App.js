@@ -99,6 +99,11 @@ export default class App extends Component {
         console.error(`${field} field is required as initialization parameter`);
       }
     });
+
+    if (!XcooBee.kit.config.cookieHandler && !XcooBee.kit.config.targetUrl) {
+      this.errors = true;
+      console.error("One of cookieHandler or targetUrl fields is required as initialization parameter");
+    }
   }
 
   fetchUserSettings(afterLogin) {

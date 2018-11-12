@@ -31,7 +31,7 @@ export default class CookieKitPopup extends Component {
   constructor(props) {
     super(props);
 
-    const { campaign, isOffline } = this.props;
+    const { campaign } = this.props;
     const checked = [];
 
     cookieTypes.forEach((type) => {
@@ -44,8 +44,7 @@ export default class CookieKitPopup extends Component {
       checked,
       selectedLocale: "EN",
       isShown: false,
-      cookies: isOffline
-        ? cookieTypes : cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)),
+      cookies: cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)),
       isAuthorized: !!localStorage[tokenKey],
     };
 
@@ -120,7 +119,7 @@ export default class CookieKitPopup extends Component {
     xcoobeeCookies.cookies = cookies;
 
     cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)).forEach((type) => {
-      cookieObject[type.model] = checked.includes(type.id);
+      cookieObject[type.key] = checked.includes(type.id);
     });
 
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
