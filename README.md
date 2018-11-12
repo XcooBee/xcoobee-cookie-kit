@@ -13,9 +13,83 @@ Website owners can easily react to data-requests, and report on privacy related 
 The XCK does not require a XcooBee connection to work for your website. You will still have access to the majority of user consent gathering but will not have central insight and consent management.
 
 
+## Easy Cookie Classification
+
+The XCK uses a classification system for cookies rather than listing each individual cookie with its origin. By putting cookies into logical groups the XCK removes the need for technical expertise to distinguish individual cookies. Users can make easier decision based on the intended use of the cookie rather than the domain name or any other technical criteria.
+
+The XcooBee classification system broadly places cookies into one of the following types:
+
+- Required or Application Cookies
+- Personalization Cookies
+- Statistics Cookies
+- Advertising and Marketing Cookies
+
+For more information please visit [XcooBee Cookie Classification](https://www.xcoobee.com/docs/xcoobee-concepts/cookies/).
+
+
+ 
 ## How does this Work
 
-The XCK operates in two modes. One, in disconnected mode, where the XCK and your website interact directly without the use of any other service. Two, in connected mode, where XCK interacts with the XcooBee network to allow companies to document and manage cookie consent while giving users additional tools to manage and simplify cookie handling.
+When using the XCK you:
+
+- a) first determine which cookies you are currently using on your site
+- b) then select which XcooBee type (classification) best fits each cookie
+- c) display to your site visitors the XCK consent dialog pop-up to ask for permission
+- d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler or target url pattern 
+
+After the cookie consent is already obtained, the XCK will not display another popup. You can query the status via JavaScript to set the cookies again, or track this on the backend side if you using Request/Response type application.
+
+### Example walk through
+
+`a` You determine that you use four cookies on your site.
+
+1. Your JSP session cookie
+2. A user cookie to keep track of user's theme
+3. A site statistics cookie from your webserver
+4. A global statistics cookie from Google Analytics
+
+`b` You classify the cookies into the following types
+
+Application: JSP Session Cookie
+
+Personalization: user cookie
+
+Statistics: local webserver cookie & google analytics cookie
+
+`c` You display the XCK Popup
+
+![alt text](cookie_popup.png "showing XCK cookie popup")
+
+`d` User makes selection and clicks OK.
+
+You set the needed cookies using a JavaScript handler process that gets invoked by the XCK.
+
+
+### Cookie Pulses
+
+The cookie kit uses a short cut evaluation method  to see whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon pulses in different colors to indicate a shortcut selection has occurred.
+
+![alt text](green.png "green cookie pulse") 
+
+The green pulse indicates that the user has visited this site before and the site cookie consent settings are known and can be reapplied.
+
+
+![alt text](blue.png "blue cookie pulse") 
+
+The blue pulse indicates that though the user has not visited this site before, the user has set consent preferences for new sites which can be applied. This is only possible when user and website are XcooBee network members.
+
+![alt text](yellow.png "yellow cookie pulse") 
+
+The yellow pulse indicates that the user has elected to participate in the XcooBee Crowd AI program for cookies. The XcooBee network will use a crowd based analysis and set the cookies based on feedback from website visitors. This is only possible when user and website are XcooBee network members.
+
+![alt text](red.png "red cookie pulse") 
+
+The red pulse indicates that we do not have any information directly from the user. In such a case, the website owner can select to use the website preference for cookies instead of user preferences. This can only be done if website and user are located outside the EU.
+
+
+## Modes of Operation
+
+The XCK operates in two modes. One, in disconnected mode, where the XCK and your website interact directly without the use of XcooBee network. Two, in connected mode, where XCK interacts with the XcooBee network to allow companies to document and manage cookie consent while giving users additional tools to manage and simplify cookie handling.
 
 In the following we explain how each mode works.
 
