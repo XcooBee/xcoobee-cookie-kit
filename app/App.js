@@ -30,7 +30,7 @@ export default class App extends Component {
       countryCode: "US",
       isOffline: !XcooBee.kit.config.campaignReference,
       isOpen: false,
-      isShown: !XcooBee.kit.config.hideOnComplete || XcooBee.kit.consentStatus !== consentStatuses.complete,
+      isShown: true,
       loading: true,
       pulsing: false,
       userOptions: [],
@@ -254,8 +254,9 @@ export default class App extends Component {
 
   render() {
     const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading } = this.state;
+    const isHide = XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete;
 
-    return !loading && (
+    return !loading && !isHide && (
       <div
         className={`container ${XcooBee.kit.config.position || "left_bottom"} ${!isShown ? "transparent" : ""}`}
         style={{ width: isOpen ? "auto" : "80px" }}
