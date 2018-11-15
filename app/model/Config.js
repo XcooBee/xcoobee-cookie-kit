@@ -43,7 +43,7 @@ export default class Config {
     this._cssAutoLoad = config.cssAutoLoad;
     this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
-    this._hideOnComplete = config._hideOnComplete;
+    this._hideOnComplete = config.hideOnComplete;
     this._position = config.position;
     this._privacyUrl = config.privacyUrl;
     this._requestDataTypes = config.requestDataTypes;
