@@ -200,7 +200,7 @@ export default class CookieKitPopup extends Component {
     const { checked, isAuthorized, selectedLocale, isShown, cookies } = this.state;
 
     const width = window.innerWidth || document.body.clientWidth;
-    const flagSize = width > 400 ? "25px" : "15px";
+    const flagSize = width > 400 ? "25px" : "20px";
 
     return (
       <div className="cookie-kit-popup">
@@ -359,6 +359,7 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
+        <div className="powered-by">Powered by XcooBee</div>
       </div>
     );
   }

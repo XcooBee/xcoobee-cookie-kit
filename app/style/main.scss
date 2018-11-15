@@ -262,6 +262,10 @@ $duration: .2s;
     @media (max-width: 400px) {
       margin: 4px 0;
       border-radius: 5px;
+
+      > div:first-child {
+        height: 20px;
+      }
     }
   }
 
@@ -270,10 +274,16 @@ $duration: .2s;
     width: 35px;
     font-size: 13px;
 
+    > div:first-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     @media (max-width: 400px) {
-      height: 22px;
-      width: 22px;
-      font-size: 10px;
+      height: 30px;
+      width: 30px;
+      font-size: 12px;
     }
   }
 
@@ -494,9 +504,11 @@ $duration: .2s;
       }
     }
 
-    @media (max-width: 400px) {
-      max-width: 200px;
+    > .powered-by {
+      display: none;
+    }
 
+    @media (max-width: 400px) {
       > .header {
         > .logo {
           img {
@@ -506,11 +518,11 @@ $duration: .2s;
         }
 
         > .title {
-          font-size: 12px;
+          font-size: 16px;
         }
 
         > .closeBtn {
-          padding: 4px;
+          padding: 4px 8px 4px 4px;
 
           > img {
             height: 10px;
@@ -521,7 +533,7 @@ $duration: .2s;
 
       > .text-container {
         > .text {
-          font-size: 12px;
+          font-size: 14px;
           padding: 8px;
         }
 
@@ -531,13 +543,13 @@ $duration: .2s;
           }
 
           > .custom-select {
-            top: 7px;
-            left: -90px;
+            top: 5px;
+            left: -120px;
             border-radius: 5px;
 
             > button {
-              padding: 4px;
-              font-size: 10px;
+              padding: 5px;
+              font-size: 14px;
 
               &:first-child {
                 border-radius: 5px 0 0 5px;
@@ -556,22 +568,28 @@ $duration: .2s;
         margin-top: 10px;
 
         .cookie-title {
-          font-size: 12px !important;
+          font-size: 14px !important;
           margin-left: 4px;
         }
       }
 
       > .check-all {
         margin-top: 4px;
-        font-size: 10px;
+        font-size: 12px;
       }
 
       > .actions {
         flex-direction: column;
         padding: 8px;
 
-        > div:first-child {
-          display: none;
+        .privacy-partner {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 4px;
+
+          > img {
+            height: 20px;
+          }
         }
 
         > div {
@@ -582,8 +600,12 @@ $duration: .2s;
           }
         }
 
-        .privacy-partner, .button-container {
-          font-size: 10px;
+        .privacy-partner {
+          display: none;
+        }
+
+        .button-container {
+          font-size: 14px;
 
           .button {
             width: 50%;
@@ -592,8 +614,16 @@ $duration: .2s;
       }
 
       > .links {
-        font-size: 12px;
+        font-size: 14px;
         padding: 0 8px 4px;
+      }
+
+      > .powered-by {
+        display: block;
+        color: #717171;
+        font-size: 10px;
+        text-align: center;
+        padding-bottom: 4px;
       }
     }
   }
