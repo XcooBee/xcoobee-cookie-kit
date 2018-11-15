@@ -15,6 +15,8 @@ export default class Config {
 
   _expirationTime = 0;
 
+  _hideOnComplete = false;
+
   _position = "left_bottom";
 
   _privacyUrl = null;
@@ -41,6 +43,7 @@ export default class Config {
     this._cssAutoLoad = config.cssAutoLoad;
     this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
+    this._hideOnComplete = config._hideOnComplete;
     this._position = config.position;
     this._privacyUrl = config.privacyUrl;
     this._requestDataTypes = config.requestDataTypes;
@@ -81,6 +84,10 @@ export default class Config {
 
   get expirationTime() {
     return this._expirationTime;
+  }
+
+  get hideOnComplete() {
+    return this._hideOnComplete;
   }
 
   get position() {
@@ -137,6 +144,10 @@ export default class Config {
 
   set expirationTime(value) {
     this._expirationTime = value;
+  }
+
+  set hideOnComplete(value) {
+    this._hideOnComplete = value;
   }
 
   set position(value) {
