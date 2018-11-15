@@ -30,7 +30,7 @@ export default class App extends Component {
       countryCode: "US",
       isOffline: !XcooBee.kit.config.campaignReference,
       isOpen: false,
-      isShown: true,
+      isShown: !XcooBee.kit.config.hideOnComplete || XcooBee.kit.consentStatus !== consentStatuses.complete,
       loading: true,
       pulsing: false,
       userOptions: [],
@@ -241,6 +241,10 @@ export default class App extends Component {
   handleClose() {
     this.setState({ isOpen: false });
     this.startTimer();
+
+    if (XcooBee.kit.config.hideOnComplete) {
+      this.setState({ isShown: false });
+    }
   }
 
   handleLogin() {
@@ -261,7 +265,7 @@ export default class App extends Component {
             ? (
               <CookieKitPopup
                 campaign={XcooBee.kit.config}
-                onClose={cookies => this.handleClose(cookies)}
+                onClose={() => this.handleClose()}
                 onLogin={() => this.handleLogin()}
                 isOffline={isOffline}
                 countryCode={countryCode}
