@@ -86,8 +86,8 @@ $duration: .2s;
     background-repeat: no-repeat;
     background-position: left top;
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 4vw;
+    height: 4vw;
   }
 
   .pulsing {
@@ -97,10 +97,10 @@ $duration: .2s;
       content: '';
       position: absolute;
       display: block;
-      width: 90px;
-      height: 90px;
-      top: -15px;
-      left: -15px;
+      width: 6vw;
+      height: 6vw;
+      top: -1vw;
+      left: -1vw;
       box-sizing: border-box;
       border-radius: 50%;
       animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
@@ -258,18 +258,48 @@ $duration: .2s;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    @media (max-width: 400px) {
+      margin: 4px 0;
+      border-radius: 5px;
+
+      > div:first-child {
+        height: 20px;
+      }
+    }
   }
 
   .block.block-sm {
     height: 35px;
     width: 35px;
     font-size: 13px;
+
+    > div:first-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (max-width: 400px) {
+      height: 30px;
+      width: 30px;
+      font-size: 12px;
+    }
   }
 
   .block.block-lg {
     height: 75px;
     width: 75px;
     font-size: 14px;
+
+    @media (max-width: 400px) {
+      height: auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 50%;
+      padding: 4px;
+    }
   }
 
   // Cookie Kit popup
@@ -321,7 +351,7 @@ $duration: .2s;
         font-size: 17px;
         padding: 16px;
         flex: 1;
-        word-break: break-word;
+        word-wrap: break-word;
       }
 
       > .locale-container {
@@ -471,6 +501,129 @@ $duration: .2s;
 
       a:hover, button:hover {
         color: $color2;
+      }
+    }
+
+    > .powered-by {
+      display: none;
+    }
+
+    @media (max-width: 400px) {
+      > .header {
+        > .logo {
+          img {
+            height: 40px;
+            padding: 4px;
+          }
+        }
+
+        > .title {
+          font-size: 16px;
+        }
+
+        > .closeBtn {
+          padding: 4px 8px 4px 4px;
+
+          > img {
+            height: 10px;
+            width: 10px;
+          }
+        }
+      }
+
+      > .text-container {
+        > .text {
+          font-size: 14px;
+          padding: 8px;
+        }
+
+        > .locale-container {
+          > .locale {
+            padding: 2px 4px;
+          }
+
+          > .custom-select {
+            top: 5px;
+            left: -120px;
+            border-radius: 5px;
+
+            > button {
+              padding: 5px;
+              font-size: 14px;
+
+              &:first-child {
+                border-radius: 5px 0 0 5px;
+              }
+
+              &:last-child {
+                border-radius: 0 5px 5px 0;
+              }
+            }
+          }
+        }
+      }
+
+      > .cookie-list {
+        flex-direction: column;
+        margin-top: 10px;
+
+        .cookie-title {
+          font-size: 14px !important;
+          margin-left: 4px;
+        }
+      }
+
+      > .check-all {
+        margin-top: 4px;
+        font-size: 12px;
+      }
+
+      > .actions {
+        flex-direction: column;
+        padding: 8px;
+
+        .privacy-partner {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 4px;
+
+          > img {
+            height: 20px;
+          }
+        }
+
+        > div {
+          height: auto;
+
+          > a {
+            font-size: 10px;
+          }
+        }
+
+        .privacy-partner {
+          display: none;
+        }
+
+        .button-container {
+          font-size: 14px;
+
+          .button {
+            width: 50%;
+          }
+        }
+      }
+
+      > .links {
+        font-size: 14px;
+        padding: 0 8px 4px;
+      }
+
+      > .powered-by {
+        display: block;
+        color: #717171;
+        font-size: 10px;
+        text-align: center;
+        padding-bottom: 4px;
       }
     }
   }

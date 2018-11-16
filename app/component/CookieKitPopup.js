@@ -199,6 +199,9 @@ export default class CookieKitPopup extends Component {
     const { campaign, isOffline, onClose, countryCode } = this.props;
     const { checked, isAuthorized, selectedLocale, isShown, cookies } = this.state;
 
+    const width = window.innerWidth || document.body.clientWidth;
+    const flagSize = width > 400 ? "25px" : "20px";
+
     return (
       <div className="cookie-kit-popup">
         <div className="header">
@@ -238,9 +241,9 @@ export default class CookieKitPopup extends Component {
               >
                 { selectedLocale }
               </button>
-              <div className="block block-sm block-img">
+              <div className="block block-sm">
                 <div>
-                  <ReactCountryFlag code={countryCode} svg styleProps={{ width: "25px", height: "25px" }} />
+                  <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
                 </div>
               </div>
             </div>
@@ -356,6 +359,7 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
+        <div className="powered-by">Powered by XcooBee</div>
       </div>
     );
   }
