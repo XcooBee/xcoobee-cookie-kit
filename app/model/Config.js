@@ -54,7 +54,7 @@ export default class Config {
 
     this._cookies = config.requestDataTypes.map(type => new Cookie({
       type,
-      checked: false,
+      checked: config.checkByDefaultTypes.includes(type),
     }));
   }
 
@@ -124,6 +124,10 @@ export default class Config {
 
   set checkByDefaultTypes(value) {
     this._checkByDefaultTypes = value;
+    this._cookies = this._requestDataTypes.map(type => new Cookie({
+      type,
+      checked: value.includes(type),
+    }));
   }
 
   set companyLogo(value) {
@@ -162,7 +166,7 @@ export default class Config {
     this._requestDataTypes = value;
     this._cookies = value.map(type => new Cookie({
       type,
-      checked: false,
+      checked: this.checkByDefaultTypes.includes(type),
     }));
   }
 
