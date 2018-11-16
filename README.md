@@ -407,7 +407,7 @@ You need to place this in the HTML of your site in between `<head>` and `<body>`
 
 
 ```javascript
-<script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/xcoobee-cookie-kit.min.js"></script>
+<script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
 <script type="text/javascript">
   XcooBee.kit.initialize({
     requestDataTypes: ["application","usage"],
@@ -428,7 +428,7 @@ You need to place this in the HTML of your site in between `<head>` and `<body>`
 Here is an example of options and values for the initialization:
 
 ```javascript
-<script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/xcoobee-cookie-kit.min.js"></script>
+<script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/scripts/kit/xcoobee-cookie-kit.min.js"></script>
 <script type="text/javascript">
   XcooBee.kit.initialize({
     campaignReference: <String>,    
@@ -449,7 +449,7 @@ Here is an example of options and values for the initialization:
 
 ## CSS Reference
 
-<link rel="stylesheet" href="{URL}/xcoobee-cookie-kit.min.css">
+<link rel="stylesheet" href="{URL}/scripts/kit/xcoobee-cookie-kit.min.css">
 
 All of the display elements can be overridden, however, we can not support non-standard CSS values.
 
