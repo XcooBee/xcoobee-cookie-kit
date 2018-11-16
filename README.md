@@ -152,7 +152,7 @@ The XCK is initialized with a set of parameters that determine the behavior of t
 
 The following is a list of parameters the XCK can process:
 
-### checkByDefaultTypes
+### checkByDefaultTypes `array`
 
 This is an array of strings of cookie types used on your sites by default. This is one or more of [application|usage|statistics|advertising]. The default is empty array.
 
@@ -162,7 +162,7 @@ Example:
   checkByDefaultTypes: ["application"]
 ```
 
-### cookieHandler
+### cookieHandler `string` or `function`
 
 If you are using a single page application or a JavaScript based solution for setting cookies you need to specify a cookie handler function, e.g.  `handleCookies(<object>)`. The XCK will call this function with the user's preferences or defaults as needed. This function should either remove or set the cookies based on the categories allowed by user.
 
@@ -174,6 +174,11 @@ See more information in section `How to Use the XcooBee Cookie Kit` in this docu
 cookieHandler: handleCookies
 ```
 
+### displayOnlyForEU `boolean`
+
+This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.
+
+
 ### expirationTime `integer`
 
 This is the time in seconds we will display the floating cookie icon. After the expiration time has been reached the floating cookie icon will be removed from display. This time resets every time the icon is clicked and a pop-up dialog is displayed.
@@ -184,6 +189,15 @@ Defaults to zero.
 
 ```json
 expirationTime: 0
+
+```
+
+### hideOnComplete `boolean`
+
+The XCK can be completely hidden once the user has made the cookie type selection or the selection can be automatically determined. To enable the immediate removal of the cookie icon set this to true. Default: false
+
+```json
+hideOnComplete: true
 
 ```
 
@@ -203,7 +217,7 @@ This is the page the user will be directed to to review your Privacy Policy. The
 termsUrl: "https://mysite.com/privacy"
 ```
 
-### requestDataTypes
+### requestDataTypes `array`
  This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
 
  ```json
@@ -212,9 +226,23 @@ termsUrl: "https://mysite.com/privacy"
 
 ### targetUrl `string`
 
-If you are using Request/Response technology based site, for example PHP, JSP, CFML and you set the cookies in your code, the XCK will make a call via HTTP GET to the targetUrl you specify and a URL parameter payload with the user's preferences for cookies. 
+If you are using Request/Response technology based site, for example PHP, JSP, CFML and you set the cookies in your code, the XCK will make a call via HTTP POST to the targetUrl you specify and a body parameter with JSON payload with the user's preferences for cookies. 
 
-You will, then, need to set them accordingly. We encourage the use of HTTPS/TLS connections to ensure proper security.
+Example Body Payload:
+
+```json
+{
+ "time": "Thu, 11 Oct 2018 15:40:28 GMT",
+ "code": 200,
+ "result": {
+   "application": true,
+   "usage": false,
+   "statistics": false
+ }
+}
+```
+
+You will, then, need to set cookies by cookie type accordingly. We encourage the use of HTTPS/TLS connections to ensure proper security.
 
 This is related to `cookieHandler`. One of `cookieHandler` or `targetUrl` is required to be specified for XCK to start.
 
@@ -254,10 +282,6 @@ Example of text entry in multiple languages:
   "fr-fr": "French text",
 }
 ```
-
-### displayOnlyForEU `boolean`
-
-This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time.
 
 
 ## Initialization Parameters with XcooBee subscription

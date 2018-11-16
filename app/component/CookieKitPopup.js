@@ -175,7 +175,7 @@ export default class CookieKitPopup extends Component {
     }
 
     XcooBee.kit.consentStatus = consentStatuses.complete;
-    onClose(xcoobeeCookies);
+    onClose();
   }
 
   renderTextMessage(JSON) {

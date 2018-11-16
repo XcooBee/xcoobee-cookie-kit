@@ -241,6 +241,10 @@ export default class App extends Component {
   handleClose() {
     this.setState({ isOpen: false });
     this.startTimer();
+
+    if (XcooBee.kit.config.hideOnComplete) {
+      this.setState({ isShown: false });
+    }
   }
 
   handleLogin() {
@@ -250,8 +254,9 @@ export default class App extends Component {
 
   render() {
     const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading } = this.state;
+    const isHide = XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete;
 
-    return !loading && (
+    return !loading && !isHide && (
       <div
         className={`container ${XcooBee.kit.config.position || "left_bottom"} ${!isShown ? "transparent" : ""}`}
         style={{ width: isOpen ? "auto" : "80px" }}
@@ -261,7 +266,7 @@ export default class App extends Component {
             ? (
               <CookieKitPopup
                 campaign={XcooBee.kit.config}
-                onClose={cookies => this.handleClose(cookies)}
+                onClose={() => this.handleClose()}
                 onLogin={() => this.handleLogin()}
                 isOffline={isOffline}
                 countryCode={countryCode}
