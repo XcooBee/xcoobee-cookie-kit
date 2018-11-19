@@ -598,14 +598,14 @@ c. Load XCK
 
 In this example, we assume that you have JS `<script>` tags for all the cookies that you need to create and saved them to corresponding PHP variables in this manner:
 
-```
+```html
 $cookie_scripts_application => the required application cookies, e.g. 
 
 for example:
-<script
-  src="https://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous">
+<script>
+  document.cookie = $cookieName;
+</script>
+
 
 $cookie_scripts_user => the user personalization cookies
 
@@ -616,13 +616,33 @@ for example:
 
 
 $cookie_scripts_statistics => the site statistics cookies
+
+for example:
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-XXXXX-Y', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
 $cookie_scripts_advertising => the site advertising cookies
+
+for example:
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous">
 
 ```
 
 You would output each of these be HTML encoding them, like so
 
-```JavaScript
+```html
 <script type="JavaScript">
 // define cookie script management scope in JS
 let myCookieScripts = {};
