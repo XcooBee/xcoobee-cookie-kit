@@ -534,6 +534,8 @@ function cookieHandler(cookieObject) {
 
 The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need an web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
 
+However, depending on your situation you still might be able to handle all interactions inside JavaScript without reloads or calls to backend (see example below)
+
 The HTTP POST will be using `CONTENT-TYPE` = `application/json`
 
 The body content is a JSON object with the user selection of cookie types. Only the cookie types for which you have asked for consent will be included.
@@ -558,6 +560,223 @@ code => 200 for success
 result => the JSON with information about cookie types
 ```
 
+A sample process to handle cookie consent via a Request/Response and a `handler-page` pattern could look like this. Your `handler-page` is most likely a piece of code that will need to be included in all page rendering calls. You will also need to be able to call it independently.
+
+1. Your system starts without any cookies
+2. If no cookies are defined you invoke the XCK
+3. The XCK gathers user consent and call the `handler-page` indentified in `targetUrl` parameter
+4. `handler-page` saves user decision and flag that user has made decision
+5. for each subsequent call, the `handler-page` checks that user decision is available and sets the cookie types
+
+
+Your `handler-page` will probably employ this kind of logic
+
+- determine whether this is a regular call (included) or call from XCK to save user decision
+- if regular call
+  - determine if we have user cookie type decision
+    - if we do not have decision -> load XCK by inserting `<script>` tags into HTML to present cookie choice to user
+    - if we have user-cookie-decision -> load cookies for each allowed type
+- if called from XCK
+  - save user-cookie-decision 
+
+ 
+
+## Example use with PHP page combined with Cookie Kit
+
+In this example we assume that we have a website running PHP engine to render webpages. As part of this process the website will load the XCK to manage user consent. You are managing cookie creation via JavaScript.
+
+The management process breaks into this flow:
+
+a. PHP page writes the values for each of cookie types into HTML/Javascript stream
+
+b. Include JS Handler Code (example below)
+
+c. Load XCK 
+
+
+### `a` Pipe PHP variables with script tags into HTML 
+
+In this example, we assume that you have JS `<script>` tags for all the cookies that you need to create and saved them to corresponding PHP variables in this manner:
+
+```
+$cookie_scripts_application => the required application cookies, e.g. 
+
+for example:
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous">
+
+$cookie_scripts_user => the user personalization cookies
+
+for example:
+<script>
+  var favoriteColor=blue;
+</script>
+
+
+$cookie_scripts_statistics => the site statistics cookies
+$cookie_scripts_advertising => the site advertising cookies
+
+```
+
+You would output each of these be HTML encoding them, like so
+
+```JavaScript
+<script type="JavaScript">
+// define cookie script management scope in JS
+let myCookieScripts = {};
+
+// most likely we can set this directly since these would be required
+myCookieScripts.application = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_application )); ?>";
+
+myCookieScripts.user = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_user )); ?>";
+
+myCookieScripts.statistics = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_statistics )); ?>";
+
+myCookieScripts.advertising = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_advertising )); ?>";
+
+</script>
+```
+
+### `b` write a JS Handler
+
+You need to define your handler in JS. We are including a few helper functions that will actually set your cookies and load your scripts.
+
+```Javascript
+     /**
+     * parse html encoded script directives
+     * @param {array} loadScripts - The array of scripts to be loaded 
+     * @return {object} the fully parsed html elements
+     */         
+    function xckParseHtml(htmlData) {
+        //parse encoded via text area
+        let txt = document.createElement("textarea");
+        txt.innerHTML = htmlData;
+        
+        // now add this as html to our mirror doc
+        let el=document.createElement("html");	
+        el.innerHTML = txt.innerText;
+        return el;
+    }
+    
+    /**
+     * Load Javascript. Can load from remote file or code.
+     * @param {object} loadScripts - The HTMLCollection of scripts to be loaded  
+     */         
+    function xckLoadJs(loadScripts) {
+        
+        let i=0;
+        if (loadScripts.length > 0){
+            for (i=0; i < loadScripts.length; i++){
+                let item = loadScripts[i];
+                let script = document.createElement("script");
+                script.type = "text/javascript";
+
+                if (item.src === "") {
+                    script.text = item.text;
+                } else {
+                    //load from file
+                    script.async = true; // we always load async
+                    script.src = item.src;
+                    script.onload = function(){
+                        console.log(`cookie script from ${item.src} is ready!`);                    
+                    };      
+                    
+                    // other elements
+                    if (item.integrity !== "") {
+                        script.integrity = item.integrity;
+                    }          
+                    if (item.crossOrigin !== "") {
+                        script.crossOrigin = item.crossOrigin;
+                    }                      
+                }
+
+                // now append to document for execution
+                document.body.appendChild(script);
+
+
+            }
+        }
+             
+     }
+
+  /**
+   * This will be invoked by XCK when user clicks OK button
+   * @param {object} cookieObject - The collection containing user decisions 
+   */    
+  function myCookieHandler(cookieObject) {
+      // parse cookie scripts passed from PHP
+
+
+      if (cookieObject.application) {
+        // parse cookie scripts passed from PHP
+        let myEl = xckParseHtml(myCookieScripts.application);
+        let appScripts = myEl.getElementsByTagName("script");
+        // set required cookies here
+        xckLoadJs(appScripts);
+      } else {
+        // remove required cookie here
+        // ...
+      };
+
+      if (cookieObject.usage) {
+        // parse cookie scripts passed from PHP
+        let myEl = xckParseHtml(myCookieScripts.user);
+        let userScripts = myEl.getElementsByTagName("script");
+        // set required cookies here
+        xckLoadJs(userScripts);
+      } else {
+        // remove user personalization cookies here
+        // ...
+      };
+
+      if (cookieObject.statistics) {
+        // parse cookie scripts passed from PHP
+        let myEl = xckParseHtml(myCookieScripts.statistics);
+        let statScripts = myEl.getElementsByTagName("script");
+        // set required cookies here
+        xckLoadJs(statScripts);
+      } else {
+        // remove site statistics gathering cookies here
+        // ...
+      };
+
+      if (cookieObject.advertising) {
+        // parse cookie scripts passed from PHP
+        let myEl = xckParseHtml(myCookieScripts.advertising);
+        let adsScripts = myEl.getElementsByTagName("script");
+        // set required cookies here
+        xckLoadJs(adsScripts);
+      } else {
+        // remove advertising and marketing and tracking cookies here
+        // ...
+      };
+  }
+```
+
+### `c` Load XcooBee Cookie Kit (XCK)
+
+As outlined in a few areas, when you wish to start the XCK dialog, include the `<script>` tags in your HTML stream.
+
+
+```html
+
+ <script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
+
+ <script type="text/javascript">
+   XcooBee.kit.initialize({
+     checkByDefaultTypes: "application",
+     cookieHandler: "myCookieHandler",
+     position: "right_bottom",
+     privacyUrl: "http://mysite.com/privacy",
+     requestDataTypes: ["application","usage","statistics"],      
+     termsUrl: "http://mysite.com/terms",
+     textMessage: "Welcome to our site. We use cookies. Please let us know if this is OK."
+   });
+ </script>  
+
+```
 
 ## How use the XCK with XcooBee subscription and high security data exchange
 
