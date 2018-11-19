@@ -1,13 +1,11 @@
 import { Component } from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
-import fetch from "isomorphic-fetch";
 
 import Config from "../model/Config";
 
-import { cookieTypes, locales, tokenKey, links, consentStatuses } from "../utils";
+import { cookieTypes, locales, tokenKey, links } from "../utils";
 import renderText from "../utils/locales/renderText";
-import graphQLRequest from "../utils/graphql";
 
 export default class CookieKitPopup extends Component {
   static propTypes = {
@@ -16,6 +14,8 @@ export default class CookieKitPopup extends Component {
     countryCode: PropTypes.string,
     onClose: PropTypes.func,
     onLogin: PropTypes.func,
+    onSubmit: PropTypes.func,
+    checked: PropTypes.arrayOf(PropTypes.number),
   };
 
   static defaultProps = {
@@ -26,19 +26,15 @@ export default class CookieKitPopup extends Component {
     },
     onLogin: () => {
     },
+    onSubmit: () => {
+    },
+    checked: [],
   };
 
   constructor(props) {
     super(props);
 
-    const { campaign } = this.props;
-    const checked = [];
-
-    cookieTypes.forEach((type) => {
-      if (campaign.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
-        checked.push(type.id);
-      }
-    });
+    const { campaign, checked } = this.props;
 
     this.state = {
       checked,
@@ -68,15 +64,16 @@ export default class CookieKitPopup extends Component {
   }
 
   handleCookieCheck(e, id) {
-    let { checked } = this.state;
+    const { checked } = this.state;
+    let selected = checked.slice();
 
     if (e.target.checked) {
-      checked.push(id);
+      selected.push(id);
     } else {
-      checked = checked.filter(item => item !== id);
+      selected = checked.filter(item => item !== id);
     }
 
-    this.setState({ checked });
+    this.setState({ checked: selected });
   }
 
   handleCheckAll() {
@@ -90,92 +87,15 @@ export default class CookieKitPopup extends Component {
   }
 
   handleSubmit() {
-    const { checked, isAuthorized } = this.state;
-    const { campaign, onClose, isOffline } = this.props;
-
-    const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
-      add_consents(campaign_reference: $campaign_reference) {
-        consent_cursor
-      }
-    }`;
-    const modifyConsentQuery = `mutation ModifyConsents($config: ConsentConfig) {
-      modify_consents(config: $config) {
-        data {
-            consent_cursor
-          }
-      }
-    }`;
-    const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
-    const cookies = [];
-    const cookieObject = {};
+    const { campaign, onSubmit } = this.props;
+    const { checked } = this.state;
 
     campaign.cookies.forEach((cookie) => {
       const cookieType = cookieTypes.find(type => type.key === cookie.type);
 
       cookie.checked = cookieType && checked.includes(cookieType.id);
     });
-
-    cookieTypes.forEach(type => cookies.push(checked.includes(type.id)));
-    xcoobeeCookies.cookies = cookies;
-
-    cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)).forEach((type) => {
-      cookieObject[type.key] = checked.includes(type.id);
-    });
-
-    localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
-
-    if (campaign.cookieHandler) {
-      if (typeof campaign.cookieHandler === "string" && typeof window[campaign.cookieHandler] === "function") {
-        window[campaign.cookieHandler](cookieObject);
-      } else {
-        campaign.cookieHandler(cookieObject);
-      }
-    }
-
-    if (campaign.targetUrl) {
-      const result = {
-        time: new Date().toUTCString(),
-        code: 200,
-        result: cookieObject,
-      };
-
-      fetch(campaign.targetUrl,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(result),
-          mode: "no-cors",
-        });
-    }
-
-    if (!isOffline && isAuthorized) {
-      graphQLRequest(addConsentQuery, { campaign_reference: campaign.campaignReference }, localStorage[tokenKey])
-        .then((res) => {
-          if (!res || !res.add_consents) {
-            return;
-          }
-
-          const consentCursor = res.add_consents[0].consent_cursor;
-          const dataTypes = cookieTypes.filter(cookie => checked.includes(cookie.id)).map(cookie => cookie.key);
-          const config = {
-            consents: {
-              consent_cursor: consentCursor,
-              response: "approved",
-              is_data_request: false,
-              data: {
-                data_types: dataTypes,
-              },
-            },
-          };
-
-          graphQLRequest(modifyConsentQuery, { config }, localStorage[tokenKey]);
-        });
-    }
-
-    XcooBee.kit.consentStatus = consentStatuses.complete;
-    onClose();
+    onSubmit();
   }
 
   renderTextMessage(JSON) {

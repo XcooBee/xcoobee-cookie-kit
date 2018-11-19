@@ -1,5 +1,6 @@
 import { Component } from "react";
 import CryptoJS from "crypto-js";
+import fetch from "isomorphic-fetch";
 
 import CookieKitPopup from "./component/CookieKitPopup";
 import {
@@ -25,6 +26,14 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+
     this.state = {
       animation: animations.noAnimation,
       countryCode: "US",
@@ -35,6 +44,8 @@ export default class App extends Component {
       pulsing: false,
       userOptions: [],
       crowdAI: false,
+      isAuthorized: !!localStorage[tokenKey],
+      checked,
     };
 
     this.timer = null;
@@ -65,9 +76,13 @@ export default class App extends Component {
       return this.startPulsing(animations.userSettings);
     }
     if (userSettings && localStorage[tokenKey]) {
+      this.handleSubmit();
+
       return this.startPulsing(animations.userSettings);
     }
     if (crowdAI && localStorage[tokenKey]) {
+      this.handleSubmit();
+
       return this.startPulsing(animations.crowdIntelligence);
     }
     if (userOptions.length && localStorage[tokenKey]) {
@@ -76,6 +91,7 @@ export default class App extends Component {
           cookie.checked = true;
         }
       });
+      this.handleSubmit();
 
       return this.startPulsing(animations.userPreference);
     }
@@ -85,6 +101,7 @@ export default class App extends Component {
           cookie.checked = true;
         }
       });
+      this.handleSubmit();
 
       return this.startPulsing(animations.companyPreference);
     }
@@ -187,7 +204,13 @@ export default class App extends Component {
             const { config } = XcooBee.kit;
 
             config.cookies.forEach((cookie) => {
-              cookie.checked = crowdRating.find(item => item.cookie_type === cookie.type).value >= 0.8;
+              const ratedCookie = crowdRating.find(item => item.cookie_type.includes(cookie.type));
+
+              if (ratedCookie && ratedCookie.value >= 0.8) {
+                cookie.checked = true;
+              } else {
+                cookie.checked = false;
+              }
             });
             this.fetchLocation(true);
           }
@@ -252,8 +275,109 @@ export default class App extends Component {
     this.fetchUserSettings(true);
   }
 
+  handleSubmit() {
+    const { isOffline, isAuthorized } = this.state;
+    const { config } = XcooBee.kit;
+
+    const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
+      add_consents(campaign_reference: $campaign_reference) {
+        consent_cursor
+      }
+    }`;
+    const modifyConsentQuery = `mutation ModifyConsents($config: ConsentConfig) {
+      modify_consents(config: $config) {
+        data {
+            consent_cursor
+          }
+      }
+    }`;
+
+    const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
+    const cookies = [];
+    const cookieObject = {};
+
+    cookieTypes.forEach((type) => {
+      const cookie = config.cookies.find(item => item.type === type.key);
+
+      if (cookie && cookie.checked) {
+        cookies.push(true);
+      } else {
+        cookies.push(false);
+      }
+    });
+    xcoobeeCookies.cookies = cookies;
+
+    config.cookies.forEach((cookie) => {
+      cookieObject[cookie.type] = cookie.checked;
+    });
+
+    localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
+
+    if (config.cookieHandler) {
+      if (typeof config.cookieHandler === "string" && typeof window[config.cookieHandler] === "function") {
+        window[config.cookieHandler](cookieObject);
+      } else {
+        config.cookieHandler(cookieObject);
+      }
+    }
+
+    if (config.targetUrl) {
+      const result = {
+        time: new Date().toUTCString(),
+        code: 200,
+        result: cookieObject,
+      };
+
+      fetch(config.targetUrl,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify(result),
+          mode: "no-cors",
+        });
+    }
+
+    if (!isOffline && isAuthorized) {
+      graphQLRequest(addConsentQuery, { campaign_reference: config.campaignReference }, localStorage[tokenKey])
+        .then((res) => {
+          if (!res || !res.add_consents) {
+            return;
+          }
+
+          const consentCursor = res.add_consents[0].consent_cursor;
+          const dataTypes = config.cookies.filter(item => item.checked).map(item => item.type);
+          const data = {
+            consents: {
+              consent_cursor: consentCursor,
+              response: "approved",
+              is_data_request: false,
+              data: {
+                data_types: dataTypes,
+              },
+            },
+          };
+
+          graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey]);
+        });
+    }
+
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+    this.setState({ checked });
+
+    XcooBee.kit.consentStatus = consentStatuses.complete;
+    this.handleClose();
+  }
+
   render() {
-    const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading } = this.state;
+    const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading, checked } = this.state;
     const isHide = XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete;
 
     return !loading && !isHide && (
@@ -267,9 +391,11 @@ export default class App extends Component {
               <CookieKitPopup
                 campaign={XcooBee.kit.config}
                 onClose={() => this.handleClose()}
+                onSubmit={() => this.handleSubmit()}
                 onLogin={() => this.handleLogin()}
                 isOffline={isOffline}
                 countryCode={countryCode}
+                checked={checked}
               />
             )
             : (
