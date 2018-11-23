@@ -26,14 +26,6 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    const checked = [];
-
-    cookieTypes.forEach((type) => {
-      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
-        checked.push(type.id);
-      }
-    });
-
     this.state = {
       animation: animations.noAnimation,
       countryCode: "US",
@@ -44,8 +36,7 @@ export default class App extends Component {
       pulsing: false,
       userOptions: [],
       crowdAI: false,
-      isAuthorized: !!localStorage[tokenKey],
-      checked,
+      checked: [],
     };
 
     this.timer = null;
@@ -175,7 +166,7 @@ export default class App extends Component {
           const { config } = XcooBee.kit;
 
           config.cookies.forEach((cookie) => {
-            if (siteSettings.cookies.includes(cookie.type)) {
+            if (siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)) {
               cookie.checked = true;
             }
           });
@@ -231,6 +222,15 @@ export default class App extends Component {
   }
 
   startPulsing(animation) {
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+    this.setState({ checked });
+
     XcooBee.kit.consentStatus = consentStatuses.complete;
 
     this.setState({ animation });
@@ -276,7 +276,7 @@ export default class App extends Component {
   }
 
   handleSubmit() {
-    const { isOffline, isAuthorized } = this.state;
+    const { isOffline } = this.state;
     const { config } = XcooBee.kit;
 
     const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
@@ -339,7 +339,7 @@ export default class App extends Component {
         });
     }
 
-    if (!isOffline && isAuthorized) {
+    if (!isOffline && !!localStorage[tokenKey]) {
       graphQLRequest(addConsentQuery, { campaign_reference: config.campaignReference }, localStorage[tokenKey])
         .then((res) => {
           if (!res || !res.add_consents) {
@@ -347,7 +347,8 @@ export default class App extends Component {
           }
 
           const consentCursor = res.add_consents[0].consent_cursor;
-          const dataTypes = config.cookies.filter(item => item.checked).map(item => item.type);
+          const dataTypes = config.cookies.filter(item => item.checked)
+            .map(item => cookieTypes.find(type => type.key === item.type).dbKey);
           const data = {
             consents: {
               consent_cursor: consentCursor,
