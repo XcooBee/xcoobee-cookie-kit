@@ -9,7 +9,6 @@ import {
   tokenKey,
   euCountries,
   cookieTypes,
-  requiredFields,
   consentStatuses,
   expirationTime,
 } from "./utils";
@@ -39,10 +38,10 @@ export default class App extends Component {
       checked: [],
     };
 
-    this.timer = null;
-    this.errors = false;
-
-    this.checkRequiredFields();
+    this.expirationTimer = null;
+    this.startAnimationTimer = null;
+    this.stopAnimationTimer = null;
+    this.noAnimationTimer = null;
 
     const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
 
@@ -53,11 +52,18 @@ export default class App extends Component {
     }
   }
 
-  setAnimation(countryCode, crowdAI, userSettings, savedPreferences) {
+  componentWillUnmount() {
+    clearTimeout(this.expirationTimer);
+    clearTimeout(this.startAnimationTimer);
+    clearTimeout(this.stopAnimationTimer);
+    clearTimeout(this.noAnimationTimer);
+  }
+
+  setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences) {
     const { userOptions } = this.state;
     const { config } = XcooBee.kit;
 
-    if (savedPreferences) {
+    if (blnSavedPreferences) {
       config.cookies.forEach((cookie) => {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
 
@@ -66,12 +72,12 @@ export default class App extends Component {
 
       return this.startPulsing(animations.userSettings);
     }
-    if (userSettings && localStorage[tokenKey]) {
+    if (blnUserSettings && localStorage[tokenKey]) {
       this.handleSubmit();
 
       return this.startPulsing(animations.userSettings);
     }
-    if (crowdAI && localStorage[tokenKey]) {
+    if (blnCrowdAI && localStorage[tokenKey]) {
       this.handleSubmit();
 
       return this.startPulsing(animations.crowdIntelligence);
@@ -98,20 +104,6 @@ export default class App extends Component {
     }
     this.setState({ isOpen: true });
     return animations.noAnimation;
-  }
-
-  checkRequiredFields() {
-    requiredFields.forEach((field) => {
-      if (!XcooBee.kit.config[field]) {
-        this.errors = true;
-        console.error(`${field} field is required as initialization parameter`);
-      }
-    });
-
-    if (!XcooBee.kit.config.cookieHandler && !XcooBee.kit.config.targetUrl) {
-      this.errors = true;
-      console.error("One of cookieHandler or targetUrl fields is required as initialization parameter");
-    }
   }
 
   fetchUserSettings(afterLogin) {
@@ -211,12 +203,14 @@ export default class App extends Component {
     }
   }
 
-  fetchLocation(crowdAI, userSettings, savedPreferences) {
+  fetchLocation(blnCrowdAI, blnUserSettings, blnSavedPreferences) {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
-        this.setState({ countryCode: res.countryCode, loading: false });
-        this.setAnimation(res.countryCode, crowdAI, userSettings, savedPreferences);
+        const countryCode = res ? res.countryCode : "US";
+
+        this.setState({ countryCode, loading: false });
+        this.setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences);
         this.startTimer();
       });
   }
@@ -234,16 +228,16 @@ export default class App extends Component {
     XcooBee.kit.consentStatus = consentStatuses.complete;
 
     this.setState({ animation });
-    setTimeout(() => this.setState({ pulsing: true }), 1000);
-    setTimeout(() => this.setState({ pulsing: false }), 4500);
-    setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000);
+    this.startAnimationTimer = setTimeout(() => this.setState({ pulsing: true }), 1000);
+    this.stopAnimationTimer = setTimeout(() => this.setState({ pulsing: false }), 4500);
+    this.noAnimationTimer = setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000);
   }
 
   startTimer() {
     const timeOut = XcooBee.kit.config.expirationTime;
 
     if (timeOut && timeOut > 0) {
-      this.timer = setTimeout(() => {
+      this.expirationTimer = setTimeout(() => {
         XcooBee.kit.consentStatus = consentStatuses.closed;
         this.setState({ isShown: false });
       }, timeOut * 1000);
@@ -253,12 +247,12 @@ export default class App extends Component {
   handleOpen(animation) {
     const { loading } = this.state;
 
-    if (this.errors || animation !== animations.noAnimation || loading) {
+    if (animation !== animations.noAnimation || loading) {
       return;
     }
 
     this.setState({ isOpen: true });
-    clearTimeout(this.timer);
+    clearTimeout(this.expirationTimer);
   }
 
   handleClose() {
@@ -323,7 +317,7 @@ export default class App extends Component {
 
     if (config.targetUrl) {
       const result = {
-        time: new Date().toUTCString(),
+        time: new Date().toISOString(),
         code: 200,
         result: cookieObject,
       };
@@ -404,7 +398,7 @@ export default class App extends Component {
                 type="button"
                 onClick={() => this.handleOpen(animation)}
               >
-                <div className={`cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
+                <div className={`cookie__icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
               </button>
             )
         }
@@ -412,7 +406,7 @@ export default class App extends Component {
           (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && XcooBee.kit.config.testMode && (
             <button
               type="button"
-              className="refresh-button"
+              className="refresh__button"
               onClick={() => App.refresh()}
             >
               Refresh

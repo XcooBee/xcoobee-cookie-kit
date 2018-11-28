@@ -123,12 +123,13 @@ export default class CookieKitPopup extends Component {
     const flagSize = width > 400 ? "25px" : "20px";
 
     return (
-      <div className="cookie-kit-popup">
+      <div className="cookie__kit__popup">
         <div className="header">
           <div className="logo">
             {
               !isOffline && campaign.companyLogo && (
                 <img
+                  className="company__logo"
                   src={XcooBee.kit.config.companyLogo}
                   alt="company-logo"
                 />
@@ -138,39 +139,41 @@ export default class CookieKitPopup extends Component {
           <div className="title">{renderText("CookieKit.Title", selectedLocale)}</div>
           <button
             type="button"
-            className="closeBtn"
+            className="close__button"
             onClick={onClose}
           >
             <img
+              className="close__button__icon"
               src={`${xcoobeeConfig.domain}/close-icon.svg`}
               alt="close-icon"
             />
           </button>
         </div>
-        <div className="text-container">
+        <div className="text__container">
           <div className="text">
             { typeof campaign.textMessage === "string"
               ? campaign.textMessage : this.renderTextMessage(campaign.textMessage) }
           </div>
-          <div className="locale-container">
+          <div className="locale__container">
             <div className="locale">
               <button
                 type="button"
-                className="block block-sm"
+                className="block block--sm language__picker"
                 onClick={() => this.setState({ isShown: !isShown })}
               >
                 { selectedLocale }
               </button>
-              <div className="block block-sm">
+              <div className="block block--sm">
                 <div>
                   <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
                 </div>
               </div>
             </div>
             { isShown && (
-              <div className="custom-select">
+              <div className="custom__select">
                 { locales.map(locale => (
                   <button
+                    className="language__picker__button"
                     type="button"
                     onClick={() => this.handleLocaleChange(locale)}
                   >
@@ -180,10 +183,10 @@ export default class CookieKitPopup extends Component {
             )}
           </div>
         </div>
-        <div className="cookie-list">
+        <div className="cookie__list">
           { cookies.map(cookie => (
             <div className="cookie">
-              <div className="block block-lg">
+              <div className="block block--lg">
                 <div>
                   <input
                     id={`checkbox-${cookie.id}`}
@@ -193,11 +196,12 @@ export default class CookieKitPopup extends Component {
                   />
                   <label
                     htmlFor={`checkbox-${cookie.id}`}
-                    className="check-box"
+                    className="check__box"
                   />
                 </div>
-                <div className="cookie-title">
+                <div className="cookie__title">
                   <a
+                    className="cookie__title__link"
                     href={cookie.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -211,7 +215,7 @@ export default class CookieKitPopup extends Component {
         </div>
         <button
           type="button"
-          className="check-all"
+          className="check__all"
           onClick={() => this.handleCheckAll()}
         >
           {checked.length === cookies.length
@@ -219,22 +223,24 @@ export default class CookieKitPopup extends Component {
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
         <div className="actions">
-          <div>
+          <div className="privacy__partner__container">
             <a
+              className="privacy__partner__link"
               href={links.poweredBy}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <div className="privacy-partner">
+              <div className="privacy__partner">
                 {renderText("CookieKit.PoweredByText", selectedLocale)}
                 <img
+                  className="privacy__partner__logo"
                   src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
                   alt="xcoobee-logo"
                 />
               </div>
             </a>
           </div>
-          <div className="button-container">
+          <div className="button__container">
             <button
               type="button"
               className="button"
@@ -248,6 +254,7 @@ export default class CookieKitPopup extends Component {
           { !isOffline && (isAuthorized
             ? (
               <a
+                className="link"
                 href={links.manage}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -257,6 +264,7 @@ export default class CookieKitPopup extends Component {
             )
             : (
               <button
+                className="link"
                 type="button"
                 onClick={() => window.open(`${links.login}?targetUrl=${window.location.origin}`)}
               >
@@ -265,6 +273,7 @@ export default class CookieKitPopup extends Component {
             )
           )}
           <a
+            className="link"
             href={campaign.termsUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -272,6 +281,7 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.TermsLink", selectedLocale)}
           </a>
           <a
+            className="link"
             href={campaign.privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -279,7 +289,7 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
-        <div className="powered-by">Powered by XcooBee</div>
+        <div className="powered__by">Powered by XcooBee</div>
       </div>
     );
   }
