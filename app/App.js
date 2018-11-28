@@ -96,7 +96,16 @@ export default class App extends Component {
 
       return this.startPulsing(animations.companyPreference);
     }
-    this.setState({ isOpen: true });
+
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+    this.setState({ checked, isOpen: true });
+
     return animations.noAnimation;
   }
 
