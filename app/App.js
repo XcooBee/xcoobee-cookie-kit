@@ -23,6 +23,36 @@ export default class App extends Component {
     window.location.reload();
   }
 
+  static callCookieHandler(cookieObject) {
+    const { config } = XcooBee.kit;
+
+    if (typeof config.cookieHandler === "string" && typeof window[config.cookieHandler] === "function") {
+      window[config.cookieHandler](cookieObject);
+    } else {
+      config.cookieHandler(cookieObject);
+    }
+  }
+
+  static callTargetUrl(cookieObject) {
+    const { config } = XcooBee.kit;
+
+    const result = {
+      time: new Date().toUTCString(),
+      code: 200,
+      result: cookieObject,
+    };
+
+    fetch(config.targetUrl,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(result),
+        mode: "no-cors",
+      });
+  }
+
   constructor(props) {
     super(props);
 
@@ -58,11 +88,23 @@ export default class App extends Component {
     const { config } = XcooBee.kit;
 
     if (savedPreferences) {
+      const cookieObject = {};
+
       config.cookies.forEach((cookie) => {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
+        const checked = JSON.parse(localStorage[xcoobeeCookiesKey]).cookies[cookieType.id];
 
-        cookie.checked = JSON.parse(localStorage[xcoobeeCookiesKey]).cookies[cookieType.id];
+        cookie.checked = checked;
+        cookieObject[cookie.type] = checked;
       });
+
+      if (config.cookieHandler) {
+        App.callCookieHandler(cookieObject);
+      }
+
+      if (config.targetUrl) {
+        App.callTargetUrl(cookieObject);
+      }
 
       return this.startPulsing(animations.userSettings);
     }
@@ -314,29 +356,11 @@ export default class App extends Component {
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (config.cookieHandler) {
-      if (typeof config.cookieHandler === "string" && typeof window[config.cookieHandler] === "function") {
-        window[config.cookieHandler](cookieObject);
-      } else {
-        config.cookieHandler(cookieObject);
-      }
+      App.callCookieHandler(cookieObject);
     }
 
     if (config.targetUrl) {
-      const result = {
-        time: new Date().toUTCString(),
-        code: 200,
-        result: cookieObject,
-      };
-
-      fetch(config.targetUrl,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(result),
-          mode: "no-cors",
-        });
+      App.callTargetUrl(cookieObject);
     }
 
     if (!isOffline && !!localStorage[tokenKey]) {

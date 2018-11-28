@@ -1,5 +1,7 @@
 import Cookie from "./Cookie";
 
+import { positions } from "../utils";
+
 export default class Config {
   _campaignReference = null;
 
@@ -36,6 +38,8 @@ export default class Config {
       return;
     }
 
+    const position = (config && positions.includes(config.position)) ? config.position : positions[0];
+
     this._campaignReference = config.campaignReference;
     this._checkByDefaultTypes = config.checkByDefaultTypes;
     this._companyLogo = config.companyLogo;
@@ -44,7 +48,7 @@ export default class Config {
     this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
     this._hideOnComplete = config.hideOnComplete;
-    this._position = config.position;
+    this._position = position;
     this._privacyUrl = config.privacyUrl;
     this._requestDataTypes = config.requestDataTypes;
     this._targetUrl = config.targetUrl;
