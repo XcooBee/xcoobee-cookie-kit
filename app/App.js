@@ -26,8 +26,12 @@ export default class App extends Component {
   static callCookieHandler(cookieObject) {
     const { config } = XcooBee.kit;
 
-    if (typeof config.cookieHandler === "string" && typeof window[config.cookieHandler] === "function") {
-      window[config.cookieHandler](cookieObject);
+    if (typeof config.cookieHandler === "string") {
+      if (typeof window[config.cookieHandler] === "function") {
+        window[config.cookieHandler](cookieObject);
+      } else {
+        console.error(`You have to add "${config.cookieHandler}" function`)
+      }
     } else {
       config.cookieHandler(cookieObject);
     }
