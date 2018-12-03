@@ -38,10 +38,7 @@ export default class App extends Component {
       checked: [],
     };
 
-    this.expirationTimer = null;
-    this.startAnimationTimer = null;
-    this.stopAnimationTimer = null;
-    this.noAnimationTimer = null;
+    this.timers = [];
 
     const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
 
@@ -53,10 +50,7 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.expirationTimer);
-    clearTimeout(this.startAnimationTimer);
-    clearTimeout(this.stopAnimationTimer);
-    clearTimeout(this.noAnimationTimer);
+    this.timers.forEach(timer => clearTimeout(timer));
   }
 
   setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences) {
@@ -228,19 +222,19 @@ export default class App extends Component {
     XcooBee.kit.consentStatus = consentStatuses.complete;
 
     this.setState({ animation });
-    this.startAnimationTimer = setTimeout(() => this.setState({ pulsing: true }), 1000);
-    this.stopAnimationTimer = setTimeout(() => this.setState({ pulsing: false }), 4500);
-    this.noAnimationTimer = setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000);
+    this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
+    this.timers.push(setTimeout(() => this.setState({ pulsing: false }), 4500));
+    this.timers.push(setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000));
   }
 
   startTimer() {
     const timeOut = XcooBee.kit.config.expirationTime;
 
     if (timeOut && timeOut > 0) {
-      this.expirationTimer = setTimeout(() => {
+      this.timers.push(setTimeout(() => {
         XcooBee.kit.consentStatus = consentStatuses.closed;
         this.setState({ isShown: false });
-      }, timeOut * 1000);
+      }, timeOut * 1000));
     }
   }
 
@@ -252,7 +246,7 @@ export default class App extends Component {
     }
 
     this.setState({ isOpen: true });
-    clearTimeout(this.expirationTimer);
+    this.timers.forEach(timer => clearTimeout(timer));
   }
 
   handleClose() {
@@ -377,7 +371,7 @@ export default class App extends Component {
 
     return !loading && !isHide && (
       <div
-        className={`container ${XcooBee.kit.config.position || "left_bottom"} ${!isShown ? "transparent" : ""}`}
+        className={`xb-cookie-kit__container ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
         style={{ width: isOpen ? "auto" : "80px" }}
       >
         {
@@ -398,7 +392,7 @@ export default class App extends Component {
                 type="button"
                 onClick={() => this.handleOpen(animation)}
               >
-                <div className={`cookie__icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
+                <div className={`xb-cookie-kit__cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "xb-cookie-kit__pulsing" : ""}`} />
               </button>
             )
         }
@@ -406,7 +400,7 @@ export default class App extends Component {
           (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && XcooBee.kit.config.testMode && (
             <button
               type="button"
-              className="refresh__button"
+              className="xb-cookie-kit__refresh-button"
               onClick={() => App.refresh()}
             >
               Refresh

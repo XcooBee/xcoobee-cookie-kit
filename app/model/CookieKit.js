@@ -40,7 +40,7 @@ export default class CookieKit {
 
     const CONTAINER = document.createElement("div");
 
-    CONTAINER.id = "xcoobee__cookie__kit";
+    CONTAINER.className = "xb-cookie-kit";
 
     ReactDOM.render(<App />, CONTAINER);
     document.body.appendChild(CONTAINER);
