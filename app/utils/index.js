@@ -7,9 +7,6 @@ const defaultConfig = {
   requestDataTypes: ["application"],
   testMode: false,
   textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
-  termsUrl: "asd",
-  privacyUrl: "asd",
-  targetUrl: "asd",
 };
 const cookieTypes = [
   {
