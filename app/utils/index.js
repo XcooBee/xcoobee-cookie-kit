@@ -3,11 +3,12 @@ const defaultConfig = {
   cssAutoLoad: true,
   displayOnlyForEU: false,
   expirationTime: 0,
-  position: "left_bottom",
-  requestDataTypes: ["application", "statistics", "usage"],
-  testMode: true,
+  position: "right_bottom",
+  requestDataTypes: ["application"],
+  testMode: false,
   textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
 };
+const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
 const cookieTypes = [
   {
     id: 0,
@@ -81,4 +82,5 @@ export {
   requiredFields,
   tokenKey,
   xcoobeeCookiesKey,
+  positions,
 };

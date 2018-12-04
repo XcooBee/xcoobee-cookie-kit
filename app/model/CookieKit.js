@@ -32,22 +32,24 @@ export default class CookieKit {
 
     this._config = new Config(CONFIG);
 
-    if (CONFIG.cssAutoLoad) {
-      const fileRef = document.createElement("link");
+    document.addEventListener("DOMContentLoaded", () => {
+      if (CONFIG.cssAutoLoad) {
+        const fileRef = document.createElement("link");
 
-      fileRef.setAttribute("rel", "stylesheet");
-      fileRef.setAttribute("type", "text/css");
-      fileRef.setAttribute("href", `${xcoobeeConfig.domain}/${cssHref}`);
+        fileRef.setAttribute("rel", "stylesheet");
+        fileRef.setAttribute("type", "text/css");
+        fileRef.setAttribute("href", `${xcoobeeConfig.domain}/${cssHref}`);
 
-      document.head.appendChild(fileRef);
-    }
+        document.head.appendChild(fileRef);
+      }
 
-    const CONTAINER = document.createElement("div");
+      const CONTAINER = document.createElement("div");
 
-    CONTAINER.id = "xcoobee-cookie-kit";
+      CONTAINER.id = "xcoobee-cookie-kit";
 
-    ReactDOM.render(<App />, CONTAINER);
-    document.body.appendChild(CONTAINER);
+      ReactDOM.render(<App />, CONTAINER);
+      document.body.appendChild(CONTAINER);
+    });
   }
 
   get consentStatus() {
