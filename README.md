@@ -31,6 +31,18 @@ The XcooBee classification system broadly places cookies into one of the followi
 For more information please visit [XcooBee Cookie Classification](https://www.xcoobee.com/docs/xcoobee-concepts/cookies/).
 
 
+
+## Example Applications
+
+We have included two example applications that make use of the XCK so you can check it in action yourself.
+
+### Single Page Application
+
+Our cafe application demonstrates the use of XCK in a single page application. You can unzip and deploy on a webserver like IIS or Apache. The files are located in `examples/cafe-spa.zip`. Review the index.html file for instructions/explanations.
+
+### Sample Request/Response app based on NodeJs & Express
+
+Our pizza application demonstrates the use of the XCK in a request/response based application. You can unzip and deploy it directly on your system. You will need nodejs installed on your system. Review the `README.md` file for instructions/explanations.
  
 ## How does this Work
 

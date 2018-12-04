@@ -30,6 +30,40 @@ export default class App extends Component {
     }
   }
 
+  static callCookieHandler(cookieObject) {
+    const { config } = XcooBee.kit;
+
+    if (typeof config.cookieHandler === "string") {
+      if (typeof window[config.cookieHandler] === "function") {
+        window[config.cookieHandler](cookieObject);
+      } else {
+        console.error(`Cookie handler function "${config.cookieHandler}" is missing`)
+      }
+    } else {
+      config.cookieHandler(cookieObject);
+    }
+  }
+
+  static callTargetUrl(cookieObject) {
+    const { config } = XcooBee.kit;
+
+    const result = {
+      time: new Date().toISOString(),
+      code: 200,
+      result: cookieObject,
+    };
+
+    fetch(config.targetUrl,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(result),
+        mode: "no-cors",
+      });
+  }
+
   constructor(props) {
     super(props);
 
@@ -66,11 +100,23 @@ export default class App extends Component {
     const { config } = XcooBee.kit;
 
     if (blnSavedPreferences) {
+      const cookieObject = {};
+
       config.cookies.forEach((cookie) => {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
+        const checked = JSON.parse(localStorage[xcoobeeCookiesKey]).cookies[cookieType.id];
 
-        cookie.checked = JSON.parse(localStorage[xcoobeeCookiesKey]).cookies[cookieType.id];
+        cookie.checked = checked;
+        cookieObject[cookie.type] = checked;
       });
+
+      if (config.cookieHandler) {
+        App.callCookieHandler(cookieObject);
+      }
+
+      if (config.targetUrl) {
+        App.callTargetUrl(cookieObject);
+      }
 
       return this.startPulsing(animations.userSettings);
     }
@@ -104,7 +150,16 @@ export default class App extends Component {
 
       return this.startPulsing(animations.companyPreference);
     }
-    this.setState({ isOpen: true });
+
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+    this.setState({ checked, isOpen: true });
+
     return animations.noAnimation;
   }
 
@@ -278,8 +333,8 @@ export default class App extends Component {
     const { isOffline } = this.state;
     const { config } = XcooBee.kit;
 
-    const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
-      add_consents(campaign_reference: $campaign_reference) {
+    const addConsentQuery = `mutation AddConsents($campaign_reference: String, $domain: String) {
+      add_consents(campaign_reference: $campaign_reference, domain: $domain) {
         consent_cursor
       }
     }`;
@@ -313,33 +368,18 @@ export default class App extends Component {
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (config.cookieHandler) {
-      if (typeof config.cookieHandler === "string" && typeof window[config.cookieHandler] === "function") {
-        window[config.cookieHandler](cookieObject);
-      } else {
-        config.cookieHandler(cookieObject);
-      }
+      App.callCookieHandler(cookieObject);
     }
 
     if (config.targetUrl) {
-      const result = {
-        time: new Date().toISOString(),
-        code: 200,
-        result: cookieObject,
-      };
-
-      fetch(config.targetUrl,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify(result),
-          mode: "no-cors",
-        });
+      App.callTargetUrl(cookieObject);
     }
 
     if (!isOffline && !!localStorage[tokenKey]) {
-      graphQLRequest(addConsentQuery, { campaign_reference: config.campaignReference }, localStorage[tokenKey])
+      graphQLRequest(addConsentQuery, {
+        campaign_reference: config.campaignReference,
+        domain: window.location.origin,
+      }, localStorage[tokenKey])
         .then((res) => {
           if (!res || !res.add_consents) {
             return;
