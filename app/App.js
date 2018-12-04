@@ -142,7 +142,16 @@ export default class App extends Component {
 
       return this.startPulsing(animations.companyPreference);
     }
-    this.setState({ isOpen: true });
+
+    const checked = [];
+
+    cookieTypes.forEach((type) => {
+      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+        checked.push(type.id);
+      }
+    });
+    this.setState({ checked, isOpen: true });
+
     return animations.noAnimation;
   }
 
@@ -325,8 +334,8 @@ export default class App extends Component {
     const { isOffline } = this.state;
     const { config } = XcooBee.kit;
 
-    const addConsentQuery = `mutation AddConsents($campaign_reference: String) {
-      add_consents(campaign_reference: $campaign_reference) {
+    const addConsentQuery = `mutation AddConsents($campaign_reference: String, $domain: String) {
+      add_consents(campaign_reference: $campaign_reference, domain: $domain) {
         consent_cursor
       }
     }`;
@@ -368,7 +377,10 @@ export default class App extends Component {
     }
 
     if (!isOffline && !!localStorage[tokenKey]) {
-      graphQLRequest(addConsentQuery, { campaign_reference: config.campaignReference }, localStorage[tokenKey])
+      graphQLRequest(addConsentQuery, {
+        campaign_reference: config.campaignReference,
+        domain: window.location.origin,
+      }, localStorage[tokenKey])
         .then((res) => {
           if (!res || !res.add_consents) {
             return;

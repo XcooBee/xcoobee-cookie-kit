@@ -1,5 +1,5 @@
 const defaultConfig = {
-  checkByDefaultTypes: [],
+  checkByDefaultTypes: ["application"],
   cssAutoLoad: true,
   displayOnlyForEU: false,
   expirationTime: 0,
