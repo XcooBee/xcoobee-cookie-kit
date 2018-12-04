@@ -22,6 +22,14 @@ export default class App extends Component {
     window.location.reload();
   }
 
+  static handleErrors(error) {
+    if (Array.isArray(error)) {
+      error.forEach((e) => { throw new Error(e.message); });
+    } else if (error) {
+      throw new Error(error.message);
+    }
+  }
+
   constructor(props) {
     super(props);
 
@@ -128,7 +136,8 @@ export default class App extends Component {
             this.setState({ userOptions: res.user.settings.consent.accept_cookies });
           }
           this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
-        });
+        })
+        .catch(App.handleErrors);
     } else {
       this.fetchLocation();
     }
@@ -160,7 +169,8 @@ export default class App extends Component {
         } else {
           this.fetchCrowdAI();
         }
-      });
+      })
+      .catch(App.handleErrors);
   }
 
   fetchCrowdAI() {
@@ -191,7 +201,8 @@ export default class App extends Component {
             });
             this.fetchLocation(true);
           }
-        });
+        })
+        .catch(App.handleErrors);
     } else {
       this.fetchLocation();
     }
@@ -348,8 +359,10 @@ export default class App extends Component {
             },
           };
 
-          graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey]);
-        });
+          graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey])
+            .catch(App.handleErrors);
+        })
+        .catch(App.handleErrors);
     }
 
     const checked = [];
@@ -371,8 +384,8 @@ export default class App extends Component {
 
     return !loading && !isHide && (
       <div
-        className={`xb-cookie-kit__container ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
-        style={{ width: isOpen ? "auto" : "80px" }}
+        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
+        style={{ width: isOpen ? "auto" : "4vw" }}
       >
         {
           isOpen
@@ -392,7 +405,8 @@ export default class App extends Component {
                 type="button"
                 onClick={() => this.handleOpen(animation)}
               >
-                <div className={`xb-cookie-kit__cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "xb-cookie-kit__pulsing" : ""}`} />
+                {/* eslint-disable-next-line */}
+                <div className={`xb-cookie-kit__cookie-icon xb-cookie-kit__cookie-icon--${animation ? `${animation}` : "default"} ${pulsing ? "xb-cookie-kit__pulsing" : ""}`} />
               </button>
             )
         }

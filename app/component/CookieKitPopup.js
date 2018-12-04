@@ -163,7 +163,7 @@ export default class CookieKitPopup extends Component {
               >
                 { selectedLocale }
               </button>
-              <div className="block block--sm">
+              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
                 <div>
                   <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
                 </div>
@@ -186,7 +186,7 @@ export default class CookieKitPopup extends Component {
         <div className="xb-cookie-kit-popup__cookie-list">
           { cookies.map(cookie => (
             <div className="xb-cookie-kit-popup__cookie">
-              <div className="block block--lg">
+              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--lg">
                 <div>
                   <input
                     id={`checkbox-${cookie.id}`}

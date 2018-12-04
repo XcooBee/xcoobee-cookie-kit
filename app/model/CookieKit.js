@@ -12,7 +12,7 @@ export default class CookieKit {
   _consentStatus = consentStatuses.open;
 
   initialize(config) {
-    if (!this.checkRequiredFields(config)) {
+    if (!CookieKit.checkRequiredFields(config)) {
       return;
     }
 
@@ -40,13 +40,13 @@ export default class CookieKit {
 
     const CONTAINER = document.createElement("div");
 
-    CONTAINER.className = "xb-cookie-kit";
+    CONTAINER.className = "xb-cookie-kit-placeholder";
 
     ReactDOM.render(<App />, CONTAINER);
     document.body.appendChild(CONTAINER);
   }
 
-  checkRequiredFields(config) {
+  static checkRequiredFields(config) {
     if (!config) {
       return false;
     }
@@ -92,6 +92,8 @@ export default class CookieKit {
       console.error(`${field} parameter is not valid.`);
       return;
     }
+
+    // eslint-disable-next-line
     return this._config[field];
   }
 

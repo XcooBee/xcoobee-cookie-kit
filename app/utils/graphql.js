@@ -25,7 +25,8 @@ export default function graphQLRequest(query, variables, token) {
     .then(data => data.json())
     .then((data) => {
       if (!data) {
-        return Promise.reject();
+        // eslint-disable-next-line
+        return Promise.reject([new Error("No data")]);
       }
 
       if (data.error) {
