@@ -16,7 +16,7 @@ import {
 } from "./utils";
 import graphQLRequest from "./utils/graphql";
 
-class App extends Component {
+class CookieKit extends Component {
   // Remove cookies preferences and auth token from local storage (for easier testing)
   static refresh() {
     localStorage.removeItem(tokenKey);
@@ -110,11 +110,11 @@ class App extends Component {
       });
 
       if (config.cookieHandler) {
-        App.callCookieHandler(config, cookieObject);
+        CookieKit.callCookieHandler(config, cookieObject);
       }
 
       if (config.targetUrl) {
-        App.callTargetUrl(config, cookieObject);
+        CookieKit.callTargetUrl(config, cookieObject);
       }
 
       return this.startPulsing(animations.userSettings);
@@ -194,7 +194,7 @@ class App extends Component {
           }
           this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
         })
-        .catch(App.handleErrors);
+        .catch(CookieKit.handleErrors);
     } else {
       this.fetchLocation();
     }
@@ -227,7 +227,7 @@ class App extends Component {
           this.fetchCrowdAI();
         }
       })
-      .catch(App.handleErrors);
+      .catch(CookieKit.handleErrors);
   }
 
   fetchCrowdAI() {
@@ -259,7 +259,7 @@ class App extends Component {
             this.fetchLocation(true);
           }
         })
-        .catch(App.handleErrors);
+        .catch(CookieKit.handleErrors);
     } else {
       this.fetchLocation();
     }
@@ -377,11 +377,11 @@ class App extends Component {
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (config.cookieHandler) {
-      App.callCookieHandler(config, cookieObject);
+      CookieKit.callCookieHandler(config, cookieObject);
     }
 
     if (config.targetUrl) {
-      App.callTargetUrl(config, cookieObject);
+      CookieKit.callTargetUrl(config, cookieObject);
     }
 
     if (!isOffline && !!localStorage[tokenKey]) {
@@ -409,9 +409,9 @@ class App extends Component {
           };
 
           graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey])
-            .catch(App.handleErrors);
+            .catch(CookieKit.handleErrors);
         })
-        .catch(App.handleErrors);
+        .catch(CookieKit.handleErrors);
     }
 
     const checked = [];
@@ -466,7 +466,7 @@ class App extends Component {
             <button
               type="button"
               className="xb-cookie-kit__refresh-button"
-              onClick={() => App.refresh()}
+              onClick={() => CookieKit.refresh()}
             >
               Refresh
             </button>
@@ -477,7 +477,7 @@ class App extends Component {
   }
 }
 
-App.propTypes = {
+CookieKit.propTypes = {
   config: PropTypes.shape({
     campaignReference: PropTypes.string,
     checkByDefaultTypes: PropTypes.arrayOf(
@@ -514,4 +514,4 @@ App.propTypes = {
   }).isRequired,
 };
 
-export default App;
+export default CookieKit;
