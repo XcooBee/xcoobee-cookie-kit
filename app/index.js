@@ -8,13 +8,13 @@ import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, req
 
 import App from "./App";
 
-class CookieKit {
+class CookieConsentManager {
   _config = null;
 
   _consentStatus = consentStatuses.open;
 
   initialize(config) {
-    if (!CookieKit.checkRequiredFields(config)) {
+    if (!CookieConsentManager.checkRequiredFields(config)) {
       return;
     }
 
@@ -129,6 +129,6 @@ if (!window.XcooBee) {
 if (!window.XcooBee.ck) {
   window.XcooBee.ck = {};
 }
-window.XcooBee.ck.CookieKit = CookieKit;
+window.XcooBee.ck.CookieKit = CookieConsentManager;
 
-export default CookieKit;
+export default CookieConsentManager;
