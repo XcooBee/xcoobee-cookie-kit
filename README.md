@@ -853,6 +853,10 @@ Here is an example of parameters and values types for the initialization:
 
 All of the display elements can be overridden, however, we can not support non-standard CSS values.
 
+## Browser Support
+
+Internet Explorer 11+, Google Chrome, Mozilla Firefox, Opera, Edge.
+
 # Support
 
 Please use the [Github issues](https://github.com/XcooBee/xcoobee-cookie-kit/issues) page

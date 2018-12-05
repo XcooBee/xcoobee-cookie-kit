@@ -4,22 +4,18 @@ import App from "../App";
 
 import Config from "./Config";
 
-import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields } from "../utils";
+import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "../utils";
 
 export default class CookieKit {
   _config = null;
 
   _consentStatus = consentStatuses.open;
 
-  get cookies() {
-    return this._cookies;
-  }
-
-  get config() {
-    return this._config;
-  }
-
   initialize(config) {
+    if (!CookieKit.checkRequiredFields(config)) {
+      return;
+    }
+
     const defaultCookies = {};
 
     cookieTypes.forEach((cookie) => {
@@ -45,11 +41,44 @@ export default class CookieKit {
 
       const CONTAINER = document.createElement("div");
 
-      CONTAINER.id = "xcoobee-cookie-kit";
+      CONTAINER.className = "xb-cookie-kit-placeholder";
 
       ReactDOM.render(<App />, CONTAINER);
       document.body.appendChild(CONTAINER);
     });
+  }
+
+  static checkRequiredFields(config) {
+    if (!config) {
+      return false;
+    }
+
+    const errors = [];
+
+    requiredFields.forEach((field) => {
+      if (!config[field]) {
+        errors.push(`${field} field is required as initialization parameter`);
+      }
+    });
+
+    if (!config.cookieHandler && !config.targetUrl) {
+      errors.push("One of cookieHandler or targetUrl fields is required as initialization parameter");
+    }
+
+    if (errors.length) {
+      errors.forEach(errorMessage => console.error(errorMessage));
+      return false;
+    }
+
+    return true;
+  }
+
+  get cookies() {
+    return this._cookies;
+  }
+
+  get config() {
+    return this._config;
   }
 
   get consentStatus() {
@@ -65,6 +94,8 @@ export default class CookieKit {
       console.error(`${field} parameter is not valid.`);
       return;
     }
+
+    // eslint-disable-next-line
     return this._config[field];
   }
 

@@ -9,7 +9,6 @@ import {
   tokenKey,
   euCountries,
   cookieTypes,
-  requiredFields,
   consentStatuses,
   expirationTime,
 } from "./utils";
@@ -21,6 +20,14 @@ export default class App extends Component {
     localStorage.removeItem(tokenKey);
     localStorage.removeItem(xcoobeeCookiesKey);
     window.location.reload();
+  }
+
+  static handleErrors(error) {
+    if (Array.isArray(error)) {
+      error.forEach((e) => { throw new Error(e.message); });
+    } else if (error) {
+      throw new Error(error.message);
+    }
   }
 
   static callCookieHandler(cookieObject) {
@@ -41,7 +48,7 @@ export default class App extends Component {
     const { config } = XcooBee.kit;
 
     const result = {
-      time: new Date().toUTCString(),
+      time: new Date().toISOString(),
       code: 200,
       result: cookieObject,
     };
@@ -73,10 +80,7 @@ export default class App extends Component {
       checked: [],
     };
 
-    this.timer = null;
-    this.errors = false;
-
-    this.checkRequiredFields();
+    this.timers = [];
 
     const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
 
@@ -87,11 +91,15 @@ export default class App extends Component {
     }
   }
 
-  setAnimation(countryCode, crowdAI, userSettings, savedPreferences) {
+  componentWillUnmount() {
+    this.timers.forEach(timer => clearTimeout(timer));
+  }
+
+  setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences) {
     const { userOptions } = this.state;
     const { config } = XcooBee.kit;
 
-    if (savedPreferences) {
+    if (blnSavedPreferences) {
       const cookieObject = {};
 
       config.cookies.forEach((cookie) => {
@@ -112,12 +120,12 @@ export default class App extends Component {
 
       return this.startPulsing(animations.userSettings);
     }
-    if (userSettings && localStorage[tokenKey]) {
+    if (blnUserSettings && localStorage[tokenKey]) {
       this.handleSubmit();
 
       return this.startPulsing(animations.userSettings);
     }
-    if (crowdAI && localStorage[tokenKey]) {
+    if (blnCrowdAI && localStorage[tokenKey]) {
       this.handleSubmit();
 
       return this.startPulsing(animations.crowdIntelligence);
@@ -155,20 +163,6 @@ export default class App extends Component {
     return animations.noAnimation;
   }
 
-  checkRequiredFields() {
-    requiredFields.forEach((field) => {
-      if (!XcooBee.kit.config[field]) {
-        this.errors = true;
-        console.error(`${field} field is required as initialization parameter`);
-      }
-    });
-
-    if (!XcooBee.kit.config.cookieHandler && !XcooBee.kit.config.targetUrl) {
-      this.errors = true;
-      console.error("One of cookieHandler or targetUrl fields is required as initialization parameter");
-    }
-  }
-
   fetchUserSettings(afterLogin) {
     const { campaignReference } = XcooBee.kit.config;
 
@@ -197,7 +191,8 @@ export default class App extends Component {
             this.setState({ userOptions: res.user.settings.consent.accept_cookies });
           }
           this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
-        });
+        })
+        .catch(App.handleErrors);
     } else {
       this.fetchLocation();
     }
@@ -229,7 +224,8 @@ export default class App extends Component {
         } else {
           this.fetchCrowdAI();
         }
-      });
+      })
+      .catch(App.handleErrors);
   }
 
   fetchCrowdAI() {
@@ -260,18 +256,21 @@ export default class App extends Component {
             });
             this.fetchLocation(true);
           }
-        });
+        })
+        .catch(App.handleErrors);
     } else {
       this.fetchLocation();
     }
   }
 
-  fetchLocation(crowdAI, userSettings, savedPreferences) {
+  fetchLocation(blnCrowdAI, blnUserSettings, blnSavedPreferences) {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
-        this.setState({ countryCode: res.countryCode, loading: false });
-        this.setAnimation(res.countryCode, crowdAI, userSettings, savedPreferences);
+        const countryCode = res ? res.countryCode : "US";
+
+        this.setState({ countryCode, loading: false });
+        this.setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences);
         this.startTimer();
       });
   }
@@ -289,31 +288,31 @@ export default class App extends Component {
     XcooBee.kit.consentStatus = consentStatuses.complete;
 
     this.setState({ animation });
-    setTimeout(() => this.setState({ pulsing: true }), 1000);
-    setTimeout(() => this.setState({ pulsing: false }), 4500);
-    setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000);
+    this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
+    this.timers.push(setTimeout(() => this.setState({ pulsing: false }), 4500));
+    this.timers.push(setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000));
   }
 
   startTimer() {
     const timeOut = XcooBee.kit.config.expirationTime;
 
     if (timeOut && timeOut > 0) {
-      this.timer = setTimeout(() => {
+      this.timers.push(setTimeout(() => {
         XcooBee.kit.consentStatus = consentStatuses.closed;
         this.setState({ isShown: false });
-      }, timeOut * 1000);
+      }, timeOut * 1000));
     }
   }
 
   handleOpen(animation) {
     const { loading } = this.state;
 
-    if (this.errors || animation !== animations.noAnimation || loading) {
+    if (animation !== animations.noAnimation || loading) {
       return;
     }
 
     this.setState({ isOpen: true });
-    clearTimeout(this.timer);
+    this.timers.forEach(timer => clearTimeout(timer));
   }
 
   handleClose() {
@@ -400,8 +399,10 @@ export default class App extends Component {
             },
           };
 
-          graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey]);
-        });
+          graphQLRequest(modifyConsentQuery, { config: data }, localStorage[tokenKey])
+            .catch(App.handleErrors);
+        })
+        .catch(App.handleErrors);
     }
 
     const checked = [];
@@ -423,8 +424,8 @@ export default class App extends Component {
 
     return !loading && !isHide && (
       <div
-        className={`container ${XcooBee.kit.config.position || "left_bottom"} ${!isShown ? "transparent" : ""}`}
-        style={{ width: isOpen ? "auto" : "80px" }}
+        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
+        style={{ width: isOpen ? "auto" : "4vw" }}
       >
         {
           isOpen
@@ -444,7 +445,8 @@ export default class App extends Component {
                 type="button"
                 onClick={() => this.handleOpen(animation)}
               >
-                <div className={`cookie-icon ${animation ? `${animation}` : "default"} ${pulsing ? "pulsing" : ""}`} />
+                {/* eslint-disable-next-line */}
+                <div className={`xb-cookie-kit__cookie-icon xb-cookie-kit__cookie-icon--${animation ? `${animation}` : "default"} ${pulsing ? "xb-cookie-kit__pulsing" : ""}`} />
               </button>
             )
         }
@@ -452,7 +454,7 @@ export default class App extends Component {
           (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && XcooBee.kit.config.testMode && (
             <button
               type="button"
-              className="refresh-button"
+              className="xb-cookie-kit__refresh-button"
               onClick={() => App.refresh()}
             >
               Refresh
