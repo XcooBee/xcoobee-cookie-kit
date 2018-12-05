@@ -4,7 +4,7 @@ import Config from "./model/Config";
 
 import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
 
-import CookieKit from "./component/CookieKit";
+import CookieKit from "./components/CookieKit";
 
 class CookieConsentManager {
   _config = null;
