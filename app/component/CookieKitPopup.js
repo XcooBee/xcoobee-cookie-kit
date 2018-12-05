@@ -163,11 +163,14 @@ export default class CookieKitPopup extends Component {
               >
                 { selectedLocale }
               </button>
-              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
-                <div>
-                  <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
-                </div>
-              </div>
+              {
+                countryCode && (
+                  <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
+                    <div>
+                      <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+                    </div>
+                  </div>
+              )}
             </div>
             { isShown && (
               <div className="xb-cookie-kit-popup__custom-select">
@@ -246,7 +249,7 @@ export default class CookieKitPopup extends Component {
               className="xb-cookie-kit-popup__button"
               onClick={() => this.handleSubmit()}
             >
-              OK
+              {renderText("CookieKit.OkButton", selectedLocale)}
             </button>
           </div>
         </div>
