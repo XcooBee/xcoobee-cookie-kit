@@ -41,7 +41,7 @@ export default class App extends Component {
       if (typeof window[config.cookieHandler] === "function") {
         window[config.cookieHandler](cookieObject);
       } else {
-        console.error(`Cookie handler function "${config.cookieHandler}" is missing`)
+        console.error(`Cookie handler function "${config.cookieHandler}" is missing`);
       }
     } else {
       config.cookieHandler(cookieObject);
@@ -85,7 +85,7 @@ export default class App extends Component {
       userOptions: [],
       crowdAI: false,
       checked: [],
-      locationIsNotDefined: false
+      locationIsNotDefined: false,
     };
 
     this.timers = [];
@@ -138,7 +138,7 @@ export default class App extends Component {
     }
     if (userOptions.length && localStorage[tokenKey]) {
       config.cookies.forEach((cookie) => {
-        cookie.checked = userOptions.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)
+        cookie.checked = userOptions.includes(cookieTypes.find(type => type.key === cookie.type).dbKey);
       });
       this.handleSubmit();
 
@@ -383,7 +383,7 @@ export default class App extends Component {
     if (!isOffline && !!localStorage[tokenKey]) {
       graphQLRequest(addConsentQuery, {
         campaign_reference: config.campaignReference,
-        domain: "https://test-campaign.com",
+        domain: window.location.origin,
       }, localStorage[tokenKey])
         .then((res) => {
           if (!res || !res.add_consents) {
@@ -433,7 +433,7 @@ export default class App extends Component {
       countryCode,
       loading,
       checked,
-      locationIsNotDefined
+      locationIsNotDefined,
     } = this.state;
 
     return !loading && (
