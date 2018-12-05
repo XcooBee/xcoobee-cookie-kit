@@ -1,5 +1,3 @@
-import "./style/main.scss";
-
 import ReactDOM from "react-dom";
 
 import Config from "./model/Config";

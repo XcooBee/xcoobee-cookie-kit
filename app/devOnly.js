@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import "./style/main.scss";
+
 import { defaultConfig } from "./utils";
 
 import CookieKit from "./index";
