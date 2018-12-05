@@ -744,6 +744,8 @@ Alternately, you can initialize with correct function reference.
 </script>
 ```
 
+This can be useful when you wish to turn off certain function during runtime, e.g. the `hideOnComplete` param can be used to hide the XCK after user has confirmed cookie selection.
+
 ### getParam([parameter]) `object`
 
 Retrieves the value of actively used parameter from the XCK.
