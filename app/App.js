@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Component } from "react";
 import CryptoJS from "crypto-js";
 import fetch from "isomorphic-fetch";
@@ -11,10 +12,11 @@ import {
   cookieTypes,
   consentStatuses,
   expirationTime,
+  positions,
 } from "./utils";
 import graphQLRequest from "./utils/graphql";
 
-export default class App extends Component {
+class App extends Component {
   // Remove cookies preferences and auth token from local storage (for easier testing)
   static refresh() {
     localStorage.removeItem(tokenKey);
@@ -30,23 +32,19 @@ export default class App extends Component {
     }
   }
 
-  static callCookieHandler(cookieObject) {
-    const { config } = XcooBee.kit;
-
+  static callCookieHandler(config, cookieObject) {
     if (typeof config.cookieHandler === "string") {
       if (typeof window[config.cookieHandler] === "function") {
         window[config.cookieHandler](cookieObject);
       } else {
-        console.error(`Cookie handler function "${config.cookieHandler}" is missing`)
+        console.error(`Cookie handler function "${config.cookieHandler}" is missing`);
       }
     } else {
       config.cookieHandler(cookieObject);
     }
   }
 
-  static callTargetUrl(cookieObject) {
-    const { config } = XcooBee.kit;
-
+  static callTargetUrl(config, cookieObject) {
     const result = {
       time: new Date().toISOString(),
       code: 200,
@@ -70,7 +68,7 @@ export default class App extends Component {
     this.state = {
       animation: animations.noAnimation,
       countryCode: "US",
-      isOffline: !XcooBee.kit.config.campaignReference,
+      isOffline: !props.config.campaignReference,
       isOpen: false,
       isShown: true,
       loading: true,
@@ -97,7 +95,7 @@ export default class App extends Component {
 
   setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences) {
     const { userOptions } = this.state;
-    const { config } = XcooBee.kit;
+    const { config } = this.props;
 
     if (blnSavedPreferences) {
       const cookieObject = {};
@@ -106,16 +104,17 @@ export default class App extends Component {
         const cookieType = cookieTypes.find(type => type.key === cookie.type);
         const checked = JSON.parse(localStorage[xcoobeeCookiesKey]).cookies[cookieType.id];
 
+        // FIXME: TODO: This is changing innards of the config.
         cookie.checked = checked;
         cookieObject[cookie.type] = checked;
       });
 
       if (config.cookieHandler) {
-        App.callCookieHandler(cookieObject);
+        App.callCookieHandler(config, cookieObject);
       }
 
       if (config.targetUrl) {
-        App.callTargetUrl(cookieObject);
+        App.callTargetUrl(config, cookieObject);
       }
 
       return this.startPulsing(animations.userSettings);
@@ -133,6 +132,7 @@ export default class App extends Component {
     if (userOptions.length && localStorage[tokenKey]) {
       config.cookies.forEach((cookie) => {
         if (userOptions.includes(cookie.type)) {
+          // FIXME: TODO: This is changing innards of the config.
           cookie.checked = true;
         }
       });
@@ -143,6 +143,7 @@ export default class App extends Component {
     if (!euCountries.includes(countryCode) && config.displayOnlyForEU) {
       config.cookies.forEach((cookie) => {
         if (config.checkByDefaultTypes.includes(cookie.type)) {
+          // FIXME: TODO: This is changing innards of the config.
           cookie.checked = true;
         }
       });
@@ -154,7 +155,7 @@ export default class App extends Component {
     const checked = [];
 
     cookieTypes.forEach((type) => {
-      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+      if (config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
         checked.push(type.id);
       }
     });
@@ -164,7 +165,8 @@ export default class App extends Component {
   }
 
   fetchUserSettings(afterLogin) {
-    const { campaignReference } = XcooBee.kit.config;
+    const { config } = this.props;
+    const { campaignReference } = config;
 
     if (afterLogin) {
       this.setState({ loading: true });
@@ -199,6 +201,7 @@ export default class App extends Component {
   }
 
   fetch100Sites(userCursor, xcoobeeId) {
+    const { config } = this.props;
     const query = `query SystemUserQueries($user_cursor: String!) {
       cookie_consents(user_cursor: $user_cursor) {
         site,
@@ -213,10 +216,9 @@ export default class App extends Component {
             .toString(CryptoJS.enc.Base64));
 
         if (siteSettings && siteSettings.cookies.length) {
-          const { config } = XcooBee.kit;
-
           config.cookies.forEach((cookie) => {
             if (siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)) {
+              // FIXME: TODO: This is changing innards of the config.
               cookie.checked = true;
             }
           });
@@ -229,6 +231,7 @@ export default class App extends Component {
   }
 
   fetchCrowdAI() {
+    const { config } = this.props;
     const { crowdAI } = this.state;
 
     if (crowdAI) {
@@ -243,11 +246,10 @@ export default class App extends Component {
           const crowdRating = res ? res.crowd_rating : null;
 
           if (crowdRating) {
-            const { config } = XcooBee.kit;
-
             config.cookies.forEach((cookie) => {
               const ratedCookie = crowdRating.find(item => item.cookie_type.includes(cookie.type));
 
+              // FIXME: TODO: This is changing innards of the config.
               if (ratedCookie && ratedCookie.value >= 0.8) {
                 cookie.checked = true;
               } else {
@@ -276,16 +278,19 @@ export default class App extends Component {
   }
 
   startPulsing(animation) {
+    const { config } = this.props;
+
     const checked = [];
 
     cookieTypes.forEach((type) => {
-      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+      if (config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
         checked.push(type.id);
       }
     });
     this.setState({ checked });
 
-    XcooBee.kit.consentStatus = consentStatuses.complete;
+    // FIXME: TODO: This is changing innards of the config.
+    config.consentStatus = consentStatuses.complete;
 
     this.setState({ animation });
     this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
@@ -294,11 +299,13 @@ export default class App extends Component {
   }
 
   startTimer() {
-    const timeOut = XcooBee.kit.config.expirationTime;
+    const { config } = this.props;
+    const timeOut = config.expirationTime;
 
     if (timeOut && timeOut > 0) {
       this.timers.push(setTimeout(() => {
-        XcooBee.kit.consentStatus = consentStatuses.closed;
+        // FIXME: TODO: This is changing innards of the config.
+        config.consentStatus = consentStatuses.closed;
         this.setState({ isShown: false });
       }, timeOut * 1000));
     }
@@ -316,10 +323,12 @@ export default class App extends Component {
   }
 
   handleClose() {
+    const { config } = this.props;
+
     this.setState({ isOpen: false });
     this.startTimer();
 
-    if (XcooBee.kit.config.hideOnComplete) {
+    if (config.hideOnComplete) {
       this.setState({ isShown: false });
     }
   }
@@ -331,7 +340,7 @@ export default class App extends Component {
 
   handleSubmit() {
     const { isOffline } = this.state;
-    const { config } = XcooBee.kit;
+    const { config } = this.props;
 
     const addConsentQuery = `mutation AddConsents($campaign_reference: String, $domain: String) {
       add_consents(campaign_reference: $campaign_reference, domain: $domain) {
@@ -368,11 +377,11 @@ export default class App extends Component {
     localStorage.setItem("xcoobeeCookies", JSON.stringify(xcoobeeCookies));
 
     if (config.cookieHandler) {
-      App.callCookieHandler(cookieObject);
+      App.callCookieHandler(config, cookieObject);
     }
 
     if (config.targetUrl) {
-      App.callTargetUrl(cookieObject);
+      App.callTargetUrl(config, cookieObject);
     }
 
     if (!isOffline && !!localStorage[tokenKey]) {
@@ -408,30 +417,32 @@ export default class App extends Component {
     const checked = [];
 
     cookieTypes.forEach((type) => {
-      if (XcooBee.kit.config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
+      if (config.cookies.filter(cookie => cookie.checked).map(cookie => cookie.type).includes(type.key)) {
         checked.push(type.id);
       }
     });
     this.setState({ checked });
 
-    XcooBee.kit.consentStatus = consentStatuses.complete;
+    // FIXME: TODO: This is changing innards of the config.
+    config.consentStatus = consentStatuses.complete;
     this.handleClose();
   }
 
   render() {
+    const { config } = this.props;
     const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading, checked } = this.state;
-    const isHide = XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete;
+    const isHide = config.hideOnComplete && config.consentStatus === consentStatuses.complete;
 
     return !loading && !isHide && (
       <div
-        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
+        className={`xb-cookie-kit ${config.position} ${!isShown ? "transparent" : ""}`}
         style={{ width: isOpen ? "auto" : "4vw" }}
       >
         {
           isOpen
             ? (
               <CookieKitPopup
-                campaign={XcooBee.kit.config}
+                campaign={config}
                 onClose={() => this.handleClose()}
                 onSubmit={() => this.handleSubmit()}
                 onLogin={() => this.handleLogin()}
@@ -451,7 +462,7 @@ export default class App extends Component {
             )
         }
         {
-          (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && XcooBee.kit.config.testMode && (
+          (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]) && config.testMode && (
             <button
               type="button"
               className="xb-cookie-kit__refresh-button"
@@ -465,3 +476,42 @@ export default class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  config: PropTypes.shape({
+    campaignReference: PropTypes.string,
+    checkByDefaultTypes: PropTypes.arrayOf(
+      PropTypes.oneOf([
+        "advertising",
+        "application",
+        "statistics",
+        "usage",
+      ]).isRequired,
+    ),
+    companyLogo: PropTypes.string,
+    cookieHandler: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.string,
+    ]),
+    cookies: PropTypes.arrayOf(
+      PropTypes.shape({
+        checked: PropTypes.bool.isRequired,
+        type: PropTypes.oneOf([
+          "advertising",
+          "application",
+          "statistics",
+          "usage",
+        ]).isRequired,
+      }).isRequired,
+    ).isRequired,
+    consentStatus: PropTypes.oneOf(Object.values(consentStatuses)),
+    displayOnlyForEU: PropTypes.bool,
+    expirationTime: PropTypes.number,
+    hideOnComplete: PropTypes.bool,
+    position: PropTypes.oneOf(positions),
+    targetUrl: PropTypes.string.isRequired,
+    testMode: PropTypes.bool,
+  }).isRequired,
+};
+
+export default App;

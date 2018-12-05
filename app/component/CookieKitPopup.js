@@ -130,7 +130,7 @@ export default class CookieKitPopup extends Component {
               !isOffline && campaign.companyLogo && (
                 <img
                   className="xb-cookie-kit-popup__company-logo"
-                  src={XcooBee.kit.config.companyLogo}
+                  src={campaign.companyLogo}
                   alt="company-logo"
                 />
               )
