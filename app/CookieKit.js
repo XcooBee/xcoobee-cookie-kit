@@ -16,7 +16,45 @@ import {
 } from "./utils";
 import graphQLRequest from "./utils/graphql";
 
-class CookieKit extends Component {
+
+export default class CookieKit extends Component {
+  static propTypes = {
+    config: PropTypes.shape({
+      campaignReference: PropTypes.string,
+      checkByDefaultTypes: PropTypes.arrayOf(
+        PropTypes.oneOf([
+          "advertising",
+          "application",
+          "statistics",
+          "usage",
+        ]).isRequired,
+      ),
+      companyLogo: PropTypes.string,
+      cookieHandler: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+      ]),
+      cookies: PropTypes.arrayOf(
+        PropTypes.shape({
+          checked: PropTypes.bool.isRequired,
+          type: PropTypes.oneOf([
+            "advertising",
+            "application",
+            "statistics",
+            "usage",
+          ]).isRequired,
+        }).isRequired,
+      ).isRequired,
+      consentStatus: PropTypes.oneOf(Object.values(consentStatuses)),
+      displayOnlyForEU: PropTypes.bool,
+      expirationTime: PropTypes.number,
+      hideOnComplete: PropTypes.bool,
+      position: PropTypes.oneOf(positions),
+      targetUrl: PropTypes.string.isRequired,
+      testMode: PropTypes.bool,
+    }).isRequired,
+  };
+
   // Remove cookies preferences and auth token from local storage (for easier testing)
   static refresh() {
     localStorage.removeItem(tokenKey);
@@ -476,42 +514,3 @@ class CookieKit extends Component {
     );
   }
 }
-
-CookieKit.propTypes = {
-  config: PropTypes.shape({
-    campaignReference: PropTypes.string,
-    checkByDefaultTypes: PropTypes.arrayOf(
-      PropTypes.oneOf([
-        "advertising",
-        "application",
-        "statistics",
-        "usage",
-      ]).isRequired,
-    ),
-    companyLogo: PropTypes.string,
-    cookieHandler: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.string,
-    ]),
-    cookies: PropTypes.arrayOf(
-      PropTypes.shape({
-        checked: PropTypes.bool.isRequired,
-        type: PropTypes.oneOf([
-          "advertising",
-          "application",
-          "statistics",
-          "usage",
-        ]).isRequired,
-      }).isRequired,
-    ).isRequired,
-    consentStatus: PropTypes.oneOf(Object.values(consentStatuses)),
-    displayOnlyForEU: PropTypes.bool,
-    expirationTime: PropTypes.number,
-    hideOnComplete: PropTypes.bool,
-    position: PropTypes.oneOf(positions),
-    targetUrl: PropTypes.string.isRequired,
-    testMode: PropTypes.bool,
-  }).isRequired,
-};
-
-export default CookieKit;
