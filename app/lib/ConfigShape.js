@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 
 import { positions } from "../utils";
 
+// Note: One of `cookieHandler` or `targetUrl` is required.
 const ConfigShape = PropTypes.shape({
   campaignReference: PropTypes.string,
   checkByDefaultTypes: PropTypes.arrayOf(
@@ -21,7 +22,7 @@ const ConfigShape = PropTypes.shape({
   expirationTime: PropTypes.number,
   hideOnComplete: PropTypes.bool,
   position: PropTypes.oneOf(positions),
-  targetUrl: PropTypes.string.isRequired,
+  targetUrl: PropTypes.string,
   testMode: PropTypes.bool,
 });
 
