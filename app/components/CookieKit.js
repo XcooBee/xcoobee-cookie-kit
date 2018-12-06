@@ -58,12 +58,6 @@ export default class CookieKit extends React.PureComponent {
 
     this.timers = [];
 
-    // TODO: Use property initializers.
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handlePopupClose = this.handlePopupClose.bind(this);
-    this.handlePopupLogin = this.handlePopupLogin.bind(this);
-    this.handlePopupSubmit = this.handlePopupSubmit.bind(this);
-
     this.startPulsing();
   }
 
@@ -89,6 +83,39 @@ export default class CookieKit extends React.PureComponent {
     this.timers.forEach(timer => clearTimeout(timer));
   }
 
+  handleOpen = () => {
+    // console.log("CookieKit#handleOpen");
+    this.setState({ isOpen: true });
+    this.timers.forEach(timer => clearTimeout(timer));
+  }
+
+  handlePopupClose = () => {
+    // console.log("CookieKit#handlePopupClose");
+    const { config } = this.props;
+
+    this.setState({ isOpen: false });
+    this.startTimer();
+
+    if (config.hideOnComplete) {
+      this.setState({ isShown: false });
+    }
+  }
+
+  handlePopupLogin = (accessToken) => {
+    // console.log("CookieKit#handlePopupLogin");
+    this.setState({ isOpen: false });
+    const { onAuthentication } = this.props;
+    onAuthentication(accessToken);
+  }
+
+  handlePopupSubmit = (nextCookieConsentLut) => {
+    // console.log("CookieKit#handlePopupSubmit");
+    // console.dir(nextCookieConsentLut);
+    const { onCookieConsentsChange } = this.props;
+    onCookieConsentsChange(nextCookieConsentLut);
+    this.handlePopupClose();
+  }
+
   startPulsing() {
     // console.log("CookieKit#startPulsing");
     this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
@@ -107,39 +134,6 @@ export default class CookieKit extends React.PureComponent {
         this.setState({ isShown: false });
       }, timeOut * 1000));
     }
-  }
-
-  handleOpen() {
-    // console.log("CookieKit#handleOpen");
-    this.setState({ isOpen: true });
-    this.timers.forEach(timer => clearTimeout(timer));
-  }
-
-  handlePopupClose() {
-    // console.log("CookieKit#handlePopupClose");
-    const { config } = this.props;
-
-    this.setState({ isOpen: false });
-    this.startTimer();
-
-    if (config.hideOnComplete) {
-      this.setState({ isShown: false });
-    }
-  }
-
-  handlePopupLogin(accessToken) {
-    // console.log("CookieKit#handlePopupLogin");
-    this.setState({ isOpen: false });
-    const { onAuthentication } = this.props;
-    onAuthentication(accessToken);
-  }
-
-  handlePopupSubmit(nextCookieConsentLut) {
-    // console.log("CookieKit#handlePopupSubmit");
-    // console.dir(nextCookieConsentLut);
-    const { onCookieConsentsChange } = this.props;
-    onCookieConsentsChange(nextCookieConsentLut);
-    this.handlePopupClose();
   }
 
   render() {
@@ -169,18 +163,16 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
-            config={{
-              companyLogo: config.companyLogo,
-              privacyUrl: config.privacyUrl,
-              termsUrl: config.termsUrl,
-              textMessage: config.textMessage,
-            }}
+            companyLogo={config.companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}
             isConnected={!!config.campaignReference}
             onClose={this.handlePopupClose}
             onLogin={this.handlePopupLogin}
             onSubmit={this.handlePopupSubmit}
+            privacyUrl={config.privacyUrl}
+            termsUrl={config.termsUrl}
+            textMessage={config.textMessage}
           />
         )}
         {renderButton && (

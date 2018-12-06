@@ -14,21 +14,20 @@ import renderText from "../utils/locales/renderText";
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
-    config: PropTypes.shape({
-      companyLogo: PropTypes.string,
-      privacyUrl: PropTypes.string,
-      termsUrl: PropTypes.string,
-      textMessage: PropTypes.string,
-    }).isRequired,
+    companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
     isConnected: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    privacyUrl: PropTypes.string.isRequired,
+    termsUrl: PropTypes.string.isRequired,
+    textMessage: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
+    companyLogo: null,
     countryCode: "US",
   };
 
@@ -49,12 +48,14 @@ export default class CookieKitPopup extends React.PureComponent {
       cookieDefns: allAvailCookieDefns.filter(defn => cookieNames.includes(defn.type)),
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.onMessage = this.onMessage.bind(this);
     window.addEventListener("message", this.onMessage);
   }
 
-  onMessage(event) {
+  componentWillUnmount() {
+    window.removeEventListener("message", this.onMessage);
+  }
+
+  onMessage = (event) => {
     const { onLogin } = this.props;
     const { token } = event.data;
 
@@ -63,11 +64,11 @@ export default class CookieKitPopup extends React.PureComponent {
     }
   }
 
-  handleLocaleChange(locale) {
+  handleLocaleChange = (locale) => {
     this.setState({ selectedLocale: locale, isShown: false });
   }
 
-  handleCookieCheck(e, type) {
+  handleCookieCheck = (e, type) => {
     const { cookieConsentLut } = this.state;
     const checked = {
       ...cookieConsentLut,
@@ -78,7 +79,7 @@ export default class CookieKitPopup extends React.PureComponent {
     this.setState({ cookieConsentLut: checked });
   }
 
-  handleCheckAll() {
+  handleCheckAll = () => {
     const { cookieConsentLut } = this.state;
 
     const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
@@ -98,7 +99,7 @@ export default class CookieKitPopup extends React.PureComponent {
     }
   }
 
-  handleSubmit() {
+  handleSubmit = () => {
     const { onSubmit } = this.props;
     const { cookieConsentLut } = this.state;
 
@@ -123,12 +124,14 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   render() {
-    const { config, isConnected, onClose, countryCode } = this.props;
+    const { companyLogo, countryCode, isConnected, onClose, privacyUrl, termsUrl, textMessage } = this.props;
     const { cookieConsentLut, cookieDefns, isShown, selectedLocale } = this.state;
     const isAuthorized = AuthenticationManager.getAccessToken();
 
+    // TODO: Move the following to CSS. Use media query.
     const width = window.innerWidth || document.body.clientWidth;
     const flagSize = width > 400 ? "25px" : "20px";
+
     const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
 
     return (
@@ -136,10 +139,10 @@ export default class CookieKitPopup extends React.PureComponent {
         <div className="xb-cookie-kit-popup__header">
           <div className="xb-cookie-kit-popup__logo">
             {
-              isConnected && config.companyLogo && (
+              isConnected && companyLogo && (
                 <img
                   className="xb-cookie-kit-popup__company-logo"
-                  src={config.companyLogo}
+                  src={companyLogo}
                   alt="Company logo"
                 />
               )
@@ -160,8 +163,8 @@ export default class CookieKitPopup extends React.PureComponent {
         </div>
         <div className="xb-cookie-kit-popup__text-container">
           <div className="xb-cookie-kit-popup__text">
-            { typeof config.textMessage === "string"
-              ? config.textMessage : this.renderTextMessage(config.textMessage) }
+            { typeof textMessage === "string"
+              ? textMessage : this.renderTextMessage(textMessage) }
           </div>
           <div className="xb-cookie-kit-popup__locale-container">
             <div className="xb-cookie-kit-popup__locale">
@@ -225,7 +228,7 @@ export default class CookieKitPopup extends React.PureComponent {
         <button
           type="button"
           className="xb-cookie-kit__button xb-cookie-kit-popup__check-all"
-          onClick={() => this.handleCheckAll()}
+          onClick={this.handleCheckAll}
         >
           {isAllChecked
             ? renderText("CookieKit.UncheckButton", selectedLocale)
@@ -283,7 +286,7 @@ export default class CookieKitPopup extends React.PureComponent {
           )}
           <a
             className="xb-cookie-kit-popup__link"
-            href={config.termsUrl}
+            href={termsUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -291,7 +294,7 @@ export default class CookieKitPopup extends React.PureComponent {
           </a>
           <a
             className="xb-cookie-kit-popup__link"
-            href={config.privacyUrl}
+            href={privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
