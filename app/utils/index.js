@@ -39,6 +39,7 @@ const cookieDefns = [
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/advertising-and-marketing-cookies",
   },
 ];
+const cookieTypes = cookieDefns.map(defn => defn.type);
 const locales = ["EN", "DE", "FR", "ES"];
 const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
@@ -73,6 +74,7 @@ export {
   configFields,
   consentStatuses,
   cookieDefns,
+  cookieTypes,
   cssHref,
   defaultConfig,
   euCountries,

@@ -1,17 +1,12 @@
 import PropTypes from "prop-types";
 
-import { positions } from "../utils";
+import { cookieTypes, positions } from "../utils";
 
 // Note: One of `cookieHandler` or `targetUrl` is required.
 const ConfigShape = PropTypes.shape({
   campaignReference: PropTypes.string,
   checkByDefaultTypes: PropTypes.arrayOf(
-    PropTypes.oneOf([
-      "advertising",
-      "application",
-      "statistics",
-      "usage",
-    ]).isRequired,
+    PropTypes.oneOf(cookieTypes).isRequired,
   ),
   companyLogo: PropTypes.string,
   cookieHandler: PropTypes.oneOfType([
