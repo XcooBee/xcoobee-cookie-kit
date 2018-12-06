@@ -289,7 +289,17 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
-        <div className="xb-cookie-kit-popup__powered-by">Powered by XcooBee</div>
+        <div className="xb-cookie-kit-popup__powered-by">
+          Powered by
+          <a
+            className="xb-cookie-kit-popup__powered-by-link"
+            href={links.poweredBy}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            XcooBee
+          </a>
+        </div>
       </div>
     );
   }
