@@ -4,7 +4,7 @@ import Config from "./model/Config";
 
 import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
 
-import CookieKit from "./components/CookieKit";
+import CookieKitContainer from "./components/CookieKitContainer";
 
 class CookieConsentManager {
   _config = null;
@@ -43,7 +43,10 @@ class CookieConsentManager {
 
       CONTAINER.className = "xb-cookie-kit-placeholder";
 
-      ReactDOM.render(<CookieKit config={this._config} />, CONTAINER);
+      ReactDOM.render(
+        <CookieKitContainer config={this._config} />,
+        CONTAINER,
+      );
       document.body.appendChild(CONTAINER);
     });
   }

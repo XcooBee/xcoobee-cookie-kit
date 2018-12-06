@@ -16,6 +16,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "classnames": "^2.2.6",
     "crypto-js": "^3.1.9-1",
     "fetch-polyfill": "^0.8.2",
     "graphql": "^14.0.2",

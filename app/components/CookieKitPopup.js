@@ -1,49 +1,55 @@
-import { Component } from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import ReactCountryFlag from "react-country-flag";
 
-import Config from "../model/Config";
+import AuthenticationManager from "../lib/AuthenticationManager";
+import CookieConsentShape from "../lib/CookieConsentShape";
 
-import { cookieTypes, locales, tokenKey, links } from "../utils";
+import {
+  cookieTypes as allAvailCookieDefns,
+  locales,
+  links,
+} from "../utils";
 import renderText from "../utils/locales/renderText";
 
-export default class CookieKitPopup extends Component {
+export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
-    campaign: Config,
-    isOffline: PropTypes.bool,
+    config: PropTypes.shape({
+      companyLogo: PropTypes.string,
+      privacyUrl: PropTypes.string,
+      termsUrl: PropTypes.string,
+      textMessage: PropTypes.string,
+    }).isRequired,
+    cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
-    onClose: PropTypes.func,
-    onLogin: PropTypes.func,
-    onSubmit: PropTypes.func,
-    checked: PropTypes.arrayOf(PropTypes.number),
+    isConnected: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onLogin: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    campaign: new Config(),
-    isOffline: false,
     countryCode: "US",
-    onClose: () => {
-    },
-    onLogin: () => {
-    },
-    onSubmit: () => {
-    },
-    checked: [],
   };
 
   constructor(props) {
     super(props);
 
-    const { campaign, checked } = this.props;
+    const { cookieConsents } = this.props;
+    const cookieNames = cookieConsents.map(cookieConsent => cookieConsent.type);
+    const cookieConsentLut = {};
+    cookieConsents.forEach((cookieConsent) => {
+      cookieConsentLut[cookieConsent.type] = cookieConsent.checked;
+    });
 
     this.state = {
-      checked,
+      cookieConsentLut,
       selectedLocale: "EN",
       isShown: false,
-      cookies: cookieTypes.filter(type => campaign.cookies.map(cookie => cookie.type).includes(type.key)),
-      isAuthorized: !!localStorage[tokenKey],
+      cookieDefns: allAvailCookieDefns.filter(type => cookieNames.includes(type.key)),
     };
 
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.onMessage = this.onMessage.bind(this);
     window.addEventListener("message", this.onMessage);
   }
@@ -53,9 +59,7 @@ export default class CookieKitPopup extends Component {
     const { token } = event.data;
 
     if (token) {
-      localStorage.setItem(tokenKey, token);
-      this.setState({ isAuthorized: true });
-      onLogin();
+      onLogin(token);
     }
   }
 
@@ -63,39 +67,42 @@ export default class CookieKitPopup extends Component {
     this.setState({ selectedLocale: locale, isShown: false });
   }
 
-  handleCookieCheck(e, id) {
-    const { checked } = this.state;
-    let selected = checked.slice();
+  handleCookieCheck(e, key) {
+    const { cookieConsentLut } = this.state;
+    const checked = {
+      ...cookieConsentLut,
+    };
 
-    if (e.target.checked) {
-      selected.push(id);
-    } else {
-      selected = checked.filter(item => item !== id);
-    }
+    checked[key] = e.target.checked;
 
-    this.setState({ checked: selected });
+    this.setState({ cookieConsentLut: checked });
   }
 
   handleCheckAll() {
-    const { checked, cookies } = this.state;
+    const { cookieConsentLut } = this.state;
 
-    if (cookies.length === checked.length) {
-      this.setState({ checked: [] });
+    const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
+
+    if (isAllChecked) {
+      const noneChecked = {};
+      Object.keys(cookieConsentLut).forEach((cookieName) => {
+        noneChecked[cookieName] = false;
+      });
+      this.setState({ cookieConsentLut: noneChecked });
     } else {
-      this.setState({ checked: cookies.map(cookie => cookie.id) });
+      const allChecked = {};
+      Object.keys(cookieConsentLut).forEach((cookieName) => {
+        allChecked[cookieName] = true;
+      });
+      this.setState({ cookieConsentLut: allChecked });
     }
   }
 
   handleSubmit() {
-    const { campaign, onSubmit } = this.props;
-    const { checked } = this.state;
+    const { onSubmit } = this.props;
+    const { cookieConsentLut } = this.state;
 
-    campaign.cookies.forEach((cookie) => {
-      const cookieType = cookieTypes.find(type => type.key === cookie.type);
-
-      cookie.checked = cookieType && checked.includes(cookieType.id);
-    });
-    onSubmit();
+    onSubmit(cookieConsentLut);
   }
 
   renderTextMessage(JSON) {
@@ -116,22 +123,24 @@ export default class CookieKitPopup extends Component {
   }
 
   render() {
-    const { campaign, isOffline, onClose, countryCode } = this.props;
-    const { checked, isAuthorized, selectedLocale, isShown, cookies } = this.state;
+    const { config, isConnected, onClose, countryCode } = this.props;
+    const { cookieConsentLut, cookieDefns, isShown, selectedLocale } = this.state;
+    const isAuthorized = AuthenticationManager.getAccessToken();
 
     const width = window.innerWidth || document.body.clientWidth;
     const flagSize = width > 400 ? "25px" : "20px";
+    const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
 
     return (
       <div className="xb-cookie-kit-popup">
         <div className="xb-cookie-kit-popup__header">
           <div className="xb-cookie-kit-popup__logo">
             {
-              !isOffline && campaign.companyLogo && (
+              isConnected && config.companyLogo && (
                 <img
                   className="xb-cookie-kit-popup__company-logo"
-                  src={campaign.companyLogo}
-                  alt="company-logo"
+                  src={config.companyLogo}
+                  alt="Company logo"
                 />
               )
             }
@@ -151,8 +160,8 @@ export default class CookieKitPopup extends Component {
         </div>
         <div className="xb-cookie-kit-popup__text-container">
           <div className="xb-cookie-kit-popup__text">
-            { typeof campaign.textMessage === "string"
-              ? campaign.textMessage : this.renderTextMessage(campaign.textMessage) }
+            { typeof config.textMessage === "string"
+              ? config.textMessage : this.renderTextMessage(config.textMessage) }
           </div>
           <div className="xb-cookie-kit-popup__locale-container">
             <div className="xb-cookie-kit-popup__locale">
@@ -184,29 +193,29 @@ export default class CookieKitPopup extends Component {
           </div>
         </div>
         <div className="xb-cookie-kit-popup__cookie-list">
-          { cookies.map(cookie => (
+          { cookieDefns.map(cookieDefn => (
             <div className="xb-cookie-kit-popup__cookie">
               <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--lg">
                 <div>
                   <input
-                    id={`checkbox-${cookie.id}`}
+                    id={`xbCheckbox_${cookieDefn.id}`}
                     type="checkbox"
-                    checked={checked.includes(cookie.id)}
-                    onChange={e => this.handleCookieCheck(e, cookie.id)}
+                    checked={cookieConsentLut[cookieDefn.key]}
+                    onChange={e => this.handleCookieCheck(e, cookieDefn.key)}
                   />
                   <label
-                    htmlFor={`checkbox-${cookie.id}`}
+                    htmlFor={`xbCheckbox_${cookieDefn.id}`}
                     className="xb-cookie-kit-popup__checkbox"
                   />
                 </div>
                 <div className="xb-cookie-kit-popup__cookie-title">
                   <a
                     className="xb-cookie-kit-popup__cookie-title-link"
-                    href={cookie.url}
+                    href={cookieDefn.url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {renderText(cookie.localeKey, selectedLocale)}
+                    {renderText(cookieDefn.localeKey, selectedLocale)}
                   </a>
                 </div>
               </div>
@@ -218,7 +227,7 @@ export default class CookieKitPopup extends Component {
           className="xb-cookie-kit-popup__check-all"
           onClick={() => this.handleCheckAll()}
         >
-          {checked.length === cookies.length
+          {isAllChecked
             ? renderText("CookieKit.UncheckButton", selectedLocale)
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
@@ -235,7 +244,7 @@ export default class CookieKitPopup extends Component {
                 <img
                   className="xb-cookie-kit-popup__privacy-partner-logo"
                   src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
-                  alt="xcoobee-logo"
+                  alt="XcooBee logo"
                 />
               </div>
             </a>
@@ -244,14 +253,14 @@ export default class CookieKitPopup extends Component {
             <button
               type="button"
               className="xb-cookie-kit-popup__button"
-              onClick={() => this.handleSubmit()}
+              onClick={this.handleSubmit}
             >
               OK
             </button>
           </div>
         </div>
         <div className="xb-cookie-kit-popup__links">
-          { !isOffline && (isAuthorized
+          { isConnected && (isAuthorized
             ? (
               <a
                 className="xb-cookie-kit-popup__link"
@@ -274,7 +283,7 @@ export default class CookieKitPopup extends Component {
           )}
           <a
             className="xb-cookie-kit-popup__link"
-            href={campaign.termsUrl}
+            href={config.termsUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -282,7 +291,7 @@ export default class CookieKitPopup extends Component {
           </a>
           <a
             className="xb-cookie-kit-popup__link"
-            href={campaign.privacyUrl}
+            href={config.privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
