@@ -27,32 +27,6 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
     });
 }
 
-// async function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
-//   let cookieConsents = null;
-
-//   const usersSitesCookieConsents = await fetchUsersSitesCookieConsents(accessToken, userCursor);
-//   let siteCookieConsents = null;
-
-//   if (Array.isArray(usersSitesCookieConsents)) {
-//     siteCookieConsents = usersSitesCookieConsents.find(consent => consent.site === encodedSite);
-//   }
-
-//   if (siteCookieConsents
-//       && Array.isArray(siteCookieConsents.cookies)
-//       && siteCookieConsents.cookies.length > 0
-//   ) {
-//     cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-//       const checked = siteCookieConsents.cookies.includes(cookieDefn.dbKey);
-//       return {
-//         type: cookieDefn.type,
-//         checked,
-//       };
-//     });
-//   }
-
-//   return cookieConsents;
-// }
-
 function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
   // console.log("fetchUsersSiteCookieConsents fetching...");
   return fetchUsersSitesCookieConsents(accessToken, userCursor)
@@ -140,41 +114,6 @@ class CookieConsentsManager {
       });
   }
 
-  // static async fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
-  //   let crowdIntelligenceCookieConsents = null;
-
-  //   const userInfo = await fetchUserInfo(accessToken);
-
-  //   if (userInfo.acceptCrowdAI) {
-  //     const query = `query getCrowdRating($campaignName: String!) {
-  //       crowd_rating(campaign_name: $campaignName) {
-  //         cookie_type
-  //         value
-  //       }
-  //     }`;
-
-  //     crowdIntelligenceCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
-  //       .then((res) => {
-  //         let cookieConsents = null;
-  //         const crowdRatings = res ? res.crowd_rating : null;
-
-  //         if (Array.isArray(crowdRatings)) {
-  //           cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-  //             const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
-  //             const checked = ratedCookie && ratedCookie.value >= 0.8;
-  //             return {
-  //               type: cookieDefn.type,
-  //               checked,
-  //             };
-  //           });
-  //         }
-  //         return cookieConsents;
-  //       });
-  //   }
-
-  //   return crowdIntelligenceCookieConsents;
-  // }
-
   static fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
     // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
     return fetchUserInfo(accessToken)
@@ -239,33 +178,6 @@ class CookieConsentsManager {
     return Promise.resolve(cookieConsents);
   }
 
-  // static async fetchUserPreferenceCookieConsents(accessToken, origin) {
-  //   let userPreferenceCookieConsents = null;
-
-  //   const userInfo = await fetchUserInfo(accessToken);
-
-  //   if (userInfo) {
-  //     const message = `${origin.toLowerCase()}${userInfo.xcoobeeId}`;
-  //     const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
-
-  //     const cookieConsents = await fetchUsersSiteCookieConsents(accessToken, userInfo.userCursor, encodedSite);
-
-  //     if (cookieConsents) {
-  //       userPreferenceCookieConsents = cookieConsents;
-  //     } else if (userInfo.acceptCookies.length > 0) {
-  //       userPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-  //         const checked = userInfo.acceptCookies.includes(cookieDefn.dbKey);
-  //         return {
-  //           type: cookieDefn.type,
-  //           checked,
-  //         };
-  //       });
-  //     }
-  //   }
-
-  //   return userPreferenceCookieConsents;
-  // }
-
   static fetchUserPreferenceCookieConsents(accessToken, origin) {
     // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
     return fetchUserInfo(accessToken)
@@ -299,22 +211,6 @@ class CookieConsentsManager {
         return userPreferenceCookieConsents;
       });
   }
-
-  // static async fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
-  //   let companyPreferenceCookieConsents = null;
-
-  //   if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-  //     companyPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-  //       const checked = checkByDefaultTypes.includes(cookieDefn.type);
-  //       return {
-  //         type: cookieDefn.type,
-  //         checked,
-  //       };
-  //     });
-  //   }
-
-  //   return companyPreferenceCookieConsents;
-  // }
 
   static fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
     // console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetching...");

@@ -85,44 +85,6 @@ export default class CookieKitContainer extends React.PureComponent {
     };
   }
 
-  // async componentDidMount() {
-  //   console.log("CookieKitContainer#componentDidMount");
-
-  //   const [userSettingsCookieConsents, countryCode] = Promise.all([
-  //     fetchCountryCode(),
-  //     fetchUserSettingsCookieConsents(),
-  //   ]);
-
-  //   this.setState({ countryCode });
-  //   if (userSettingsCookieConsents) {
-  //     this.setState({
-  //       consentsSource: "userSettings",
-  //       cookieConsents: userSettingsCookieConsents,
-  //     });
-  //   } else {
-  //     const accessToken = getAccessToken();
-  //     if (accessToken) {
-  //       const { origin } = window.location;
-  //       const userPreferenceCookieConsents = await fetchUserPreferenceCookieConsents(accessToken, origin);
-  //       if (userPreferenceCookieConsents) {
-  //         this.setState({
-  //           consentsSource: "userPreference",
-  //           cookieConsents: userPreferenceCookieConsents,
-  //         });
-  //       } else {
-  //         const campaignName = window.location.host;
-  //         const crowdIntelligenceCookieConsents = await fetchCrowdIntelligenceCookieConsents(accessToken, campaignName);
-  //         if (crowdIntelligenceCookieConsents) {
-  //           this.setState({
-  //             consentsSource: "crowdIntelligence",
-  //             cookieConsents: crowdIntelligenceCookieConsents,
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   componentDidMount() {
     // console.log("CookieKitContainer#componentDidMount");
     // console.dir(this.props);
@@ -179,32 +141,6 @@ export default class CookieKitContainer extends React.PureComponent {
   //   if (this.state !== prevState) {
   //     console.log("state changed:");
   //     console.dir(this.state);
-  //   }
-  // }
-
-  // handleAuthentication = async (accessToken) => {
-  //   console.log("CookieKitContainer#handleAuthentication");
-  //   console.log("accessToken:", accessToken);
-  //   saveAccessToken(accessToken);
-
-  //   // TODO: Check that this is the logic we want to run. If so, then make it DRY.
-  //   // It is duplicated above in componentDidMount.
-  //   const { origin } = window.location;
-  //   const userPreferenceCookieConsents = await fetchUserPreferenceCookieConsents(accessToken, origin);
-  //   if (userPreferenceCookieConsents) {
-  //     this.setState({
-  //       consentsSource: "userPreference",
-  //       cookieConsents: userPreferenceCookieConsents,
-  //     });
-  //   } else {
-  //     const campaignName = window.location.host;
-  //     const crowdIntelligenceCookieConsents = await fetchCrowdIntelligenceCookieConsents(accessToken, campaignName);
-  //     if (crowdIntelligenceCookieConsents) {
-  //       this.setState({
-  //         consentsSource: "crowdIntelligence",
-  //         cookieConsents: crowdIntelligenceCookieConsents,
-  //       });
-  //     }
   //   }
   // }
 
