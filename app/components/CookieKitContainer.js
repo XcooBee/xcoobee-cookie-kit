@@ -93,7 +93,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     this.state = {
       consentsSource,
-      consentStatus: null,
+      consentStatus: consentStatuses.open,
       cookieConsents,
       countryCode: "US",
     };
