@@ -5,7 +5,7 @@ import AuthenticationManager from "../lib/AuthenticationManager";
 import ConfigShape from "../lib/ConfigShape";
 import CookieConsentsManager from "../lib/CookieConsentsManager";
 
-import { consentStatuses } from "../utils";
+import { consentStatuses, cookieTypes } from "../utils";
 
 import CookieKit from "./CookieKit";
 
@@ -70,24 +70,10 @@ export default class CookieKitContainer extends React.PureComponent {
     console.log("CookieKitContainer#constructor");
     super(props);
 
-    const cookieConsents = [
-      {
-        type: "application",
-        checked: false,
-      },
-      {
-        type: "usage",
-        checked: false,
-      },
-      {
-        type: "statistics",
-        checked: false,
-      },
-      {
-        type: "advertising",
-        checked: false,
-      },
-    ];
+    const cookieConsents = cookieTypes.map(type => ({
+      type,
+      checked: false,
+    }));
 
     const consentsSource = "unknown";
 
@@ -264,12 +250,10 @@ export default class CookieKitContainer extends React.PureComponent {
     const { config } = this.props;
     const { campaignReference } = config;
 
-    const cookieConsents = [
-      { type: "advertising", checked: !!cookieConsentLut.advertising },
-      { type: "application", checked: !!cookieConsentLut.application },
-      { type: "statistics", checked: !!cookieConsentLut.statistics },
-      { type: "usage", checked: !!cookieConsentLut.usage },
-    ];
+    const cookieConsents = cookieTypes.map(type => ({
+      type,
+      checked: !!cookieConsentLut[type],
+    }));
 
     saveLocally(cookieConsents);
 
