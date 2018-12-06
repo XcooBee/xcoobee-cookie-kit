@@ -37,7 +37,7 @@ export default class App extends Component {
       if (typeof window[config.cookieHandler] === "function") {
         window[config.cookieHandler](cookieObject);
       } else {
-        console.error(`Cookie handler function "${config.cookieHandler}" is missing`)
+        console.error(`Cookie handler function "${config.cookieHandler}" is missing`);
       }
     } else {
       config.cookieHandler(cookieObject);
