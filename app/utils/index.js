@@ -12,28 +12,28 @@ const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
 const cookieTypes = [
   {
     id: 0,
-    key: "application",
+    type: "application",
     dbKey: "application_cookie",
     localeKey: "CookieKit.ApplicationCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/application-cookies",
   },
   {
     id: 1,
-    key: "usage",
+    type: "usage",
     dbKey: "usage_cookie",
     localeKey: "CookieKit.UsageCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/personalization-cookies",
   },
   {
     id: 2,
-    key: "statistics",
+    type: "statistics",
     dbKey: "statistics_cookie",
     localeKey: "CookieKit.StatisticsCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/statistics-cookies",
   },
   {
     id: 3,
-    key: "advertising",
+    type: "advertising",
     dbKey: "advertising_cookie",
     localeKey: "CookieKit.AdvertisingCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/advertising-and-marketing-cookies",

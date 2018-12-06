@@ -46,7 +46,7 @@ export default class CookieKitPopup extends React.PureComponent {
       cookieConsentLut,
       selectedLocale: "EN",
       isShown: false,
-      cookieDefns: allAvailCookieDefns.filter(type => cookieNames.includes(type.key)),
+      cookieDefns: allAvailCookieDefns.filter(defn => cookieNames.includes(defn.type)),
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -67,13 +67,13 @@ export default class CookieKitPopup extends React.PureComponent {
     this.setState({ selectedLocale: locale, isShown: false });
   }
 
-  handleCookieCheck(e, key) {
+  handleCookieCheck(e, type) {
     const { cookieConsentLut } = this.state;
     const checked = {
       ...cookieConsentLut,
     };
 
-    checked[key] = e.target.checked;
+    checked[type] = e.target.checked;
 
     this.setState({ cookieConsentLut: checked });
   }
@@ -200,8 +200,8 @@ export default class CookieKitPopup extends React.PureComponent {
                   <input
                     id={`xbCheckbox_${cookieDefn.id}`}
                     type="checkbox"
-                    checked={cookieConsentLut[cookieDefn.key]}
-                    onChange={e => this.handleCookieCheck(e, cookieDefn.key)}
+                    checked={cookieConsentLut[cookieDefn.type]}
+                    onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
                   />
                   <label
                     htmlFor={`xbCheckbox_${cookieDefn.id}`}

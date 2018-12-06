@@ -44,7 +44,7 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
 //     cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
 //       const checked = siteCookieConsents.cookies.includes(cookieDefn.dbKey);
 //       return {
-//         type: cookieDefn.key,
+//         type: cookieDefn.type,
 //         checked,
 //       };
 //     });
@@ -75,7 +75,7 @@ function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
         cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
           const checked = siteCookieConsents.cookies.includes(cookieDefn.dbKey);
           return {
-            type: cookieDefn.key,
+            type: cookieDefn.type,
             checked,
           };
         });
@@ -163,7 +163,7 @@ class CookieConsentsManager {
   //             const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
   //             const checked = ratedCookie && ratedCookie.value >= 0.8;
   //             return {
-  //               type: cookieDefn.key,
+  //               type: cookieDefn.type,
   //               checked,
   //             };
   //           });
@@ -199,7 +199,7 @@ class CookieConsentsManager {
                   const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
                   const checked = ratedCookie && ratedCookie.value >= 0.8;
                   return {
-                    type: cookieDefn.key,
+                    type: cookieDefn.type,
                     checked,
                   };
                 });
@@ -225,7 +225,7 @@ class CookieConsentsManager {
         // If the saved cookie consents have not expired, then extract it.
         if ((Date.now() - timestamp) < expirationTime) {
           cookieConsents = allAvailCookieDefns.map(cookieDefn => ({
-            type: cookieDefn.key,
+            type: cookieDefn.type,
             checked: consents[cookieDefn.id],
           }));
         }
@@ -258,7 +258,7 @@ class CookieConsentsManager {
   //       userPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
   //         const checked = userInfo.acceptCookies.includes(cookieDefn.dbKey);
   //         return {
-  //           type: cookieDefn.key,
+  //           type: cookieDefn.type,
   //           checked,
   //         };
   //       });
@@ -288,7 +288,7 @@ class CookieConsentsManager {
                   cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
                     const checked = userInfo.acceptCookies.includes(cookieDefn.dbKey);
                     return {
-                      type: cookieDefn.key,
+                      type: cookieDefn.type,
                       checked,
                     };
                   });
@@ -309,9 +309,9 @@ class CookieConsentsManager {
 
   //   if (!euCountries.includes(countryCode) && displayOnlyForEU) {
   //     companyPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-  //       const checked = checkByDefaultTypes.includes(cookieDefn.key);
+  //       const checked = checkByDefaultTypes.includes(cookieDefn.type);
   //       return {
-  //         type: cookieDefn.key,
+  //         type: cookieDefn.type,
   //         checked,
   //       };
   //     });
@@ -326,9 +326,9 @@ class CookieConsentsManager {
 
     if (!euCountries.includes(countryCode) && displayOnlyForEU) {
       companyPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-        const checked = checkByDefaultTypes.includes(cookieDefn.key);
+        const checked = checkByDefaultTypes.includes(cookieDefn.type);
         return {
-          type: cookieDefn.key,
+          type: cookieDefn.type,
           checked,
         };
       });
@@ -342,7 +342,7 @@ class CookieConsentsManager {
     // TODO: Save as a LUT instead of an array.
     const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
     allAvailCookieDefns.forEach((cookieDefn) => {
-      const cookieConsent = cookieConsents.find(item => item.type === cookieDefn.key);
+      const cookieConsent = cookieConsents.find(item => item.type === cookieDefn.type);
 
       if (cookieConsent && cookieConsent.checked) {
         xcoobeeCookies.cookies.push(true);
@@ -372,7 +372,7 @@ class CookieConsentsManager {
 
           const consentCursor = res.add_consents[0].consent_cursor;
           const dataTypes = cookieConsents.filter(item => item.checked)
-            .map(item => allAvailCookieDefns.find(type => type.key === item.type).dbKey);
+            .map(item => allAvailCookieDefns.find(defn => defn.type === item.type).dbKey);
           const consentConfig = {
             consents: {
               consent_cursor: consentCursor,
