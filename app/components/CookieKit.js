@@ -113,6 +113,7 @@ export default class CookieKit extends React.PureComponent {
     // console.dir(nextCookieConsentLut);
     const { onCookieConsentsChange } = this.props;
     onCookieConsentsChange(nextCookieConsentLut);
+    this.startPulsing();
     this.handlePopupClose();
   }
 
@@ -120,7 +121,6 @@ export default class CookieKit extends React.PureComponent {
     // console.log("CookieKit#startPulsing");
     this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
     this.timers.push(setTimeout(() => this.setState({ pulsing: false }), 4500));
-    this.timers.push(setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000));
   }
 
   startTimer() {
