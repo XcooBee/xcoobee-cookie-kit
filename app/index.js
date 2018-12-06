@@ -4,7 +4,7 @@ import CookieKitContainer from "./components/CookieKitContainer";
 
 import Config from "./model/Config";
 
-import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
+import { cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
 
 class CookieConsentManager {
   _config = null;
@@ -15,14 +15,6 @@ class CookieConsentManager {
     if (!CookieConsentManager.checkRequiredFields(config)) {
       return;
     }
-
-    const defaultCookies = {};
-
-    cookieTypes.forEach((cookie) => {
-      defaultCookies[cookie.key] = {
-        name: cookie.key,
-      };
-    });
 
     const CONFIG = Object.assign(defaultConfig, config);
 
