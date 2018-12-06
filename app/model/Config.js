@@ -1,5 +1,3 @@
-import Cookie from "./Cookie";
-
 import { positions } from "../utils";
 
 export default class Config {
@@ -10,8 +8,6 @@ export default class Config {
   _companyLogo = null;
 
   _cookieHandler = () => null;
-
-  _cookies = [];
 
   _displayOnlyForEU = false;
 
@@ -55,11 +51,6 @@ export default class Config {
     this._termsUrl = config.termsUrl;
     this._testMode = config.testMode;
     this._textMessage = config.textMessage;
-
-    this._cookies = config.requestDataTypes.map(type => new Cookie({
-      type,
-      checked: config.checkByDefaultTypes.includes(type),
-    }));
   }
 
   get campaignReference() {
@@ -72,10 +63,6 @@ export default class Config {
 
   get companyLogo() {
     return this._companyLogo;
-  }
-
-  get cookies() {
-    return this._cookies;
   }
 
   get cookieHandler() {
@@ -128,18 +115,10 @@ export default class Config {
 
   set checkByDefaultTypes(value) {
     this._checkByDefaultTypes = value;
-    this._cookies = this._requestDataTypes.map(type => new Cookie({
-      type,
-      checked: value.includes(type),
-    }));
   }
 
   set companyLogo(value) {
     this._companyLogo = value;
-  }
-
-  set cookies(value) {
-    this._cookies = value.map(item => new Cookie(item));
   }
 
   set cookieHandler(value) {
@@ -168,10 +147,6 @@ export default class Config {
 
   set requestDataTypes(value) {
     this._requestDataTypes = value;
-    this._cookies = value.map(type => new Cookie({
-      type,
-      checked: this.checkByDefaultTypes.includes(type),
-    }));
   }
 
   set targetUrl(value) {
