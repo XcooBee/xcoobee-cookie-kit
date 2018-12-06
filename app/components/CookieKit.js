@@ -155,7 +155,6 @@ export default class CookieKit extends React.PureComponent {
     const renderRefreshButton = config.testMode
       && (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]);
 
-    // TODO: Move button's style to stylesheet.
     return (
       <div
         className={
@@ -189,8 +188,8 @@ export default class CookieKit extends React.PureComponent {
         {renderButton && (
           <button
             type="button"
+            className="xb-cookie-kit__button xb-cookie-kit__cookie-button"
             onClick={this.handleOpen}
-            style={{ width: "4vw" }}
           >
             <div
               className={
@@ -207,8 +206,8 @@ export default class CookieKit extends React.PureComponent {
         )}
         {renderRefreshButton && (
           <button
-            className="xb-cookie-kit__refresh-button"
             type="button"
+            className="xb-cookie-kit__button xb-cookie-kit__refresh-button"
             onClick={onRefresh}
           >
             Refresh

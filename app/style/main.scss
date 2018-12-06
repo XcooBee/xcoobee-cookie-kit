@@ -48,7 +48,7 @@ $duration: .2s;
     opacity: 0;
   }
 
-  button {
+  &__button {
     background: none;
     color: inherit;
     border: none;
@@ -58,7 +58,11 @@ $duration: .2s;
     outline: inherit;
   }
 
-  .xb-cookie-kit__refresh-button {
+  &__cookie-button {
+    width: 4vw;
+  }
+
+  &__refresh-button {
     background: #fdb81a;
     color: #fff;
     font-size: 12px;

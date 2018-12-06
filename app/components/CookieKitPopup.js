@@ -148,7 +148,7 @@ export default class CookieKitPopup extends React.PureComponent {
           <div className="xb-cookie-kit-popup__title">{renderText("CookieKit.Title", selectedLocale)}</div>
           <button
             type="button"
-            className="xb-cookie-kit-popup__close-button"
+            className="xb-cookie-kit__button xb-cookie-kit-popup__close-button"
             onClick={onClose}
           >
             <img
@@ -167,7 +167,7 @@ export default class CookieKitPopup extends React.PureComponent {
             <div className="xb-cookie-kit-popup__locale">
               <button
                 type="button"
-                className="xb-cookie-kit-popup__language-picker"
+                className="xb-cookie-kit__button xb-cookie-kit-popup__language-picker"
                 onClick={() => this.setState({ isShown: !isShown })}
               >
                 { selectedLocale }
@@ -182,7 +182,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <div className="xb-cookie-kit-popup__custom-select">
                 { locales.map(locale => (
                   <button
-                    className="xb-cookie-kit-popup__language-picker-button"
+                    className="xb-cookie-kit__button xb-cookie-kit-popup__language-picker-button"
                     type="button"
                     onClick={() => this.handleLocaleChange(locale)}
                   >
@@ -224,7 +224,7 @@ export default class CookieKitPopup extends React.PureComponent {
         </div>
         <button
           type="button"
-          className="xb-cookie-kit-popup__check-all"
+          className="xb-cookie-kit__button xb-cookie-kit-popup__check-all"
           onClick={() => this.handleCheckAll()}
         >
           {isAllChecked
@@ -252,7 +252,7 @@ export default class CookieKitPopup extends React.PureComponent {
           <div className="xb-cookie-kit-popup__button-container">
             <button
               type="button"
-              className="xb-cookie-kit-popup__button"
+              className="xb-cookie-kit__button xb-cookie-kit-popup__button"
               onClick={this.handleSubmit}
             >
               OK
@@ -273,7 +273,7 @@ export default class CookieKitPopup extends React.PureComponent {
             )
             : (
               <button
-                className="xb-cookie-kit-popup__link"
+                className="xb-cookie-kit__button xb-cookie-kit-popup__link"
                 type="button"
                 onClick={() => window.open(`${links.login}?targetUrl=${window.location.origin}`)}
               >
