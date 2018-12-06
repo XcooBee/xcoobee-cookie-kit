@@ -6,7 +6,7 @@ import AuthenticationManager from "../lib/AuthenticationManager";
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
-  cookieTypes as allAvailCookieDefns,
+  cookieDefns as allAvailCookieDefns,
   locales,
   links,
 } from "../utils";

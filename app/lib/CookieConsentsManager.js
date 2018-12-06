@@ -2,7 +2,7 @@
 import CryptoJS from "crypto-js";
 
 import {
-  cookieTypes as allAvailCookieDefns,
+  cookieDefns as allAvailCookieDefns,
   euCountries,
   expirationTime,
   xcoobeeCookiesKey,

@@ -9,7 +9,7 @@ const defaultConfig = {
   textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
 };
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
-const cookieTypes = [
+const cookieDefns = [
   {
     id: 0,
     type: "application",
@@ -70,17 +70,17 @@ const expirationTime = 86400000;
 
 export {
   animations,
-  cookieTypes,
   configFields,
   consentStatuses,
+  cookieDefns,
   cssHref,
   defaultConfig,
   euCountries,
   expirationTime,
   links,
   locales,
+  positions,
   requiredFields,
   tokenKey,
   xcoobeeCookiesKey,
-  positions,
 };
