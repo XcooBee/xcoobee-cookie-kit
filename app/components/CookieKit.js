@@ -167,8 +167,6 @@ export default class CookieKit extends React.PureComponent {
           )
         }
       >
-        <p>{animation}</p>
-        <p>{`pulsing: ${pulsing}`}</p>
         {renderPopup && (
           <CookieKitPopup
             config={{
