@@ -1,10 +1,10 @@
 import ReactDOM from "react-dom";
 
+import CookieKitContainer from "./components/CookieKitContainer";
+
 import Config from "./model/Config";
 
 import { cookieTypes, cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
-
-import CookieKitContainer from "./components/CookieKitContainer";
 
 class CookieConsentManager {
   _config = null;
@@ -74,22 +74,6 @@ class CookieConsentManager {
     }
 
     return true;
-  }
-
-  get cookies() {
-    return this._cookies;
-  }
-
-  get config() {
-    return this._config;
-  }
-
-  get consentStatus() {
-    return this._consentStatus;
-  }
-
-  set consentStatus(value) {
-    this._consentStatus = value;
   }
 
   getParam(field) {
