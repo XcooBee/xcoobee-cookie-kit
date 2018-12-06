@@ -47,7 +47,7 @@ export default class CookieKit extends React.PureComponent {
   }
 
   constructor(props) {
-    console.log("CookieKit#constructor");
+    // console.log("CookieKit#constructor");
     super(props);
 
     this.state = {
@@ -67,37 +67,37 @@ export default class CookieKit extends React.PureComponent {
     this.startPulsing();
   }
 
-  componentDidMount() {
-    console.log("CookieKit#componentDidMount");
-    console.dir(this.props);
-    console.dir(this.state);
-  }
+  // componentDidMount() {
+  //   console.log("CookieKit#componentDidMount");
+  //   console.dir(this.props);
+  //   console.dir(this.state);
+  // }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("CookieKit#componentDidUpdate");
-    if (this.props !== prevProps) {
-      console.log("props changed:");
-      console.dir(this.props);
-    }
-    if (this.state !== prevState) {
-      console.log("state changed:");
-      console.dir(this.state);
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("CookieKit#componentDidUpdate");
+  //   if (this.props !== prevProps) {
+  //     console.log("props changed:");
+  //     console.dir(this.props);
+  //   }
+  //   if (this.state !== prevState) {
+  //     console.log("state changed:");
+  //     console.dir(this.state);
+  //   }
+  // }
 
   componentWillUnmount() {
     this.timers.forEach(timer => clearTimeout(timer));
   }
 
   startPulsing() {
-    console.log("CookieKit#startPulsing");
+    // console.log("CookieKit#startPulsing");
     this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
     this.timers.push(setTimeout(() => this.setState({ pulsing: false }), 4500));
     this.timers.push(setTimeout(() => this.setState({ animation: animations.noAnimation }), 5000));
   }
 
   startTimer() {
-    console.log("CookieKit#startTimer");
+    // console.log("CookieKit#startTimer");
     const { config, onConsentStatusChange } = this.props;
     const timeOut = config.expirationTime;
 
@@ -110,13 +110,13 @@ export default class CookieKit extends React.PureComponent {
   }
 
   handleOpen() {
-    console.log("CookieKit#handleOpen");
+    // console.log("CookieKit#handleOpen");
     this.setState({ isOpen: true });
     this.timers.forEach(timer => clearTimeout(timer));
   }
 
   handlePopupClose() {
-    console.log("CookieKit#handlePopupClose");
+    // console.log("CookieKit#handlePopupClose");
     const { config } = this.props;
 
     this.setState({ isOpen: false });
@@ -128,22 +128,22 @@ export default class CookieKit extends React.PureComponent {
   }
 
   handlePopupLogin(accessToken) {
-    console.log("CookieKit#handlePopupLogin");
+    // console.log("CookieKit#handlePopupLogin");
     this.setState({ isOpen: false });
     const { onAuthentication } = this.props;
     onAuthentication(accessToken);
   }
 
   handlePopupSubmit(nextCookieConsentLut) {
-    console.log("CookieKit#handlePopupSubmit");
-    console.dir(nextCookieConsentLut);
+    // console.log("CookieKit#handlePopupSubmit");
+    // console.dir(nextCookieConsentLut);
     const { onCookieConsentsChange } = this.props;
     onCookieConsentsChange(nextCookieConsentLut);
     this.handlePopupClose();
   }
 
   render() {
-    console.log("CookieKit#render");
+    // console.log("CookieKit#render");
     const { config, consentsSource, cookieConsents, countryCode, onRefresh } = this.props;
     const { isOpen, isShown, pulsing } = this.state;
 

@@ -67,7 +67,7 @@ export default class CookieKitContainer extends React.PureComponent {
   };
 
   constructor(props) {
-    console.log("CookieKitContainer#constructor");
+    // console.log("CookieKitContainer#constructor");
     super(props);
 
     const cookieConsents = cookieTypes.map(type => ({
@@ -124,9 +124,9 @@ export default class CookieKitContainer extends React.PureComponent {
   // }
 
   componentDidMount() {
-    console.log("CookieKitContainer#componentDidMount");
-    console.dir(this.props);
-    console.dir(this.state);
+    // console.log("CookieKitContainer#componentDidMount");
+    // console.dir(this.props);
+    // console.dir(this.state);
 
     Promise.all([
       fetchCountryCode(),
@@ -134,7 +134,7 @@ export default class CookieKitContainer extends React.PureComponent {
     ]).then(([countryCode, userSettingsCookieConsents]) => {
       this.setState({ countryCode });
       if (userSettingsCookieConsents) {
-        console.log("Using saved cookie consents!");
+        // console.log("Using saved cookie consents!");
         this.setState({
           consentsSource: "userSettings",
           cookieConsents: userSettingsCookieConsents,
@@ -170,17 +170,17 @@ export default class CookieKitContainer extends React.PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("CookieKitContainer#componentDidUpdate");
-    if (this.props !== prevProps) {
-      console.log("props changed:");
-      console.dir(this.props);
-    }
-    if (this.state !== prevState) {
-      console.log("state changed:");
-      console.dir(this.state);
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("CookieKitContainer#componentDidUpdate");
+  //   if (this.props !== prevProps) {
+  //     console.log("props changed:");
+  //     console.dir(this.props);
+  //   }
+  //   if (this.state !== prevState) {
+  //     console.log("state changed:");
+  //     console.dir(this.state);
+  //   }
+  // }
 
   // handleAuthentication = async (accessToken) => {
   //   console.log("CookieKitContainer#handleAuthentication");
@@ -209,8 +209,8 @@ export default class CookieKitContainer extends React.PureComponent {
   // }
 
   handleAuthentication = (accessToken) => {
-    console.log("CookieKitContainer#handleAuthentication");
-    console.log("accessToken:", accessToken);
+    // console.log("CookieKitContainer#handleAuthentication");
+    // console.log("accessToken:", accessToken);
     saveAccessToken(accessToken);
 
     // TODO: Check that this is the logic we want to run. If so, then make it DRY.
@@ -239,14 +239,14 @@ export default class CookieKitContainer extends React.PureComponent {
   }
 
   handleConsentStatusChange = (nextConsentStatus) => {
-    console.log("CookieKitContainer#handleConsentStatusChange");
-    console.log("nextConsentStatus:", nextConsentStatus);
+    // console.log("CookieKitContainer#handleConsentStatusChange");
+    // console.log("nextConsentStatus:", nextConsentStatus);
     this.setState({ consentStatus: nextConsentStatus });
   };
 
   handleCookieConsentsChange = (cookieConsentLut) => {
-    console.log("CookieKitContainer#handleCookieConsentsChange");
-    console.log("cookieConsentLut:", cookieConsentLut);
+    // console.log("CookieKitContainer#handleCookieConsentsChange");
+    // console.log("cookieConsentLut:", cookieConsentLut);
     const { config } = this.props;
     const { campaignReference } = config;
 
@@ -277,7 +277,7 @@ export default class CookieKitContainer extends React.PureComponent {
   };
 
   render() {
-    console.log("CookieKitContainer#render");
+    // console.log("CookieKitContainer#render");
     const { config } = this.props;
     const { consentsSource, consentStatus, cookieConsents, countryCode } = this.state;
     return (

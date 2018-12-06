@@ -11,7 +11,7 @@ import {
 import graphQLRequest from "../utils/graphql";
 
 function fetchUsersSitesCookieConsents(accessToken, userCursor) {
-  console.log("fetchUsersSitesCookieConsents fetching...");
+  // console.log("fetchUsersSitesCookieConsents fetching...");
   const query = `query getUsersSitesCookieConsents($userCursor: String!) {
     cookie_consents(user_cursor: $userCursor) {
       site
@@ -22,7 +22,7 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
   return graphQLRequest(query, { userCursor }, accessToken)
     .then((res) => {
       const usersSitesCookieConsents = res.cookie_consents;
-      console.log("fetchUsersSitesCookieConsents fetched.");
+      // console.log("fetchUsersSitesCookieConsents fetched.");
       return usersSitesCookieConsents;
     });
 }
@@ -54,7 +54,7 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
 // }
 
 function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
-  console.log("fetchUsersSiteCookieConsents fetching...");
+  // console.log("fetchUsersSiteCookieConsents fetching...");
   return fetchUsersSitesCookieConsents(accessToken, userCursor)
     .then((usersSitesCookieConsents) => {
       let siteCookieConsents = null;
@@ -81,14 +81,14 @@ function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
         });
       }
 
-      console.log("fetchUsersSiteCookieConsents fetched.");
+      // console.log("fetchUsersSiteCookieConsents fetched.");
       return cookieConsents;
     });
 }
 
 // TODO: See if we should cache the results of this query.
 function fetchUserInfo(accessToken) {
-  console.log("fetchUserInfo fetching...");
+  // console.log("fetchUserInfo fetching...");
   const query = `query getUserCookieConsentPreferences {
     user {
       cursor
@@ -119,7 +119,7 @@ function fetchUserInfo(accessToken) {
         }
       }
 
-      console.log("fetchUserInfo fetched.");
+      // console.log("fetchUserInfo fetched.");
       return userInfo;
     });
 }
@@ -130,11 +130,11 @@ class CookieConsentsManager {
   }
 
   static fetchCountryCode() {
-    console.log("CookieConsentsManager#fetchCountryCode fetching...");
+    // console.log("CookieConsentsManager#fetchCountryCode fetching...");
     return fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
-        console.log("CookieConsentsManager#fetchCountryCode fetched.");
+        // console.log("CookieConsentsManager#fetchCountryCode fetched.");
         const countryCode = res ? res.countryCode : "US";
         return countryCode;
       });
@@ -176,7 +176,7 @@ class CookieConsentsManager {
   // }
 
   static fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
-    console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
+    // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
     return fetchUserInfo(accessToken)
       .then((userInfo) => {
         let crowdIntelligenceCookieConsents = null;
@@ -208,13 +208,13 @@ class CookieConsentsManager {
             });
         }
 
-        console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetched.");
+        // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetched.");
         return crowdIntelligenceCookieConsents;
       });
   }
 
   static fetchUserSettingsCookieConsents() {
-    console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetching...");
+    // console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetching...");
     let cookieConsents = null;
 
     if (localStorage[xcoobeeCookiesKey]) {
@@ -235,7 +235,7 @@ class CookieConsentsManager {
       }
     }
 
-    console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetched.");
+    // console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetched.");
     return Promise.resolve(cookieConsents);
   }
 
@@ -267,7 +267,7 @@ class CookieConsentsManager {
   // }
 
   static fetchUserPreferenceCookieConsents(accessToken, origin) {
-    console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
+    // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
     return fetchUserInfo(accessToken)
       .then((userInfo) => {
         let userPreferenceCookieConsents = null;
@@ -295,7 +295,7 @@ class CookieConsentsManager {
             });
         }
 
-        console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetched.");
+        // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetched.");
         return userPreferenceCookieConsents;
       });
   }
@@ -317,7 +317,7 @@ class CookieConsentsManager {
   // }
 
   static fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
-    console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetching...");
+    // console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetching...");
     let companyPreferenceCookieConsents = null;
 
     if (!euCountries.includes(countryCode) && displayOnlyForEU) {
@@ -330,7 +330,7 @@ class CookieConsentsManager {
       });
     }
 
-    console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetched.");
+    // console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetched.");
     return Promise.resolve(companyPreferenceCookieConsents);
   }
 
