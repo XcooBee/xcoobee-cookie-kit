@@ -245,8 +245,6 @@ class CookieConsentsManager {
   //   const userInfo = await fetchUserInfo(accessToken);
 
   //   if (userInfo) {
-  //     // TODO: Pass in the origin to use instead of getting it from the window.
-  //     // const message = `${window.location.origin.toLowerCase()}${userInfo.xcoobeeId}`;
   //     const message = `${origin.toLowerCase()}${userInfo.xcoobeeId}`;
   //     const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
 
@@ -275,8 +273,6 @@ class CookieConsentsManager {
         let userPreferenceCookieConsents = null;
 
         if (userInfo) {
-          // TODO: Pass in the origin to use instead of getting it from the window.
-          // const message = `${window.location.origin.toLowerCase()}${userInfo.xcoobeeId}`;
           const message = `${origin.toLowerCase()}${userInfo.xcoobeeId}`;
           const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
           userPreferenceCookieConsents = fetchUsersSiteCookieConsents(accessToken, userInfo.userCursor, encodedSite)
