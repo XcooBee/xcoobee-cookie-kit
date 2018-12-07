@@ -7,6 +7,7 @@ import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
   cookieDefns as allAvailCookieDefns,
+  cookieTypes,
   locales,
   links,
 } from "../utils";
@@ -22,6 +23,9 @@ export default class CookieKitPopup extends React.PureComponent {
     onLogin: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     privacyUrl: PropTypes.string.isRequired,
+    requestDataTypes: PropTypes.arrayOf(
+      PropTypes.oneOf(cookieTypes).isRequired,
+    ).isRequired,
     termsUrl: PropTypes.string.isRequired,
     textMessage: PropTypes.string.isRequired,
   };
@@ -35,7 +39,6 @@ export default class CookieKitPopup extends React.PureComponent {
     super(props);
 
     const { cookieConsents } = this.props;
-    const cookieNames = cookieConsents.map(cookieConsent => cookieConsent.type);
     const cookieConsentLut = {};
     cookieConsents.forEach((cookieConsent) => {
       cookieConsentLut[cookieConsent.type] = cookieConsent.checked;
@@ -45,7 +48,6 @@ export default class CookieKitPopup extends React.PureComponent {
       cookieConsentLut,
       selectedLocale: "EN",
       isShown: false,
-      cookieDefns: allAvailCookieDefns.filter(defn => cookieNames.includes(defn.type)),
     };
 
     window.addEventListener("message", this.onMessage);
@@ -124,8 +126,17 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   render() {
-    const { companyLogo, countryCode, isConnected, onClose, privacyUrl, termsUrl, textMessage } = this.props;
-    const { cookieConsentLut, cookieDefns, isShown, selectedLocale } = this.state;
+    const {
+      companyLogo,
+      countryCode,
+      isConnected,
+      onClose,
+      privacyUrl,
+      requestDataTypes,
+      termsUrl,
+      textMessage,
+    } = this.props;
+    const { cookieConsentLut, isShown, selectedLocale } = this.state;
     const isAuthorized = AuthenticationManager.getAccessToken();
 
     // TODO: Move the following to CSS. Use media query.
@@ -133,6 +144,10 @@ export default class CookieKitPopup extends React.PureComponent {
     const flagSize = width > 400 ? "25px" : "20px";
 
     const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
+
+    const cookieDefns = allAvailCookieDefns.filter(
+      defn => requestDataTypes.includes(defn.type),
+    );
 
     return (
       <div className="xb-cookie-kit-popup">

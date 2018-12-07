@@ -1,80 +1,63 @@
+import React from "react";
 import ReactDOM from "react-dom";
 
 import CookieKitContainer from "./components/CookieKitContainer";
 
-import Config from "./model/Config";
+import {
+  consentStatuses,
+  configFields,
+  defaultConfig,
+  requiredFields,
+} from "./utils";
 
-import { cssHref, defaultConfig, consentStatuses, configFields, requiredFields } from "./utils";
+function checkRequiredFields(config) {
+  const errors = [];
 
-class CookieConsentManager {
-  _config = null;
-
-  _consentStatus = consentStatuses.open;
-
-  initialize(config) {
-    if (!CookieConsentManager.checkRequiredFields(config)) {
-      return;
+  requiredFields.forEach((field) => {
+    if (!config[field]) {
+      errors.push(`${field} field is required as initialization parameter.`);
     }
+  });
 
-    const CONFIG = Object.assign(defaultConfig, config);
-
-    this._config = new Config(CONFIG);
-
-    document.addEventListener("DOMContentLoaded", () => {
-      if (CONFIG.cssAutoLoad) {
-        const fileRef = document.createElement("link");
-
-        fileRef.setAttribute("rel", "stylesheet");
-        fileRef.setAttribute("type", "text/css");
-        fileRef.setAttribute("href", `${xcoobeeConfig.domain}/${cssHref}`);
-
-        document.head.appendChild(fileRef);
-      }
-
-      const CONTAINER = document.createElement("div");
-
-      CONTAINER.className = "xb-cookie-kit-placeholder";
-
-      ReactDOM.render(
-        <CookieKitContainer config={this._config} />,
-        CONTAINER,
-      );
-      document.body.appendChild(CONTAINER);
-    });
+  if (!config.cookieHandler && !config.targetUrl) {
+    errors.push("One of `cookieHandler` or `targetUrl` fields is required as initialization parameter.");
   }
 
-  static checkRequiredFields(config) {
-    if (!config) {
-      return false;
-    }
+  if (errors.length > 0) {
+    errors.forEach(errorMessage => console.error(errorMessage));
+    return false;
+  }
 
-    const errors = [];
+  return true;
+}
 
-    requiredFields.forEach((field) => {
-      if (!config[field]) {
-        errors.push(`${field} field is required as initialization parameter`);
-      }
-    });
+class CookitKitInitializer {
+  _compRef = React.createRef();
 
-    if (!config.cookieHandler && !config.targetUrl) {
-      errors.push("One of cookieHandler or targetUrl fields is required as initialization parameter");
-    }
+  _config = {
+    ...defaultConfig,
+    checkByDefaultTypes: [...defaultConfig.checkByDefaultTypes],
+    requestDataTypes: [...defaultConfig.requestDataTypes],
+    textMessage: {
+      ...defaultConfig.textMessage,
+    },
+  };
 
-    if (errors.length) {
-      errors.forEach(errorMessage => console.error(errorMessage));
-      return false;
-    }
+  initialize(cfg) {
+    const config = {
+      ...this._config,
+      ...cfg,
+    };
 
-    return true;
+    this._config = config;
   }
 
   getParam(field) {
     if (!configFields.includes(field)) {
       console.error(`${field} parameter is not valid.`);
-      return;
+      return undefined;
     }
 
-    // eslint-disable-next-line
     return this._config[field];
   }
 
@@ -87,25 +70,51 @@ class CookieConsentManager {
   }
 
   getConsentStatus() {
-    return this._consentStatus;
+    let consentStatus;
+    if (this._compRef.current) {
+      consentStatus = this._compRef.current.getConsentStatus();
+    }
+    return consentStatus || consentStatuses.open;
   }
 
   getCookieTypes() {
-    const cookies = {};
+    let cookieConsentSettings;
+    if (this._compRef.current) {
+      cookieConsentSettings = this._compRef.current.getCookieTypes();
+    }
+    return cookieConsentSettings || {};
+  }
 
-    this._config.cookies.forEach((cookie) => {
-      cookies[cookie.type] = cookie.checked;
-    });
-    return this._consentStatus === consentStatuses.complete ? cookies : {};
+  render(dom = document.body) {
+    const appendCookieKit = () => {
+      if (!checkRequiredFields(this._config)) {
+        throw Error("Configuration invalid.");
+      }
+      const placeHolderDom = document.createElement("div");
+
+      placeHolderDom.className = "xb-cookie-kit-placeholder";
+
+      ReactDOM.render(
+        <CookieKitContainer
+          ref={this._compRef}
+          {...this._config}
+        />,
+        placeHolderDom,
+      );
+      dom.appendChild(placeHolderDom);
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", appendCookieKit);
+    } else {
+      appendCookieKit();
+    }
   }
 }
 
 if (!window.XcooBee) {
   window.XcooBee = {};
 }
-if (!window.XcooBee.ck) {
-  window.XcooBee.ck = {};
+if (!window.XcooBee.kit) {
+  window.XcooBee.kit = new CookitKitInitializer();
 }
-window.XcooBee.ck.CookieKit = CookieConsentManager;
-
-export default CookieConsentManager;

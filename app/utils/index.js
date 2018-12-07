@@ -6,7 +6,9 @@ const defaultConfig = {
   position: "right_bottom",
   requestDataTypes: ["application"],
   testMode: false,
-  textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
+  textMessage: {
+    "en-us": "This site uses cookies. Use this panel to adjust your preferences.",
+  },
 };
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
 const cookieDefns = [
@@ -64,8 +66,23 @@ const consentStatuses = {
   complete: "complete",
   closed: "closed",
 };
-// eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
+const configFields = [
+  "campaignReference",
+  "checkByDefaultTypes",
+  "companyLogo",
+  "cookieHandler",
+  "cssAutoLoad",
+  "displayOnlyForEU",
+  "expirationTime",
+  "hideOnComplete",
+  "position",
+  "privacyUrl",
+  "requestDataTypes",
+  "targetUrl",
+  "termsUrl",
+  "testMode",
+  "textMessage",
+];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
 

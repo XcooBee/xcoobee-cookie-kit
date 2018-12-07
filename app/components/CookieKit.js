@@ -3,21 +3,21 @@ import cx from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
 
-import ConfigShape from "../lib/ConfigShape";
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
   animations,
   consentStatuses,
-  tokenKey,
-  xcoobeeCookiesKey,
+  cookieTypes,
+  positions,
 } from "../utils";
 
 import CookieKitPopup from "./CookieKitPopup";
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
-    config: ConfigShape.isRequired,
+    campaignReference: PropTypes.string,
+    companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf([
       "companyPreference",
       "crowdIntelligence",
@@ -26,25 +26,34 @@ export default class CookieKit extends React.PureComponent {
       "unknown",
     ]).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    countryCode: PropTypes.string,
+    countryCode: PropTypes.string.isRequired,
+    expirationTime: PropTypes.number,
+    hideOnComplete: PropTypes.bool.isRequired,
     onAuthentication: PropTypes.func.isRequired,
     onConsentStatusChange: PropTypes.func.isRequired,
     onCookieConsentsChange: PropTypes.func.isRequired,
-    onRefresh: PropTypes.func,
+    position: PropTypes.oneOf(positions).isRequired,
+    privacyUrl: PropTypes.string.isRequired,
+    requestDataTypes: PropTypes.arrayOf(
+      PropTypes.oneOf(cookieTypes).isRequired,
+    ).isRequired,
+    termsUrl: PropTypes.string.isRequired,
+    textMessage: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        "en-us": PropTypes.string,
+        "de-de": PropTypes.string,
+        "es-419": PropTypes.string,
+        "fr-fr": PropTypes.string,
+      }),
+    ]).isRequired,
   };
 
   static defaultProps = {
-    countryCode: null,
-    onRefresh: () => {},
+    campaignReference: null,
+    companyLogo: null,
+    expirationTime: 0,
   };
-
-  static handleErrors(error) {
-    if (Array.isArray(error)) {
-      error.forEach((e) => { throw new Error(e.message); });
-    } else if (error) {
-      throw new Error(error.message);
-    }
-  }
 
   constructor(props) {
     // console.log("CookieKit#constructor");
@@ -59,6 +68,7 @@ export default class CookieKit extends React.PureComponent {
     this.timers = [];
 
     this.startPulsing();
+    this.startTimer();
   }
 
   // componentDidMount() {
@@ -85,36 +95,61 @@ export default class CookieKit extends React.PureComponent {
 
   handleOpen = () => {
     // console.log("CookieKit#handleOpen");
+    this.clearTimers();
+
     this.setState({ isOpen: true });
-    this.timers.forEach(timer => clearTimeout(timer));
   }
 
   handlePopupClose = () => {
     // console.log("CookieKit#handlePopupClose");
-    const { config } = this.props;
+    const { onConsentStatusChange } = this.props;
 
-    this.setState({ isOpen: false });
+    onConsentStatusChange(consentStatuses.closed);
+
+    this.clearTimers();
     this.startTimer();
 
-    if (config.hideOnComplete) {
-      this.setState({ isShown: false });
-    }
+    this.setState({ isOpen: false });
   }
 
   handlePopupLogin = (accessToken) => {
     // console.log("CookieKit#handlePopupLogin");
-    this.setState({ isOpen: false });
     const { onAuthentication } = this.props;
+
     onAuthentication(accessToken);
+
+    this.clearTimers();
+    this.startPulsing();
+    this.startTimer();
+
+    this.setState({ isOpen: false });
   }
 
   handlePopupSubmit = (nextCookieConsentLut) => {
     // console.log("CookieKit#handlePopupSubmit");
     // console.dir(nextCookieConsentLut);
-    const { onCookieConsentsChange } = this.props;
+    const {
+      hideOnComplete,
+      onConsentStatusChange,
+      onCookieConsentsChange,
+    } = this.props;
+
     onCookieConsentsChange(nextCookieConsentLut);
+    onConsentStatusChange(consentStatuses.complete);
+
+    this.clearTimers();
     this.startPulsing();
-    this.handlePopupClose();
+    this.startTimer();
+    this.setState({ isOpen: false });
+
+    if (hideOnComplete) {
+      this.setState({ isShown: false });
+    }
+  }
+
+  clearTimers() {
+    this.timers.forEach(timer => clearTimeout(timer));
+    this.timers = [];
   }
 
   startPulsing() {
@@ -125,12 +160,11 @@ export default class CookieKit extends React.PureComponent {
 
   startTimer() {
     // console.log("CookieKit#startTimer");
-    const { config, onConsentStatusChange } = this.props;
-    const timeOut = config.expirationTime;
+    const { expirationTime } = this.props;
+    const timeOut = expirationTime;
 
     if (timeOut && timeOut > 0) {
       this.timers.push(setTimeout(() => {
-        onConsentStatusChange(consentStatuses.closed);
         this.setState({ isShown: false });
       }, timeOut * 1000));
     }
@@ -138,7 +172,18 @@ export default class CookieKit extends React.PureComponent {
 
   render() {
     // console.log("CookieKit#render");
-    const { config, consentsSource, cookieConsents, countryCode, onRefresh } = this.props;
+    const {
+      campaignReference,
+      companyLogo,
+      consentsSource,
+      cookieConsents,
+      countryCode,
+      position,
+      privacyUrl,
+      requestDataTypes,
+      termsUrl,
+      textMessage,
+    } = this.props;
     const { isOpen, isShown, pulsing } = this.state;
 
     const animation = animations[consentsSource] || animations.noAnimation;
@@ -146,15 +191,12 @@ export default class CookieKit extends React.PureComponent {
     const renderButton = !isOpen;
     const renderPopup = isOpen;
 
-    const renderRefreshButton = config.testMode
-      && (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]);
-
     return (
       <div
         className={
           cx(
             "xb-cookie-kit",
-            config.position,
+            position,
             {
               transparent: !isShown,
             },
@@ -163,16 +205,17 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
-            companyLogo={config.companyLogo}
+            companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}
-            isConnected={!!config.campaignReference}
+            isConnected={!!campaignReference}
             onClose={this.handlePopupClose}
             onLogin={this.handlePopupLogin}
             onSubmit={this.handlePopupSubmit}
-            privacyUrl={config.privacyUrl}
-            termsUrl={config.termsUrl}
-            textMessage={config.textMessage}
+            privacyUrl={privacyUrl}
+            requestDataTypes={requestDataTypes}
+            termsUrl={termsUrl}
+            textMessage={textMessage}
           />
         )}
         {renderButton && (
@@ -192,15 +235,6 @@ export default class CookieKit extends React.PureComponent {
                 )
               }
             />
-          </button>
-        )}
-        {renderRefreshButton && (
-          <button
-            type="button"
-            className="xb-cookie-kit__button xb-cookie-kit__refresh-button"
-            onClick={onRefresh}
-          >
-            Refresh
           </button>
         )}
       </div>
