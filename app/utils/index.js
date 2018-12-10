@@ -64,7 +64,7 @@ const consentStatuses = {
   closed: "closed",
 };
 // eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
+const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
 
