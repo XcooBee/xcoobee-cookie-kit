@@ -438,7 +438,8 @@ export default class App extends Component {
 
     return !loading && (
       <div
-        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
+        /* eslint-disable-next-line */
+        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""} ${isOpen ? "scroll" : ""}`}
         style={{ width: isOpen ? "auto" : "4vw" }}
       >
         {
