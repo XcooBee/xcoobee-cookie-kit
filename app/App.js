@@ -198,7 +198,7 @@ export default class App extends Component {
           if (res.user.settings.consent && res.user.settings.consent.accept_cookies) {
             this.setState({ userOptions: res.user.settings.consent.accept_cookies });
           }
-          this.fetchSiteSettings(res.user.cursor, res.user.xcoobee_id);
+          this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
         })
         .catch((error) => {
           if (typeof error === "object" && error.message === authErrorMessage) {
@@ -212,36 +212,6 @@ export default class App extends Component {
     } else {
       this.fetchLocation();
     }
-  }
-
-  fetchSiteSettings(userCursor, xcoobeeId) {
-    const query = `query SystemUserQueries($user_cursor: String!) {
-      cookie_consents(user_cursor: $user_cursor) {
-        site,
-        cookies
-      }
-    }`;
-
-    graphQLRequest(query, { user_cursor: userCursor }, localStorage[tokenKey])
-      .then((res) => {
-        const siteSettings = res.cookie_consents
-          .find(consent => consent.site === CryptoJS.SHA256(`${window.location.origin.toLowerCase()}${xcoobeeId}`)
-            .toString(CryptoJS.enc.Base64));
-
-        if (siteSettings && siteSettings.cookies.length) {
-          const { config } = XcooBee.kit;
-
-          config.cookies.forEach((cookie) => {
-            if (siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)) {
-              cookie.checked = true;
-            }
-          });
-          this.fetchLocation(false, true);
-        } else {
-          this.fetchCrowdAI();
-        }
-      })
-      .catch(App.handleErrors);
   }
 
   fetch100Sites(userCursor, xcoobeeId) {
