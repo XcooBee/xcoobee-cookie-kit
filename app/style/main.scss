@@ -48,6 +48,11 @@ $duration: .2s;
     opacity: 0;
   }
 
+  &.scroll {
+    max-height: 100%;
+    overflow: auto;
+  }
+
   &__button {
     background: none;
     color: inherit;
@@ -237,7 +242,7 @@ $duration: .2s;
       align-items: center;
       flex-direction: column;
 
-      @media (max-width: 400px) {
+      @media (max-width: 500px) {
         margin: 4px 0;
         border-radius: 5px;
       }
@@ -248,7 +253,7 @@ $duration: .2s;
       width: 35px;
       font-size: 13px;
 
-      @media (max-width: 400px) {
+      @media (max-width: 500px) {
         height: 30px;
         width: 30px;
         font-size: 12px;
@@ -260,7 +265,7 @@ $duration: .2s;
       width: 75px;
       font-size: 14px;
 
-      @media (max-width: 400px) {
+      @media (max-width: 500px) {
         height: auto;
         display: flex;
         flex-direction: row;
@@ -333,7 +338,7 @@ $duration: .2s;
             width: 35px;
             font-size: 13px;
 
-            @media (max-width: 400px) {
+            @media (max-width: 500px) {
               height: 30px;
               width: 30px;
               font-size: 12px;
@@ -483,7 +488,7 @@ $duration: .2s;
       display: none;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 500px) {
       > .xb-cookie-kit-popup__header {
         padding: 4px;
 
@@ -580,7 +585,7 @@ $duration: .2s;
       > .xb-cookie-kit-popup__powered-by {
         display: block;
         color: #717171;
-        font-size: 10px;
+        font-size: 11px;
         text-align: center;
         padding-bottom: 4px;
 

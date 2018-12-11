@@ -190,11 +190,13 @@ export default class CookieKitPopup extends React.PureComponent {
               >
                 { selectedLocale }
               </button>
-              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
-                <div>
-                  <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+              { countryCode && (
+                <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
+                  <div>
+                    <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             { isShown && (
               <div className="xb-cookie-kit-popup__custom-select">
