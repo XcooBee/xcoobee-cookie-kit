@@ -426,7 +426,7 @@ $duration: .2s;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 16px 4px 16px;
+      padding: 8px;
 
       > .xb-cookie-kit-popup__privacy-partner-container {
         flex: 1;
@@ -473,6 +473,8 @@ $duration: .2s;
         color: $primary-color;
         text-decoration: none;
         cursor: pointer;
+        flex: 1;
+        text-align: center;
 
         &:hover {
           color: $secondary-color;

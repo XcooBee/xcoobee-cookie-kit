@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 
-import { authErrorMessage } from "./"
+import { authErrorMessage } from ".";
 
 export default function graphQLRequest(query, variables, token) {
   const init = {
@@ -21,7 +21,8 @@ export default function graphQLRequest(query, variables, token) {
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
-      } else if (response.status === 401) {
+      }
+      if (response.status === 401) {
         return Promise.reject(new Error(authErrorMessage));
       }
       return Promise.reject(response);

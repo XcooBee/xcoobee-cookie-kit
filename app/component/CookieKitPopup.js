@@ -118,6 +118,7 @@ export default class CookieKitPopup extends Component {
   render() {
     const { campaign, isOffline, onClose, countryCode } = this.props;
     const { checked, isAuthorized, selectedLocale, isShown, cookies } = this.state;
+    const targetUrl = encodeURIComponent(window.location.origin);
 
     const width = window.innerWidth || document.body.clientWidth;
     const flagSize = width > 400 ? "25px" : "20px";
@@ -225,23 +226,25 @@ export default class CookieKitPopup extends Component {
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
         <div className="xb-cookie-kit-popup__actions">
-          <div className="xb-cookie-kit-popup__privacy-partner-container">
-            <a
-              className="xb-cookie-kit-popup__privacy-partner-link"
-              href={links.poweredBy}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="xb-cookie-kit-popup__privacy-partner">
-                {renderText("CookieKit.PoweredByText", selectedLocale)}
-                <img
-                  className="xb-cookie-kit-popup__privacy-partner-logo"
-                  src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
-                  alt="xcoobee-logo"
-                />
-              </div>
-            </a>
-          </div>
+          { !campaign.hideBrandTag && (
+            <div className="xb-cookie-kit-popup__privacy-partner-container">
+              <a
+                className="xb-cookie-kit-popup__privacy-partner-link"
+                href={links.poweredBy}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="xb-cookie-kit-popup__privacy-partner">
+                  {renderText("CookieKit.PoweredByText", selectedLocale)}
+                  <img
+                    className="xb-cookie-kit-popup__privacy-partner-logo"
+                    src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
+                    alt="xcoobee-logo"
+                  />
+                </div>
+              </a>
+            </div>
+          )}
           <div className="xb-cookie-kit-popup__button-container">
             <button
               type="button"
@@ -257,7 +260,7 @@ export default class CookieKitPopup extends Component {
             ? (
               <a
                 className="xb-cookie-kit-popup__link"
-                href={links.manage}
+                href={`${xcoobeeConfig.origin}${links.manage}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -268,7 +271,7 @@ export default class CookieKitPopup extends Component {
               <button
                 className="xb-cookie-kit-popup__link"
                 type="button"
-                onClick={() => window.open(`${links.login}?targetUrl=${window.location.origin}`)}
+                onClick={() => window.open(`${xcoobeeConfig.origin}${links.login}?targetUrl=${targetUrl}`)}
               >
                 {renderText("CookieKit.LoginLink", selectedLocale)}
               </button>
@@ -291,17 +294,19 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
-        <div className="xb-cookie-kit-popup__powered-by">
-          Powered by
-          <a
-            className="xb-cookie-kit-popup__powered-by-link"
-            href={links.poweredBy}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            XcooBee
-          </a>
-        </div>
+        { !campaign.hideBrandTag && (
+          <div className="xb-cookie-kit-popup__powered-by">
+            Powered by
+            <a
+              className="xb-cookie-kit-popup__powered-by-link"
+              href={links.poweredBy}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              XcooBee
+            </a>
+          </div>
+        )}
       </div>
     );
   }

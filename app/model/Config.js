@@ -17,6 +17,8 @@ export default class Config {
 
   _expirationTime = 0;
 
+  _hideBrandTag = false;
+
   _hideOnComplete = false;
 
   _position = "left_bottom";
@@ -47,6 +49,7 @@ export default class Config {
     this._cssAutoLoad = config.cssAutoLoad;
     this._displayOnlyForEU = config.displayOnlyForEU;
     this._expirationTime = config.expirationTime;
+    this._hideBrandTag = config.hideBrandTag;
     this._hideOnComplete = config.hideOnComplete;
     this._position = position;
     this._privacyUrl = config.privacyUrl;
@@ -88,6 +91,10 @@ export default class Config {
 
   get expirationTime() {
     return this._expirationTime;
+  }
+
+  get hideBrandTag() {
+    return this._hideBrandTag;
   }
 
   get hideOnComplete() {
@@ -152,6 +159,10 @@ export default class Config {
 
   set expirationTime(value) {
     this._expirationTime = value;
+  }
+
+  set hideBrandTag(value) {
+    this._hideBrandTag = value;
   }
 
   set hideOnComplete(value) {

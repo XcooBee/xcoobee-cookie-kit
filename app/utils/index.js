@@ -1,16 +1,12 @@
 const defaultConfig = {
-  checkByDefaultTypes: ["application"],
+  checkByDefaultTypes: [],
   cssAutoLoad: true,
   displayOnlyForEU: false,
   expirationTime: 0,
   position: "right_bottom",
-  requestDataTypes: ["application", "usage", "statistics"],
+  requestDataTypes: ["application"],
   testMode: false,
   textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
-  cookieHandler: cookies => console.log(cookies),
-  termsUrl: "asd",
-  privacyUrl: "ad",
-  campaignReference: "LRn8viWHrZ2YpLzndDcbr4IRiAjdYtiAruxdr/FS0KXKsDq480WVkTRJoJpEjGrHlqOffg=="
 };
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
 const cookieTypes = [
@@ -48,8 +44,8 @@ const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
 const links = {
   poweredBy: "https://www.xcoobee.com",
-  login: "https://testapp.xcoobee.net/auth/minlogin",
-  manage: "https://testapp.xcoobee.net/user/consentCenter/cookies",
+  login: "/auth/minlogin",
+  manage: "/user/consentCenter/cookies",
 };
 const animations = {
   noAnimation: "default",
@@ -68,7 +64,7 @@ const consentStatuses = {
   closed: "closed",
 };
 // eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
+const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideBrandTag", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
 const authErrorMessage = "Failed to connect to XcooBee. Try again later.";

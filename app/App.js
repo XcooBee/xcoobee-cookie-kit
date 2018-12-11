@@ -74,6 +74,7 @@ export default class App extends Component {
 
     const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
     const isExpired = !timestamp || ((Date.now() - timestamp) > expirationTime);
+    const reference = XcooBee.kit.config.campaignReference;
 
     this.state = {
       animation: animations.noAnimation,
@@ -81,7 +82,6 @@ export default class App extends Component {
       isOffline: !XcooBee.kit.config.campaignReference,
       isOpen: false,
       isShown: isExpired || !XcooBee.kit.config.hideOnComplete,
-      isCampaignActive: false,
       loading: true,
       pulsing: false,
       userOptions: [],
@@ -96,6 +96,10 @@ export default class App extends Component {
       this.fetchUserSettings();
     } else {
       this.fetchLocation(false, false, true);
+    }
+
+    if (reference && typeof reference !== "string") {
+      console.error("Invalid campaign reference");
     }
   }
 
