@@ -273,7 +273,7 @@ export default class CookieKitPopup extends React.PureComponent {
               className="xb-cookie-kit__button xb-cookie-kit-popup__button"
               onClick={this.handleSubmit}
             >
-              OK
+              {renderText("CookieKit.OkButton", selectedLocale)}
             </button>
           </div>
         </div>
