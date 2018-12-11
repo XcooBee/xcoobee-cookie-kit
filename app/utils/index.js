@@ -48,7 +48,7 @@ const xcoobeeCookiesKey = "xcoobeeCookies";
 const links = {
   poweredBy: "https://www.xcoobee.com",
   login: "https://testapp.xcoobee.net/auth/minlogin",
-  manage: "https://testapp.xcoobee.net/user/consentCenter/consent",
+  manage: "https://testapp.xcoobee.net/user/consentCenter/cookies",
 };
 const animations = {
   noAnimation: "default",
