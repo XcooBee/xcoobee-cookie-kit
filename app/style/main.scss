@@ -583,6 +583,14 @@ $duration: .2s;
         font-size: 10px;
         text-align: center;
         padding-bottom: 4px;
+
+        > .xb-cookie-kit-popup__powered-by-link {
+          margin-left: 4px;
+          font-weight: 600;
+          color: inherit;
+          text-decoration: none;
+          cursor: pointer;
+        }
       }
     }
   }
