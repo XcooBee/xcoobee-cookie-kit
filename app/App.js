@@ -17,7 +17,11 @@ import graphQLRequest from "./utils/graphql";
 
 export default class App extends Component {
   // Remove cookies preferences and auth token from local storage (for easier testing)
-  static refresh() {
+  static refresh(isShown) {
+    if (!isShown) {
+      return;
+    }
+
     localStorage.removeItem(tokenKey);
     localStorage.removeItem(xcoobeeCookiesKey);
     window.location.reload();
@@ -38,7 +42,7 @@ export default class App extends Component {
       if (typeof window[config.cookieHandler] === "function") {
         window[config.cookieHandler](cookieObject);
       } else {
-        console.error(`Cookie handler function "${config.cookieHandler}" is missing`)
+        console.error(`Cookie handler function "${config.cookieHandler}" is missing`);
       }
     } else {
       config.cookieHandler(cookieObject);
@@ -68,28 +72,30 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
+    const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
+    const isExpired = !timestamp || ((Date.now() - timestamp) > expirationTime);
+
     this.state = {
       animation: animations.noAnimation,
       countryCode: "US",
       isOffline: !XcooBee.kit.config.campaignReference,
       isOpen: false,
-      isShown: true,
+      isShown: isExpired || !XcooBee.kit.config.hideOnComplete,
       isCampaignActive: false,
       loading: true,
       pulsing: false,
       userOptions: [],
       crowdAI: false,
       checked: [],
+      locationIsNotDefined: false,
     };
 
     this.timers = [];
 
-    const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
-
-    if (timestamp && ((Date.now() - timestamp) < expirationTime)) {
-      this.fetchLocation(false, false, true);
-    } else {
+    if (isExpired) {
       this.fetchUserSettings();
+    } else {
+      this.fetchLocation(false, false, true);
     }
   }
 
@@ -252,9 +258,7 @@ export default class App extends Component {
           const { config } = XcooBee.kit;
 
           config.cookies.forEach((cookie) => {
-            if (siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)) {
-              cookie.checked = true;
-            }
+            cookie.checked = siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey);
           });
           this.fetchLocation(false, true);
         } else {
@@ -303,10 +307,13 @@ export default class App extends Component {
     fetch("http://ip-api.com/json")
       .then(res => res.json())
       .then((res) => {
-        const countryCode = res ? res.countryCode : "US";
-
-        this.setState({ countryCode, loading: false });
-        this.setAnimation(countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences);
+        this.setState({ countryCode: res.countryCode, loading: false });
+        this.setAnimation(res.countryCode, blnCrowdAI, blnUserSettings, blnSavedPreferences);
+        this.startTimer();
+      })
+      .catch(() => {
+        this.setState({ countryCode: euCountries[0], loading: false, locationIsNotDefined: true });
+        this.setAnimation(euCountries[0], blnCrowdAI, blnUserSettings, blnSavedPreferences);
         this.startTimer();
       });
   }
@@ -341,9 +348,9 @@ export default class App extends Component {
   }
 
   handleOpen(animation) {
-    const { loading } = this.state;
+    const { loading, isShown } = this.state;
 
-    if (animation !== animations.noAnimation || loading) {
+    if (animation !== animations.noAnimation || loading || !isShown) {
       return;
     }
 
@@ -351,11 +358,11 @@ export default class App extends Component {
     this.timers.forEach(timer => clearTimeout(timer));
   }
 
-  handleClose() {
+  handleClose(afterUpdate) {
     this.setState({ isOpen: false });
     this.startTimer();
 
-    if (XcooBee.kit.config.hideOnComplete) {
+    if (XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete && afterUpdate) {
       this.setState({ isShown: false });
     }
   }
@@ -365,7 +372,7 @@ export default class App extends Component {
     this.fetchUserSettings(true);
   }
 
-  handleSubmit() {
+  handleSubmit(afterUpdate) {
     const { isOffline } = this.state;
     const { config } = XcooBee.kit;
 
@@ -451,16 +458,26 @@ export default class App extends Component {
     this.setState({ checked });
 
     XcooBee.kit.consentStatus = consentStatuses.complete;
-    this.handleClose();
+    this.handleClose(afterUpdate);
   }
 
   render() {
-    const { isShown, isOpen, animation, pulsing, isOffline, countryCode, loading, checked } = this.state;
-    const isHide = XcooBee.kit.config.hideOnComplete && XcooBee.kit.consentStatus === consentStatuses.complete;
+    const {
+      isShown,
+      isOpen,
+      animation,
+      pulsing,
+      isOffline,
+      countryCode,
+      loading,
+      checked,
+      locationIsNotDefined,
+    } = this.state;
 
-    return !loading && !isHide && (
+    return !loading && (
       <div
-        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""}`}
+        /* eslint-disable-next-line */
+        className={`xb-cookie-kit ${XcooBee.kit.config.position} ${!isShown ? "transparent" : ""} ${isOpen ? "scroll" : ""}`}
         style={{ width: isOpen ? "auto" : "4vw" }}
       >
         {
@@ -469,10 +486,10 @@ export default class App extends Component {
               <CookieKitPopup
                 campaign={XcooBee.kit.config}
                 onClose={() => this.handleClose()}
-                onSubmit={() => this.handleSubmit()}
+                onSubmit={() => this.handleSubmit(true)}
                 onLogin={() => this.handleLogin()}
                 isOffline={isOffline}
-                countryCode={countryCode}
+                countryCode={locationIsNotDefined ? null : countryCode}
                 checked={checked}
               />
             )
@@ -491,7 +508,7 @@ export default class App extends Component {
             <button
               type="button"
               className="xb-cookie-kit__refresh-button"
-              onClick={() => App.refresh()}
+              onClick={() => App.refresh(isShown)}
             >
               Refresh
             </button>

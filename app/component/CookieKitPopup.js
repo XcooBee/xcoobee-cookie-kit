@@ -163,11 +163,13 @@ export default class CookieKitPopup extends Component {
               >
                 { selectedLocale }
               </button>
-              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
-                <div>
-                  <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+              { countryCode && (
+                <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
+                  <div>
+                    <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             { isShown && (
               <div className="xb-cookie-kit-popup__custom-select">
@@ -246,7 +248,7 @@ export default class CookieKitPopup extends Component {
               className="xb-cookie-kit-popup__button"
               onClick={() => this.handleSubmit()}
             >
-              OK
+              {renderText("CookieKit.OkButton", selectedLocale)}
             </button>
           </div>
         </div>
@@ -289,7 +291,17 @@ export default class CookieKitPopup extends Component {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
-        <div className="xb-cookie-kit-popup__powered-by">Powered by XcooBee</div>
+        <div className="xb-cookie-kit-popup__powered-by">
+          Powered by
+          <a
+            className="xb-cookie-kit-popup__powered-by-link"
+            href={links.poweredBy}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            XcooBee
+          </a>
+        </div>
       </div>
     );
   }
