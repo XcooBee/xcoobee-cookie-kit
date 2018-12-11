@@ -84,11 +84,9 @@ Personalization: user cookie
 
 Statistics: local webserver cookie & google analytics cookie
 
-`c` You [initialize](#c-load-xcoobee-cookie-kit) the XCK script.
+`c` You [initialize and render](#c-load-xcoobee-cookie-kit) the XCK script to display the user consent popup.
 
-`d` You [render](#d-load-xcoobee-cookie-kit) the XCK script to display the user consent popup.
-
-`e` User makes selection and clicks OK.
+`d` User makes selection and clicks OK.
 
 You set the needed cookies using a JavaScript handler process that gets invoked by the XCK.
 
