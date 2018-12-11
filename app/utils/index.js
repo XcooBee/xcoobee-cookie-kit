@@ -4,9 +4,13 @@ const defaultConfig = {
   displayOnlyForEU: false,
   expirationTime: 0,
   position: "right_bottom",
-  requestDataTypes: ["application"],
+  requestDataTypes: ["application", "usage", "statistics"],
   testMode: false,
   textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
+  cookieHandler: cookies => console.log(cookies),
+  termsUrl: "asd",
+  privacyUrl: "ad",
+  campaignReference: "LRn8viWHrZ2YpLzndDcbr4IRiAjdYtiAruxdr/FS0KXKsDq480WVkTRJoJpEjGrHlqOffg=="
 };
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
 const cookieTypes = [
@@ -64,12 +68,14 @@ const consentStatuses = {
   closed: "closed",
 };
 // eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
+const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideBrandTag", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
+const authErrorMessage = "Failed to connect to XcooBee. Try again later.";
 
 export {
   animations,
+  authErrorMessage,
   cookieTypes,
   configFields,
   consentStatuses,

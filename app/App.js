@@ -6,6 +6,7 @@ import CookieKitPopup from "./component/CookieKitPopup";
 import {
   xcoobeeCookiesKey,
   animations,
+  authErrorMessage,
   tokenKey,
   euCountries,
   cookieTypes,
@@ -73,6 +74,7 @@ export default class App extends Component {
       isOffline: !XcooBee.kit.config.campaignReference,
       isOpen: false,
       isShown: true,
+      isCampaignActive: false,
       loading: true,
       pulsing: false,
       userOptions: [],
@@ -132,9 +134,7 @@ export default class App extends Component {
     }
     if (userOptions.length && localStorage[tokenKey]) {
       config.cookies.forEach((cookie) => {
-        if (userOptions.includes(cookie.type)) {
-          cookie.checked = true;
-        }
+        cookie.checked = userOptions.includes(cookieTypes.find(type => type.key === cookie.type).dbKey);
       });
       this.handleSubmit();
 
@@ -142,9 +142,7 @@ export default class App extends Component {
     }
     if (!euCountries.includes(countryCode) && config.displayOnlyForEU) {
       config.cookies.forEach((cookie) => {
-        if (config.checkByDefaultTypes.includes(cookie.type)) {
-          cookie.checked = true;
-        }
+        cookie.checked = config.checkByDefaultTypes.includes(cookie.type);
       });
       this.handleSubmit();
 
@@ -190,12 +188,50 @@ export default class App extends Component {
           if (res.user.settings.consent && res.user.settings.consent.accept_cookies) {
             this.setState({ userOptions: res.user.settings.consent.accept_cookies });
           }
-          this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
+          this.fetchSiteSettings(res.user.cursor, res.user.xcoobee_id);
         })
-        .catch(App.handleErrors);
+        .catch((error) => {
+          if (typeof error === "object" && error.message === authErrorMessage) {
+            console.error(error.message);
+            localStorage.removeItem(tokenKey);
+            this.fetchLocation();
+          } else {
+            App.handleErrors(error);
+          }
+        });
     } else {
       this.fetchLocation();
     }
+  }
+
+  fetchSiteSettings(userCursor, xcoobeeId) {
+    const query = `query SystemUserQueries($user_cursor: String!) {
+      cookie_consents(user_cursor: $user_cursor) {
+        site,
+        cookies
+      }
+    }`;
+
+    graphQLRequest(query, { user_cursor: userCursor }, localStorage[tokenKey])
+      .then((res) => {
+        const siteSettings = res.cookie_consents
+          .find(consent => consent.site === CryptoJS.SHA256(`${window.location.origin.toLowerCase()}${xcoobeeId}`)
+            .toString(CryptoJS.enc.Base64));
+
+        if (siteSettings && siteSettings.cookies.length) {
+          const { config } = XcooBee.kit;
+
+          config.cookies.forEach((cookie) => {
+            if (siteSettings.cookies.includes(cookieTypes.find(type => type.key === cookie.type).dbKey)) {
+              cookie.checked = true;
+            }
+          });
+          this.fetchLocation(false, true);
+        } else {
+          this.fetchCrowdAI();
+        }
+      })
+      .catch(App.handleErrors);
   }
 
   fetch100Sites(userCursor, xcoobeeId) {
