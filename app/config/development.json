@@ -1,4 +1,5 @@
 {
+  "origin": "https://testapp.xcoobee.net",
   "domain": "http://localhost:3001",
   "apiUrl": "https://testapi.xcoobee.net/Test"
 }

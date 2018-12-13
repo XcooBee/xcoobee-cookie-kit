@@ -6,6 +6,7 @@ import CookieKitPopup from "./component/CookieKitPopup";
 import {
   xcoobeeCookiesKey,
   animations,
+  authErrorMessage,
   tokenKey,
   euCountries,
   cookieTypes,
@@ -73,6 +74,7 @@ export default class App extends Component {
 
     const timestamp = localStorage[xcoobeeCookiesKey] ? JSON.parse(localStorage[xcoobeeCookiesKey]).timestamp : null;
     const isExpired = !timestamp || ((Date.now() - timestamp) > expirationTime);
+    const reference = XcooBee.kit.config.campaignReference;
 
     this.state = {
       animation: animations.noAnimation,
@@ -94,6 +96,10 @@ export default class App extends Component {
       this.fetchUserSettings();
     } else {
       this.fetchLocation(false, false, true);
+    }
+
+    if (reference && typeof reference !== "string") {
+      console.error("Invalid campaign reference");
     }
   }
 
@@ -146,9 +152,7 @@ export default class App extends Component {
     }
     if (!euCountries.includes(countryCode) && config.displayOnlyForEU) {
       config.cookies.forEach((cookie) => {
-        if (config.checkByDefaultTypes.includes(cookie.type)) {
-          cookie.checked = true;
-        }
+        cookie.checked = config.checkByDefaultTypes.includes(cookie.type);
       });
       this.handleSubmit();
 
@@ -196,7 +200,15 @@ export default class App extends Component {
           }
           this.fetch100Sites(res.user.cursor, res.user.xcoobee_id);
         })
-        .catch(App.handleErrors);
+        .catch((error) => {
+          if (typeof error === "object" && error.message === authErrorMessage) {
+            console.error(error.message);
+            localStorage.removeItem(tokenKey);
+            this.fetchLocation();
+          } else {
+            App.handleErrors(error);
+          }
+        });
     } else {
       this.fetchLocation();
     }

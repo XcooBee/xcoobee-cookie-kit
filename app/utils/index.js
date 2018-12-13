@@ -1,5 +1,5 @@
 const defaultConfig = {
-  checkByDefaultTypes: ["application"],
+  checkByDefaultTypes: [],
   cssAutoLoad: true,
   displayOnlyForEU: false,
   expirationTime: 0,
@@ -44,8 +44,8 @@ const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
 const links = {
   poweredBy: "https://www.xcoobee.com",
-  login: "https://testapp.xcoobee.net/auth/minlogin",
-  manage: "https://testapp.xcoobee.net/user/consentCenter/cookies",
+  login: "/auth/minlogin",
+  manage: "/user/consentCenter/cookies",
 };
 const animations = {
   noAnimation: "default",
@@ -64,12 +64,14 @@ const consentStatuses = {
   closed: "closed",
 };
 // eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
+const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideBrandTag", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
+const authErrorMessage = "Failed to connect to XcooBee. Try again later.";
 
 export {
   animations,
+  authErrorMessage,
   cookieTypes,
   configFields,
   consentStatuses,
