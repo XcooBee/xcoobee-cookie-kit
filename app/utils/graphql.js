@@ -1,5 +1,7 @@
 import fetch from "isomorphic-fetch";
 
+import xcoobeeConfig from "../config/xcoobeeConfig";
+
 import { authErrorMessage } from ".";
 
 export default function graphQLRequest(query, variables, token) {

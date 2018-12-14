@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactCountryFlag from "react-country-flag";
 
+import xcoobeeConfig from "../config/xcoobeeConfig";
+
 import AuthenticationManager from "../lib/AuthenticationManager";
 import CookieConsentShape from "../lib/CookieConsentShape";
 

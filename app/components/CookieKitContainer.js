@@ -2,6 +2,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 
+import xcoobeeConfig from "../config/xcoobeeConfig";
+
 import AuthenticationManager from "../lib/AuthenticationManager";
 import CookieConsentsManager from "../lib/CookieConsentsManager";
 
