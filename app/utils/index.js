@@ -1,5 +1,5 @@
 const defaultConfig = {
-  checkByDefaultTypes: ["application"],
+  checkByDefaultTypes: [],
   cssAutoLoad: true,
   displayOnlyForEU: false,
   expirationTime: 0,
@@ -47,8 +47,8 @@ const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
 const links = {
   poweredBy: "https://www.xcoobee.com",
-  login: "https://testapp.xcoobee.net/auth/minlogin",
-  manage: "https://testapp.xcoobee.net/user/consentCenter/cookies",
+  login: "/auth/minlogin",
+  manage: "/user/consentCenter/cookies",
 };
 const animations = {
   noAnimation: "default",
@@ -74,6 +74,7 @@ const configFields = [
   "cssAutoLoad",
   "displayOnlyForEU",
   "expirationTime",
+  "hideBrandTag",
   "hideOnComplete",
   "position",
   "privacyUrl",
@@ -85,9 +86,11 @@ const configFields = [
 ];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
+const authErrorMessage = "Failed to connect to XcooBee. Try again later.";
 
 export {
   animations,
+  authErrorMessage,
   configFields,
   consentStatuses,
   cookieDefns,

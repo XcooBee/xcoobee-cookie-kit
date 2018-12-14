@@ -18,6 +18,7 @@ export default class CookieKitPopup extends React.PureComponent {
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
+    hideBrandTag: PropTypes.bool.isRequired,
     isConnected: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
@@ -129,6 +130,7 @@ export default class CookieKitPopup extends React.PureComponent {
     const {
       companyLogo,
       countryCode,
+      hideBrandTag,
       isConnected,
       onClose,
       privacyUrl,
@@ -138,6 +140,7 @@ export default class CookieKitPopup extends React.PureComponent {
     } = this.props;
     const { cookieConsentLut, isShown, selectedLocale } = this.state;
     const isAuthorized = AuthenticationManager.getAccessToken();
+    const targetUrl = encodeURIComponent(window.location.origin);
 
     // TODO: Move the following to CSS. Use media query.
     const width = window.innerWidth || document.body.clientWidth;
@@ -252,23 +255,25 @@ export default class CookieKitPopup extends React.PureComponent {
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
         <div className="xb-cookie-kit-popup__actions">
-          <div className="xb-cookie-kit-popup__privacy-partner-container">
-            <a
-              className="xb-cookie-kit-popup__privacy-partner-link"
-              href={links.poweredBy}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="xb-cookie-kit-popup__privacy-partner">
-                {renderText("CookieKit.PoweredByText", selectedLocale)}
-                <img
-                  className="xb-cookie-kit-popup__privacy-partner-logo"
-                  src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
-                  alt="XcooBee logo"
-                />
-              </div>
-            </a>
-          </div>
+          { !hideBrandTag && (
+            <div className="xb-cookie-kit-popup__privacy-partner-container">
+              <a
+                className="xb-cookie-kit-popup__privacy-partner-link"
+                href={links.poweredBy}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className="xb-cookie-kit-popup__privacy-partner">
+                  {renderText("CookieKit.PoweredByText", selectedLocale)}
+                  <img
+                    className="xb-cookie-kit-popup__privacy-partner-logo"
+                    src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
+                    alt="XcooBee logo"
+                  />
+                </div>
+              </a>
+            </div>
+          )}
           <div className="xb-cookie-kit-popup__button-container">
             <button
               type="button"
@@ -284,7 +289,7 @@ export default class CookieKitPopup extends React.PureComponent {
             ? (
               <a
                 className="xb-cookie-kit-popup__link"
-                href={links.manage}
+                href={`${xcoobeeConfig.origin}${links.manage}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -295,7 +300,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 className="xb-cookie-kit__button xb-cookie-kit-popup__link"
                 type="button"
-                onClick={() => window.open(`${links.login}?targetUrl=${window.location.origin}`)}
+                onClick={() => window.open(`${xcoobeeConfig.origin}${links.login}?targetUrl=${targetUrl}`)}
               >
                 {renderText("CookieKit.LoginLink", selectedLocale)}
               </button>
@@ -318,17 +323,19 @@ export default class CookieKitPopup extends React.PureComponent {
             {renderText("CookieKit.PolicyLink", selectedLocale)}
           </a>
         </div>
-        <div className="xb-cookie-kit-popup__powered-by">
-          Powered by
-          <a
-            className="xb-cookie-kit-popup__powered-by-link"
-            href={links.poweredBy}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            XcooBee
-          </a>
-        </div>
+        { !hideBrandTag && (
+          <div className="xb-cookie-kit-popup__powered-by">
+            Powered by
+            <a
+              className="xb-cookie-kit-popup__powered-by-link"
+              href={links.poweredBy}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              XcooBee
+            </a>
+          </div>
+        )}
       </div>
     );
   }

@@ -54,15 +54,14 @@ function callTargetUrl(targetUrl, cookieConsentLut) {
     result: cookieConsentLut,
   };
 
-  fetch(targetUrl,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(result),
-      mode: "no-cors",
-    });
+  fetch(targetUrl, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(result),
+    mode: "no-cors",
+  });
 }
 
 function handleErrors(error) {
@@ -100,6 +99,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
+    hideBrandTag: PropTypes.bool,
     hideOnComplete: PropTypes.bool,
     position: PropTypes.oneOf(positions),
     privacyUrl: PropTypes.string.isRequired,
@@ -128,6 +128,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: true,
     displayOnlyForEU: false,
     expirationTime: 0,
+    hideBrandTag: false,
     hideOnComplete: false,
     position: "right_bottom",
     requestDataTypes: ["application"],
@@ -338,6 +339,7 @@ export default class CookieKitContainer extends React.PureComponent {
       campaignReference,
       companyLogo,
       expirationTime,
+      hideBrandTag,
       hideOnComplete,
       position,
       privacyUrl,
@@ -360,6 +362,7 @@ export default class CookieKitContainer extends React.PureComponent {
           cookieConsents={cookieConsents}
           countryCode={countryCode}
           expirationTime={expirationTime}
+          hideBrandTag={hideBrandTag}
           hideOnComplete={hideOnComplete}
           onAuthentication={this.handleAuthentication}
           onConsentStatusChange={this.handleConsentStatusChange}

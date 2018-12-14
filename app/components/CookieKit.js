@@ -28,6 +28,7 @@ export default class CookieKit extends React.PureComponent {
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string.isRequired,
     expirationTime: PropTypes.number,
+    hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
     onAuthentication: PropTypes.func.isRequired,
     onConsentStatusChange: PropTypes.func.isRequired,
@@ -148,6 +149,7 @@ export default class CookieKit extends React.PureComponent {
   }
 
   clearTimers() {
+    // console.log("CookieKit#clearTimers");
     this.timers.forEach(timer => clearTimeout(timer));
     this.timers = [];
   }
@@ -178,6 +180,7 @@ export default class CookieKit extends React.PureComponent {
       consentsSource,
       cookieConsents,
       countryCode,
+      hideBrandTag,
       position,
       privacyUrl,
       requestDataTypes,
@@ -208,6 +211,7 @@ export default class CookieKit extends React.PureComponent {
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}
+            hideBrandTag={hideBrandTag}
             isConnected={!!campaignReference}
             onClose={this.handlePopupClose}
             onLogin={this.handlePopupLogin}
