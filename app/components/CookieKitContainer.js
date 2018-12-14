@@ -4,8 +4,21 @@ import React from "react";
 
 import xcoobeeConfig from "../config/xcoobeeConfig";
 
-import AuthenticationManager from "../lib/AuthenticationManager";
-import CookieConsentsManager from "../lib/CookieConsentsManager";
+import {
+  clearAccessToken,
+  getAccessToken,
+  saveAccessToken,
+} from "../lib/AccessTokenManager";
+import {
+  clearLocallySaved,
+  fetchCompanyPreferenceCookieConsents,
+  fetchCountryCode,
+  fetchCrowdIntelligenceCookieConsents,
+  fetchUserPreferenceCookieConsents,
+  fetchUserSettingsCookieConsents,
+  saveLocally,
+  saveRemotely,
+} from "../lib/CookieConsentsManager";
 import NotAuthorizedError from "../lib/NotAuthorizedError";
 
 import {
@@ -20,23 +33,6 @@ import {
 import CookieKit from "./CookieKit";
 
 import "../style/main.scss";
-
-const {
-  clearAccessToken,
-  getAccessToken,
-  saveAccessToken,
-} = AuthenticationManager;
-
-const {
-  clearLocallySaved,
-  fetchCompanyPreferenceCookieConsents,
-  fetchCountryCode,
-  fetchCrowdIntelligenceCookieConsents,
-  fetchUserPreferenceCookieConsents,
-  fetchUserSettingsCookieConsents,
-  saveLocally,
-  saveRemotely,
-} = CookieConsentsManager;
 
 function callCookieHandler(cookieHandler, cookieConsentLut) {
   if (typeof cookieHandler === "string") {

@@ -4,7 +4,7 @@ import ReactCountryFlag from "react-country-flag";
 
 import xcoobeeConfig from "../config/xcoobeeConfig";
 
-import AuthenticationManager from "../lib/AuthenticationManager";
+import { getAccessToken } from "../lib/AccessTokenManager";
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
@@ -141,7 +141,7 @@ export default class CookieKitPopup extends React.PureComponent {
       textMessage,
     } = this.props;
     const { cookieConsentLut, isShown, selectedLocale } = this.state;
-    const isAuthorized = AuthenticationManager.getAccessToken();
+    const isAuthorized = getAccessToken();
     const targetUrl = encodeURIComponent(window.location.origin);
 
     // TODO: Move the following to CSS. Use media query.
