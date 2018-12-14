@@ -86,11 +86,9 @@ const configFields = [
 ];
 // Expiration time of cookie preferences saved locally (in milliseconds)
 const expirationTime = 86400000;
-const authErrorMessage = "Failed to connect to XcooBee. Try again later.";
 
 export {
   animations,
-  authErrorMessage,
   configFields,
   consentStatuses,
   cookieDefns,

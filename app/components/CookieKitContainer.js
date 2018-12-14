@@ -6,6 +6,7 @@ import xcoobeeConfig from "../config/xcoobeeConfig";
 
 import AuthenticationManager from "../lib/AuthenticationManager";
 import CookieConsentsManager from "../lib/CookieConsentsManager";
+import NotAuthorizedError from "../lib/NotAuthorizedError";
 
 import {
   consentStatuses,
@@ -68,8 +69,18 @@ function callTargetUrl(targetUrl, cookieConsentLut) {
 
 function handleErrors(error) {
   if (Array.isArray(error)) {
-    error.forEach((e) => { throw Error(e.message); });
+    error.forEach((e) => {
+      if (e instanceof NotAuthorizedError) {
+        clearAccessToken();
+      }
+    });
+    error.forEach((e) => {
+      throw Error(e.message);
+    });
   } else if (error) {
+    if (error instanceof NotAuthorizedError) {
+      clearAccessToken();
+    }
     throw Error(error.message);
   }
 }
@@ -220,7 +231,8 @@ export default class CookieKitContainer extends React.PureComponent {
                       }
                     });
                 }
-              });
+              })
+              .catch(handleErrors);
           } else {
             fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes)
               .then((companyPreferenceCookieConsents) => {
