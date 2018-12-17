@@ -25,7 +25,7 @@ XcooBee.kit.setParam("cssAutoLoad", true);
 
 XcooBee.kit.setParam("displayOnlyForEU", true);
 
-XcooBee.kit.setParam("expirationTime", 10);
+XcooBee.kit.setParam("expirationTime", 0);
 
 XcooBee.kit.setParam("hideOnComplete", true);
 

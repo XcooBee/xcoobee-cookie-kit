@@ -284,7 +284,8 @@ $duration: .2s;
 
       > .xb-cookie-kit-popup__logo {
         .xb-cookie-kit-popup__company-logo {
-          height: 80px;
+          max-height: 80px;
+          width: 80px;
           padding: 4px;
           cursor: pointer;
         }
