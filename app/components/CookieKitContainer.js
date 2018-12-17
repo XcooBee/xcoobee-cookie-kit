@@ -2,8 +2,24 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import AuthenticationManager from "../lib/AuthenticationManager";
-import CookieConsentsManager from "../lib/CookieConsentsManager";
+import xcoobeeConfig from "../config/xcoobeeConfig";
+
+import {
+  clearAccessToken,
+  getAccessToken,
+  saveAccessToken,
+} from "../lib/AccessTokenManager";
+import {
+  clearLocallySaved,
+  fetchCompanyPreferenceCookieConsents,
+  fetchCountryCode,
+  fetchCrowdIntelligenceCookieConsents,
+  fetchUserPreferenceCookieConsents,
+  fetchUserSettingsCookieConsents,
+  saveLocally,
+  saveRemotely,
+} from "../lib/CookieConsentsManager";
+import NotAuthorizedError from "../lib/NotAuthorizedError";
 
 import {
   consentStatuses,
@@ -17,23 +33,6 @@ import {
 import CookieKit from "./CookieKit";
 
 import "../style/main.scss";
-
-const {
-  clearAccessToken,
-  getAccessToken,
-  saveAccessToken,
-} = AuthenticationManager;
-
-const {
-  clearLocallySaved,
-  fetchCompanyPreferenceCookieConsents,
-  fetchCountryCode,
-  fetchCrowdIntelligenceCookieConsents,
-  fetchUserPreferenceCookieConsents,
-  fetchUserSettingsCookieConsents,
-  saveLocally,
-  saveRemotely,
-} = CookieConsentsManager;
 
 function callCookieHandler(cookieHandler, cookieConsentLut) {
   if (typeof cookieHandler === "string") {
@@ -54,21 +53,30 @@ function callTargetUrl(targetUrl, cookieConsentLut) {
     result: cookieConsentLut,
   };
 
-  fetch(targetUrl,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(result),
-      mode: "no-cors",
-    });
+  fetch(targetUrl, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(result),
+    mode: "no-cors",
+  });
 }
 
 function handleErrors(error) {
   if (Array.isArray(error)) {
-    error.forEach((e) => { throw Error(e.message); });
+    error.forEach((e) => {
+      if (e instanceof NotAuthorizedError) {
+        clearAccessToken();
+      }
+    });
+    error.forEach((e) => {
+      throw Error(e.message);
+    });
   } else if (error) {
+    if (error instanceof NotAuthorizedError) {
+      clearAccessToken();
+    }
     throw Error(error.message);
   }
 }
@@ -100,6 +108,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
+    hideBrandTag: PropTypes.bool,
     hideOnComplete: PropTypes.bool,
     position: PropTypes.oneOf(positions),
     privacyUrl: PropTypes.string.isRequired,
@@ -128,6 +137,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: true,
     displayOnlyForEU: false,
     expirationTime: 0,
+    hideBrandTag: false,
     hideOnComplete: false,
     position: "right_bottom",
     requestDataTypes: ["application"],
@@ -217,7 +227,8 @@ export default class CookieKitContainer extends React.PureComponent {
                       }
                     });
                 }
-              });
+              })
+              .catch(handleErrors);
           } else {
             fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes)
               .then((companyPreferenceCookieConsents) => {
@@ -338,6 +349,7 @@ export default class CookieKitContainer extends React.PureComponent {
       campaignReference,
       companyLogo,
       expirationTime,
+      hideBrandTag,
       hideOnComplete,
       position,
       privacyUrl,
@@ -360,6 +372,7 @@ export default class CookieKitContainer extends React.PureComponent {
           cookieConsents={cookieConsents}
           countryCode={countryCode}
           expirationTime={expirationTime}
+          hideBrandTag={hideBrandTag}
           hideOnComplete={hideOnComplete}
           onAuthentication={this.handleAuthentication}
           onConsentStatusChange={this.handleConsentStatusChange}

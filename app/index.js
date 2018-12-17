@@ -28,6 +28,15 @@ function checkRequiredFields(config) {
     return false;
   }
 
+  const reference = config.campaignReference;
+  const referenceType = typeof reference;
+  if (
+    (reference !== undefined && referenceType !== "string")
+    || (referenceType === "string" && reference.length === 0)
+  ) {
+    errors.push("Invalid campaign reference");
+  }
+
   return true;
 }
 

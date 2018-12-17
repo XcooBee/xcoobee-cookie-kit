@@ -27,6 +27,8 @@ XcooBee.kit.setParam("displayOnlyForEU", true);
 
 XcooBee.kit.setParam("expirationTime", 0);
 
+XcooBee.kit.setParam("hideBrandTag", true);
+
 XcooBee.kit.setParam("hideOnComplete", true);
 
 XcooBee.kit.setParam("position", "left_bottom");
@@ -68,6 +70,7 @@ XcooBee.kit.setParam("textMessage", {
 //   cssAutoLoad: true,
 //   displayOnlyForEU: true,
 //   // expirationTime: 10,
+//   hideBrandTag: true,
 //   hideOnComplete: true,
 //   position: "left_bottom",
 //   // position: "left_top",

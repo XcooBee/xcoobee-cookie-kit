@@ -1,5 +1,9 @@
 import fetch from "isomorphic-fetch";
 
+import xcoobeeConfig from "../config/xcoobeeConfig";
+
+import NotAuthorizedError from "../lib/NotAuthorizedError";
+
 export default function graphQLRequest(query, variables, token) {
   const init = {
     method: "post",
@@ -19,6 +23,9 @@ export default function graphQLRequest(query, variables, token) {
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
+      }
+      if (response.status === 401) {
+        return Promise.reject(new NotAuthorizedError());
       }
       return Promise.reject(response);
     })
