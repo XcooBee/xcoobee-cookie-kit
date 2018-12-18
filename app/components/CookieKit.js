@@ -21,6 +21,7 @@ export default class CookieKit extends React.PureComponent {
     consentsSource: PropTypes.oneOf([
       "companyPreference",
       "crowdIntelligence",
+      "savedConsents",
       "userPreferences",
       "userSettings",
       "unknown",

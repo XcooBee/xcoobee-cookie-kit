@@ -151,8 +151,8 @@ export function fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) 
     });
 }
 
-export function fetchUserSettingsCookieConsents() {
-  // console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetching...");
+export function fetchSavedCookieConsents() {
+  // console.log("CookieConsentsManager#fetchSavedCookieConsents fetching...");
   let cookieConsents = null;
 
   if (localStorage[xcoobeeCookiesKey]) {
@@ -173,7 +173,7 @@ export function fetchUserSettingsCookieConsents() {
     }
   }
 
-  // console.log("CookieConsentsManager#fetchUserSettingsCookieConsents fetched.");
+  // console.log("CookieConsentsManager#fetchSavedCookieConsents fetched.");
   return Promise.resolve(cookieConsents);
 }
 
@@ -230,6 +230,7 @@ export function fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyFor
 }
 
 export function saveLocally(cookieConsents) {
+  // console.log("CookieConsentsManager#saveLocally saving...");
   // TODO: Save as a LUT instead of an array.
   const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
   allAvailCookieDefns.forEach((cookieDefn) => {
@@ -242,9 +243,11 @@ export function saveLocally(cookieConsents) {
     }
   });
   localStorage.setItem(xcoobeeCookiesKey, JSON.stringify(xcoobeeCookies));
+  // console.log("CookieConsentsManager#saveLocally saved.");
 }
 
 export function saveRemotely(accessToken, cookieConsents, campaignReference) {
+  // console.log("CookieConsentsManager#saveRemotely saving...");
   let promise;
   if (campaignReference && accessToken) {
     const addConsentQuery = `mutation AddConsents($campaign_reference: String, $domain: String) {
@@ -286,5 +289,8 @@ export function saveRemotely(accessToken, cookieConsents, campaignReference) {
       });
   }
   promise = promise || Promise.resolve();
+  promise.then(() => {
+    // console.log("CookieConsentsManager#saveRemotely saved.");
+  });
   return promise;
 }

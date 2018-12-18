@@ -14,8 +14,8 @@ import {
   fetchCompanyPreferenceCookieConsents,
   fetchCountryCode,
   fetchCrowdIntelligenceCookieConsents,
+  fetchSavedCookieConsents,
   fetchUserPreferenceCookieConsents,
-  fetchUserSettingsCookieConsents,
   saveLocally,
   saveRemotely,
 } from "../lib/CookieConsentsManager";
@@ -181,15 +181,15 @@ export default class CookieKitContainer extends React.PureComponent {
 
     Promise.all([
       fetchCountryCode(),
-      fetchUserSettingsCookieConsents(),
+      fetchSavedCookieConsents(),
     ])
-      .then(([countryCode, userSettingsCookieConsents]) => {
+      .then(([countryCode, savedCookieConsents]) => {
         this.setState({ countryCode });
-        if (userSettingsCookieConsents) {
+        if (savedCookieConsents) {
           // console.log("Using saved cookie consents!");
           this.setState({
-            consentsSource: "userSettings",
-            cookieConsents: userSettingsCookieConsents,
+            consentsSource: "savedConsents",
+            cookieConsents: savedCookieConsents,
           });
         } else {
           const accessToken = getAccessToken();

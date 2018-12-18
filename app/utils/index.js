@@ -56,6 +56,7 @@ const animations = {
   userSettings: "green",
   crowdIntelligence: "yellow",
   companyPreference: "red",
+  savedConsents: "green",
 };
 const cssHref = "xcoobee-cookie-kit.min.css";
 const euCountries = ["AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT",
