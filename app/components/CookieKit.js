@@ -30,6 +30,7 @@ export default class CookieKit extends React.PureComponent {
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
+    initialIsOpen: PropTypes.bool,
     onAuthentication: PropTypes.func.isRequired,
     onConsentStatusChange: PropTypes.func.isRequired,
     onCookieConsentsChange: PropTypes.func.isRequired,
@@ -54,6 +55,7 @@ export default class CookieKit extends React.PureComponent {
     campaignReference: null,
     companyLogo: null,
     expirationTime: 0,
+    initialIsOpen: false,
   };
 
   constructor(props) {
@@ -61,7 +63,7 @@ export default class CookieKit extends React.PureComponent {
     super(props);
 
     this.state = {
-      isOpen: false,
+      isOpen: props.initialIsOpen,
       isShown: true,
       pulsing: false,
     };

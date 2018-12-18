@@ -155,13 +155,12 @@ export default class CookieKitContainer extends React.PureComponent {
       checked: checkByDefaultTypes.includes(type),
     }));
 
-    const consentsSource = "unknown";
-
     this.state = {
-      consentsSource,
+      consentsSource: "unknown",
       consentStatus: consentStatuses.open,
       cookieConsents,
       countryCode: "US",
+      initialIsOpen: false,
     };
 
     if (props.cssAutoLoad) {
@@ -222,6 +221,8 @@ export default class CookieKitContainer extends React.PureComponent {
                                 consentsSource: "companyPreference",
                                 cookieConsents: companyPreferenceCookieConsents,
                               });
+                            } else {
+                              this.setState({ initialIsOpen: true });
                             }
                           });
                       }
@@ -237,6 +238,8 @@ export default class CookieKitContainer extends React.PureComponent {
                     consentsSource: "companyPreference",
                     cookieConsents: companyPreferenceCookieConsents,
                   });
+                } else {
+                  this.setState({ initialIsOpen: true });
                 }
               });
           }
@@ -358,7 +361,7 @@ export default class CookieKitContainer extends React.PureComponent {
       testMode,
       textMessage,
     } = this.props;
-    const { consentsSource, cookieConsents, countryCode } = this.state;
+    const { consentsSource, cookieConsents, countryCode, initialIsOpen } = this.state;
 
     const renderRefreshButton = testMode
       && (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]);
@@ -374,6 +377,7 @@ export default class CookieKitContainer extends React.PureComponent {
           expirationTime={expirationTime}
           hideBrandTag={hideBrandTag}
           hideOnComplete={hideOnComplete}
+          initialIsOpen={initialIsOpen}
           onAuthentication={this.handleAuthentication}
           onConsentStatusChange={this.handleConsentStatusChange}
           onCookieConsentsChange={this.handleCookieConsentsChange}
