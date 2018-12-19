@@ -6,6 +6,7 @@ import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
   animations,
+  consentsSources,
   consentStatuses,
   cookieTypes,
   positions,
@@ -17,14 +18,7 @@ export default class CookieKit extends React.PureComponent {
   static propTypes = {
     campaignReference: PropTypes.string,
     companyLogo: PropTypes.string,
-    consentsSource: PropTypes.oneOf([
-      "companyPreference",
-      "crowdIntelligence",
-      "savedConsents",
-      "userPreferences",
-      "userSettings",
-      "unknown",
-    ]).isRequired,
+    consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string.isRequired,
     expirationTime: PropTypes.number,
@@ -146,16 +140,16 @@ export default class CookieKit extends React.PureComponent {
     }, 1);
   }
 
-  handlePopupSubmit = (nextCookieConsentLut) => {
+  handlePopupSubmit = (nextConsentSettings) => {
     // console.log("CookieKit#handlePopupSubmit");
-    // console.dir(nextCookieConsentLut);
+    // console.dir(nextConsentSettings);
     const {
       hideOnComplete,
       // onConsentStatusChange,
       onCookieConsentsChange,
     } = this.props;
 
-    onCookieConsentsChange(nextCookieConsentLut);
+    onCookieConsentsChange(nextConsentSettings);
     // I believe complete is implied when onCookieConsentsChange is called.
     // onConsentStatusChange(consentStatuses.complete);
 
@@ -187,7 +181,7 @@ export default class CookieKit extends React.PureComponent {
     const { consentsSource } = this.props;
     const animation = animations[consentsSource];
 
-    if (animation && animation !== animations.noAnimation) {
+    if (animation && animation !== "default") {
       this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 500));
       this.timers.push(setTimeout(() => this.stopPulsing(), 4500));
     }
@@ -227,11 +221,12 @@ export default class CookieKit extends React.PureComponent {
     } = this.props;
     const { hasClosed, isOpen, isShown, pulsing } = this.state;
 
-    const animation = animations[consentsSource] || animations.noAnimation;
+    const animation = animations[consentsSource];
 
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
+    // console.log("animation:", animation);
     // console.log("consentsSource:", consentsSource);
     // console.log("hasClosed:", hasClosed);
     // console.log("pulsing:", pulsing);

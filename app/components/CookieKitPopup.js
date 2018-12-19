@@ -43,13 +43,13 @@ export default class CookieKitPopup extends React.PureComponent {
     super(props);
 
     const { cookieConsents } = this.props;
-    const cookieConsentLut = {};
+    const consentSettings = {};
     cookieConsents.forEach((cookieConsent) => {
-      cookieConsentLut[cookieConsent.type] = cookieConsent.checked;
+      consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
 
     this.state = {
-      cookieConsentLut,
+      consentSettings,
       selectedLocale: "EN",
       isShown: false,
     };
@@ -79,43 +79,43 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleCookieCheck = (e, type) => {
     // console.log('CookieKitPopup#handleCookieCheck');
-    const { cookieConsentLut } = this.state;
+    const { consentSettings } = this.state;
     const checked = {
-      ...cookieConsentLut,
+      ...consentSettings,
     };
 
     checked[type] = e.target.checked;
 
-    this.setState({ cookieConsentLut: checked });
+    this.setState({ consentSettings: checked });
   }
 
   handleCheckAll = () => {
     // console.log('CookieKitPopup#handleCheckAll');
-    const { cookieConsentLut } = this.state;
+    const { consentSettings } = this.state;
 
-    const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
+    const isAllChecked = Object.values(consentSettings).every(checked => checked);
 
     if (isAllChecked) {
       const noneChecked = {};
-      Object.keys(cookieConsentLut).forEach((cookieName) => {
+      Object.keys(consentSettings).forEach((cookieName) => {
         noneChecked[cookieName] = false;
       });
-      this.setState({ cookieConsentLut: noneChecked });
+      this.setState({ consentSettings: noneChecked });
     } else {
       const allChecked = {};
-      Object.keys(cookieConsentLut).forEach((cookieName) => {
+      Object.keys(consentSettings).forEach((cookieName) => {
         allChecked[cookieName] = true;
       });
-      this.setState({ cookieConsentLut: allChecked });
+      this.setState({ consentSettings: allChecked });
     }
   }
 
   handleSubmit = () => {
     // console.log('CookieKitPopup#handleSubmit');
     const { onSubmit } = this.props;
-    const { cookieConsentLut } = this.state;
+    const { consentSettings } = this.state;
 
-    onSubmit(cookieConsentLut);
+    onSubmit(consentSettings);
   }
 
   renderTextMessage(JSON) {
@@ -149,7 +149,7 @@ export default class CookieKitPopup extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { cookieConsentLut, isShown, selectedLocale } = this.state;
+    const { consentSettings, isShown, selectedLocale } = this.state;
     const isAuthorized = getAccessToken();
     const targetUrl = encodeURIComponent(window.location.origin);
 
@@ -157,7 +157,7 @@ export default class CookieKitPopup extends React.PureComponent {
     const width = window.innerWidth || document.body.clientWidth;
     const flagSize = width > 400 ? "25px" : "20px";
 
-    const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
+    const isAllChecked = Object.values(consentSettings).every(checked => checked);
 
     const cookieDefns = allAvailCookieDefns.filter(
       defn => requestDataTypes.includes(defn.type),
@@ -234,7 +234,7 @@ export default class CookieKitPopup extends React.PureComponent {
                   <input
                     id={`xbCheckbox_${cookieDefn.id}`}
                     type="checkbox"
-                    checked={cookieConsentLut[cookieDefn.type]}
+                    checked={consentSettings[cookieDefn.type]}
                     onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
                   />
                   <label

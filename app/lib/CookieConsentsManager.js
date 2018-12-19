@@ -117,7 +117,7 @@ export function fetchUserSettings(accessToken) {
     });
 }
 
-export function clearLocallySaved() {
+export function clearCached() {
   localStorage.removeItem(xcoobeeCookiesKey);
 }
 
@@ -164,11 +164,11 @@ export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
   return crowdAiCookieConsents;
 }
 
-// export function fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
-//   // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
+// export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
+//   // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetching...");
 //   return fetchUserSettings(accessToken)
 //     .then((userSettings) => {
-//       let crowdIntelligenceCookieConsents = null;
+//       let crowdAiCookieConsents = null;
 
 //       if (userSettings.acceptCrowdAI) {
 //         const query = `query getCrowdRating($campaignName: String!) {
@@ -178,7 +178,7 @@ export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
 //           }
 //         }`;
 
-//         crowdIntelligenceCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
+//         crowdAiCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
 //           .then((res) => {
 //             let cookieConsents = null;
 //             const crowdRatings = res ? res.crowd_rating : null;
@@ -197,13 +197,13 @@ export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
 //           });
 //       }
 
-//       // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetched.");
-//       return crowdIntelligenceCookieConsents;
+//       // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetched.");
+//       return crowdAiCookieConsents;
 //     });
 // }
 
-export function fetchSavedCookieConsents() {
-  // console.log("CookieConsentsManager#fetchSavedCookieConsents fetching...");
+export function fetchCachedCookieConsents() {
+  // console.log("CookieConsentsManager#fetchCachedCookieConsents fetching...");
   let cookieConsents = null;
 
   if (localStorage[xcoobeeCookiesKey]) {
@@ -211,7 +211,7 @@ export function fetchSavedCookieConsents() {
       const xcoobeeCookies = JSON.parse(localStorage[xcoobeeCookiesKey]);
       const { cookies: consents, timestamp } = xcoobeeCookies;
 
-      // If the saved cookie consents have not expired, then extract it.
+      // If the cached cookie consents have not expired, then extract it.
       if ((Date.now() - timestamp) < expirationTime) {
         cookieConsents = allAvailCookieDefns.map(cookieDefn => ({
           type: cookieDefn.type,
@@ -224,18 +224,18 @@ export function fetchSavedCookieConsents() {
     }
   }
 
-  // console.log("CookieConsentsManager#fetchSavedCookieConsents fetched.");
+  // console.log("CookieConsentsManager#fetchCachedCookieConsents fetched.");
   return Promise.resolve(cookieConsents);
 }
 
-// export function fetchUserPreferenceCookieConsents(accessToken, origin) {
-//   // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
+// export function fetchUsersDefaultsCookieConsents(accessToken, origin) {
+//   // console.log("CookieConsentsManager#fetchUsersDefaultsCookieConsents fetching...");
 //   return fetchUserSettings(accessToken)
 //     .then((userSettings) => {
-//       let userPreferenceCookieConsents = null;
+//       let usersDefaultsCookieConsents = null;
 
 //       if (userSettings) {
-//         userPreferenceCookieConsents = fetchUsersSiteCookieConsents(
+//         usersDefaultsCookieConsents = fetchUsersSiteCookieConsents(
 //           accessToken,
 //           origin,
 //           userSettings.xcoobeeId,
@@ -260,8 +260,8 @@ export function fetchSavedCookieConsents() {
 //           });
 //       }
 
-//       // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetched.");
-//       return userPreferenceCookieConsents;
+//       // console.log("CookieConsentsManager#fetchUsersDefaultsCookieConsents fetched.");
+//       return usersDefaultsCookieConsents;
 //     });
 // }
 
@@ -287,8 +287,8 @@ export function fetchSavedCookieConsents() {
 //   return hostsDefaultCookieConsents;
 // }
 
-export function saveLocally(cookieConsents) {
-  // console.log("CookieConsentsManager#saveLocally saving...");
+export function cache(cookieConsents) {
+  // console.log("CookieConsentsManager#cache caching...");
   // TODO: Save as a LUT instead of an array.
   const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
   allAvailCookieDefns.forEach((cookieDefn) => {
@@ -301,7 +301,7 @@ export function saveLocally(cookieConsents) {
     }
   });
   localStorage.setItem(xcoobeeCookiesKey, JSON.stringify(xcoobeeCookies));
-  // console.log("CookieConsentsManager#saveLocally saved.");
+  // console.log("CookieConsentsManager#cache cached.");
 }
 
 export function saveRemotely(accessToken, cookieConsents, campaignReference) {

@@ -9,17 +9,17 @@ import {
   saveAccessToken,
 } from "../lib/AccessTokenManager";
 import {
-  clearLocallySaved,
+  cache,
+  clearCached,
   fetchCountryCode,
-  // fetchCrowdIntelligenceCookieConsents,
+  // fetchCrowdAiCookieConsents,
   fetchCrowdAiCookieConsents,
   // fetchHostsDefaultCookieConsents,
-  fetchSavedCookieConsents,
-  // fetchUserPreferenceCookieConsents,
+  fetchCachedCookieConsents,
+  // fetchUsersDefaultsCookieConsents,
   fetchUsersDefaultCookieConsents,
   fetchUsersSiteCookieConsents,
   fetchUserSettings,
-  saveLocally,
   saveRemotely,
 } from "../lib/CookieConsentsManager";
 import NotAuthorizedError from "../lib/NotAuthorizedError";
@@ -42,23 +42,23 @@ import "../style/main.scss";
 const COMPLETE = consentStatuses.complete;
 const OPEN = consentStatuses.open;
 
-function callCookieHandler(cookieHandler, cookieConsentLut) {
+function callCookieHandler(cookieHandler, consentSettings) {
   if (typeof cookieHandler === "string") {
     if (typeof window[cookieHandler] === "function") {
-      window[cookieHandler](cookieConsentLut);
+      window[cookieHandler](consentSettings);
     } else {
       console.error(`Cookie handler function "${cookieHandler}" is missing`);
     }
   } else {
-    cookieHandler(cookieConsentLut);
+    cookieHandler(consentSettings);
   }
 }
 
-function callTargetUrl(targetUrl, cookieConsentLut) {
+function callTargetUrl(targetUrl, consentSettings) {
   const result = {
     time: new Date().toISOString(),
     code: 200,
-    result: cookieConsentLut,
+    result: consentSettings,
   };
 
   fetch(targetUrl, {
@@ -91,7 +91,7 @@ function handleErrors(error) {
 
 function refresh() {
   clearAccessToken();
-  clearLocallySaved();
+  clearCached();
   window.location.reload();
 }
 
@@ -181,16 +181,16 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const promises = [
       fetchCountryCode(),
-      fetchSavedCookieConsents(),
+      fetchCachedCookieConsents(),
     ];
 
     Promise.all(promises)
-      .then(([countryCode, savedCookieConsents]) => {
+      .then(([countryCode, cachedCookieConsents]) => {
         this.setState({ countryCode });
 
-        if (savedCookieConsents) {
-          // console.log("Using saved cookie consents!");
-          this.setCookieConsents("savedConsents", savedCookieConsents);
+        if (cachedCookieConsents) {
+          // console.log("Using cached cookie consents!");
+          this.setCookieConsents("cached", cachedCookieConsents);
           return;
         }
 
@@ -211,7 +211,7 @@ export default class CookieKitContainer extends React.PureComponent {
             checked: checkByDefaultTypes.includes(type),
           }));
           if (displayOnlyForEU && !euCountries.includes(countryCode)) {
-            this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+            this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
           } else {
             const consentsSource = "unknown";
             const cookieConsents = hostsDefaultCookieConsents;
@@ -237,21 +237,21 @@ export default class CookieKitContainer extends React.PureComponent {
   //   // console.dir(this.state);
   //   const promises = [
   //     fetchCountryCode(),
-  //     fetchSavedCookieConsents(),
+  //     fetchCachedCookieConsents(),
   //   ];
 
   //   Promise.all(promises)
-  //     .then(([countryCode, savedCookieConsents]) => {
+  //     .then(([countryCode, cachedCookieConsents]) => {
   //       this.setState({ countryCode });
 
-  //       if (savedCookieConsents) {
-  //         // console.log("Using saved cookie consents!");
-  //         // const cookieConsents = savedCookieConsents;
+  //       if (cachedCookieConsents) {
+  //         // console.log("Using cached cookie consents!");
+  //         // const cookieConsents = cachedCookieConsents;
   //         // const consentStatus = COMPLETE;
-  //         // const consentsSource = "savedConsents";
+  //         // const consentsSource = "cached";
   //         // this.setState({ consentsSource, consentStatus, cookieConsents });
   //         // this.callCallbacks(cookieConsents);
-  //         this.setCookieConsents("savedConsents", savedCookieConsents);
+  //         this.setCookieConsents("cached", cachedCookieConsents);
   //         return;
   //       }
 
@@ -280,13 +280,13 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //       fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor)
   //         //         .then((usersSiteCookieConsents) => {
   //         //           if (usersSiteCookieConsents) {
-  //         //             // const consentsSource = "userSettings";
+  //         //             // const consentsSource = "usersSaved";
   //         //             // const consentStatus = COMPLETE;
   //         //             // const cookieConsents = usersSiteCookieConsents;
   //         //             // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //             // saveLocally(cookieConsents);
+  //         //             // cache(cookieConsents);
   //         //             // this.callCallbacks(cookieConsents);
-  //         //             this.setCookieConsents("userSettings", usersSiteCookieConsents);
+  //         //             this.setCookieConsents("usersSaved", usersSiteCookieConsents);
   //         //             return;
   //         //           }
 
@@ -301,23 +301,23 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //             if (crowdAiCookieConsents) {
   //         //               // const cookieConsents = crowdAiCookieConsents;
   //         //               // const consentStatus = COMPLETE;
-  //         //               // const consentsSource = "crowdIntelligence";
+  //         //               // const consentsSource = "crowdAi";
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // saveLocally(cookieConsents);
+  //         //               // cache(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
-  //         //               this.setCookieConsents("crowdIntelligence", crowdAiCookieConsents);
+  //         //               this.setCookieConsents("crowdAi", crowdAiCookieConsents);
   //         //               return;
   //         //             }
 
   //         //             const usersDefaultCookieConsents = fetchUsersDefaultCookieConsents(userSettings);
   //         //             if (usersDefaultCookieConsents) {
-  //         //               // const consentsSource = "userPreference";
+  //         //               // const consentsSource = "usersDefaults";
   //         //               // const consentStatus = COMPLETE;
   //         //               // const cookieConsents = usersDefaultCookieConsents;
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // saveLocally(cookieConsents);
+  //         //               // cache(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
-  //         //               this.setCookieConsents("userPreference", usersDefaultCookieConsents);
+  //         //               this.setCookieConsents("usersDefaults", usersDefaultCookieConsents);
   //         //               return;
   //         //             }
 
@@ -327,13 +327,13 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //               checkByDefaultTypes,
   //         //             );
   //         //             if (hostsDefaultCookieConsents) {
-  //         //               // const consentsSource = "companyPreference";
+  //         //               // const consentsSource = "hostsDefaults";
   //         //               // const consentStatus = COMPLETE;
   //         //               // const cookieConsents = hostsDefaultCookieConsents;
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // saveLocally(cookieConsents);
+  //         //               // cache(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
-  //         //               this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+  //         //               this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         //               return;
   //         //             }
   //         //             const consentsSource = "unknown";
@@ -351,13 +351,13 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //         checkByDefaultTypes,
   //         //       );
   //         //       if (hostsDefaultCookieConsents) {
-  //         //         // const consentsSource = "companyPreference";
+  //         //         // const consentsSource = "hostsDefaults";
   //         //         // const consentStatus = COMPLETE;
   //         //         // const cookieConsents = hostsDefaultCookieConsents;
   //         //         // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //         // saveLocally(cookieConsents);
+  //         //         // cache(cookieConsents);
   //         //         // this.callCallbacks(cookieConsents);
-  //         //         this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+  //         //         this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         //         return;
   //         //       }
   //         //       const consentsSource = "unknown";
@@ -375,7 +375,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //           checked: checkByDefaultTypes.includes(type),
   //         }));
   //         if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-  //           this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+  //           this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         } else {
   //           // const consentsSource = "unknown";
   //           const cookieConsents = hostsDefaultCookieConsents;
@@ -387,13 +387,13 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //   checkByDefaultTypes,
   //         // );
   //         // if (hostsDefaultCookieConsents) {
-  //         //   // const consentsSource = "companyPreference";
+  //         //   // const consentsSource = "hostsDefaults";
   //         //   // const consentStatus = COMPLETE;
   //         //   // const cookieConsents = hostsDefaultCookieConsents;
   //         //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //   // saveLocally(cookieConsents);
+  //         //   // cache(cookieConsents);
   //         //   // this.callCallbacks(cookieConsents);
-  //         //   this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+  //         //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         // } else {
   //         //   const consentsSource = "unknown";
   //         //   const cookieConsents = cookieTypes.map(type => ({
@@ -421,17 +421,17 @@ export default class CookieKitContainer extends React.PureComponent {
 
   //   const promises = [
   //     fetchCountryCode(),
-  //     fetchSavedCookieConsents(),
+  //     fetchCachedCookieConsents(),
   //   ];
 
   //   Promise.all(promises)
-  //     .then(async ([countryCode, savedCookieConsents]) => {
+  //     .then(async ([countryCode, cachedCookieConsents]) => {
   //       this.setState({ countryCode });
-  //       if (savedCookieConsents) {
-  //         // console.log("Using saved cookie consents!");
+  //       if (cachedCookieConsents) {
+  //         // console.log("Using cached cookie consents!");
   //         this.setState({
-  //           consentsSource: "savedConsents",
-  //           cookieConsents: savedCookieConsents,
+  //           consentsSource: "cached",
+  //           cookieConsents: cachedCookieConsents,
   //         });
   //         // TODO: Call callback mechanism
   //       } else {
@@ -460,19 +460,19 @@ export default class CookieKitContainer extends React.PureComponent {
   //             const { userCursor, xcoobeeId } = userSettings;
   //             cookieConsents = await fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor);
   //             if (cookieConsents) {
-  //               consentsSource = "userSettings";
+  //               consentsSource = "usersSaved";
   //             } else {
   //               if (userSettings.acceptCrowdAI) {
   //                 const campaignName = window.location.host;
   //                 cookieConsents = await fetchCrowdAiCookieConsents(accessToken, campaignName);
   //                 if (cookieConsents) {
-  //                   consentsSource = "crowdIntelligence";
+  //                   consentsSource = "crowdAi";
   //                 }
   //               }
   //               if (!cookieConsents) {
   //                 cookieConsents = fetchUsersDefaultCookieConsents(userSettings);
   //                 if (cookieConsents) {
-  //                   consentsSource = "userPreference";
+  //                   consentsSource = "usersDefaults";
   //                 }
   //               }
   //             }
@@ -481,22 +481,22 @@ export default class CookieKitContainer extends React.PureComponent {
   //         if (!cookieConsents) {
   //           cookieConsents = fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes);
   //           if (cookieConsents) {
-  //             consentsSource = "companyPreference";
+  //             consentsSource = "hostsDefaults";
   //           }
   //         }
   //         if (cookieConsents) {
   //           this.setState({ consentsSource, cookieConsents });
-  //           const cookieConsentLut = {};
+  //           const consentSettings = {};
   //           cookieConsents.forEach((consent) => {
-  //             cookieConsentLut[consent.type] = consent.checked;
+  //             consentSettings[consent.type] = consent.checked;
   //           });
 
   //           if (cookieHandler) {
-  //             callCookieHandler(cookieHandler, cookieConsentLut);
+  //             callCookieHandler(cookieHandler, consentSettings);
   //           }
 
   //           if (targetUrl) {
-  //             callTargetUrl(targetUrl, cookieConsentLut);
+  //             callTargetUrl(targetUrl, consentSettings);
   //           }
   //         }
   //       }
@@ -504,46 +504,46 @@ export default class CookieKitContainer extends React.PureComponent {
 
   //   // const promises = [
   //   //   fetchCountryCode(),
-  //   //   fetchSavedCookieConsents(),
+  //   //   fetchCachedCookieConsents(),
   //   // ];
 
   //   // Promise.all(promises)
-  //   //   .then(([countryCode, savedCookieConsents]) => {
+  //   //   .then(([countryCode, cachedCookieConsents]) => {
   //   //     this.setState({ countryCode });
-  //   //     if (savedCookieConsents) {
-  //   //       // console.log("Using saved cookie consents!");
+  //   //     if (cachedCookieConsents) {
+  //   //       // console.log("Using cached cookie consents!");
   //   //       this.setState({
-  //   //         consentsSource: "savedConsents",
-  //   //         cookieConsents: savedCookieConsents,
+  //   //         consentsSource: "cached",
+  //   //         cookieConsents: cachedCookieConsents,
   //   //       });
   //   //     } else {
   //   //       if (accessToken) {
   //   //         const { origin } = window.location;
 
-  //   //         fetchUserPreferenceCookieConsents(accessToken, origin)
-  //   //           .then((userPreferenceCookieConsents) => {
-  //   //             if (userPreferenceCookieConsents) {
+  //   //         fetchUsersDefaultsCookieConsents(accessToken, origin)
+  //   //           .then((usersDefaultsCookieConsents) => {
+  //   //             if (usersDefaultsCookieConsents) {
   //   //               this.setState({
-  //   //                 consentsSource: "userPreference",
-  //   //                 cookieConsents: userPreferenceCookieConsents,
+  //   //                 consentsSource: "usersDefaults",
+  //   //                 cookieConsents: usersDefaultsCookieConsents,
   //   //               });
   //   //             } else {
   //   //               const campaignName = window.location.host;
 
-  //   //               fetchCrowdIntelligenceCookieConsents(accessToken, campaignName)
-  //   //                 .then((crowdIntelligenceCookieConsents) => {
-  //   //                   if (crowdIntelligenceCookieConsents) {
+  //   //               fetchCrowdAiCookieConsents(accessToken, campaignName)
+  //   //                 .then((crowdAiCookieConsents) => {
+  //   //                   if (crowdAiCookieConsents) {
   //   //                     this.setState({
-  //   //                       consentsSource: "crowdIntelligence",
-  //   //                       cookieConsents: crowdIntelligenceCookieConsents,
+  //   //                       consentsSource: "crowdAi",
+  //   //                       cookieConsents: crowdAiCookieConsents,
   //   //                     });
   //   //                   } else {
   //   //                     fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes)
-  //   //                       .then((companyPreferenceCookieConsents) => {
-  //   //                         if (companyPreferenceCookieConsents) {
+  //   //                       .then((hostsDefaultCookieConsents) => {
+  //   //                         if (hostsDefaultCookieConsents) {
   //   //                           this.setState({
-  //   //                             consentsSource: "companyPreference",
-  //   //                             cookieConsents: companyPreferenceCookieConsents,
+  //   //                             consentsSource: "hostsDefaults",
+  //   //                             cookieConsents: hostsDefaultCookieConsents,
   //   //                           });
   //   //                         }
   //   //                       });
@@ -554,11 +554,11 @@ export default class CookieKitContainer extends React.PureComponent {
   //   //           .catch(handleErrors);
   //   //       } else {
   //   //         fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes)
-  //   //           .then((companyPreferenceCookieConsents) => {
-  //   //             if (companyPreferenceCookieConsents) {
+  //   //           .then((hostsDefaultCookieConsents) => {
+  //   //             if (hostsDefaultCookieConsents) {
   //   //               this.setState({
-  //   //                 consentsSource: "companyPreference",
-  //   //                 cookieConsents: companyPreferenceCookieConsents,
+  //   //                 consentsSource: "hostsDefaults",
+  //   //                 cookieConsents: hostsDefaultCookieConsents,
   //   //               });
   //   //             }
   //   //           });
@@ -588,19 +588,19 @@ export default class CookieKitContainer extends React.PureComponent {
   getCookieTypes() {
     const { consentStatus, cookieConsents } = this.state;
 
-    const cookieConsentSettings = {};
+    const consentSettings = {};
     if (consentStatus === COMPLETE) {
       cookieConsents.forEach((consent) => {
-        cookieConsentSettings[consent.type] = consent.checked;
+        consentSettings[consent.type] = consent.checked;
       });
     }
-    return cookieConsentSettings;
+    return consentSettings;
   }
 
   // Convenience method
   setCookieConsents(consentsSource, cookieConsents) {
     // console.log("CookieKitContainer#setCookieConsents");
-    saveLocally(cookieConsents);
+    cache(cookieConsents);
     const consentStatus = COMPLETE;
     this.setState({
       consentsSource,
@@ -657,19 +657,19 @@ export default class CookieKitContainer extends React.PureComponent {
     //     const { userCursor, xcoobeeId } = userSettings;
     //     cookieConsents = await fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor);
     //     if (cookieConsents) {
-    //       consentsSource = "userSettings";
+    //       consentsSource = "usersSaved";
     //     } else {
     //       if (userSettings.acceptCrowdAI) {
     //         const campaignName = window.location.host;
     //         cookieConsents = await fetchCrowdAiCookieConsents(accessToken, campaignName);
     //         if (cookieConsents) {
-    //           consentsSource = "crowdIntelligence";
+    //           consentsSource = "crowdAi";
     //         }
     //       }
     //       if (!cookieConsents) {
     //         cookieConsents = fetchUsersDefaultCookieConsents(userSettings);
     //         if (cookieConsents) {
-    //           consentsSource = "userPreference";
+    //           consentsSource = "usersDefaults";
     //         }
     //       }
     //     }
@@ -678,12 +678,12 @@ export default class CookieKitContainer extends React.PureComponent {
     // if (!cookieConsents) {
     //   cookieConsents = fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes);
     //   if (cookieConsents) {
-    //     consentsSource = "companyPreference";
+    //     consentsSource = "hostsDefaults";
     //   }
     // }
     // if (cookieConsents) {
     //   this.setState({ consentsSource, cookieConsents });
-    //   saveLocally(cookieConsents);
+    //   cache(cookieConsents);
     //   this.callCallbacks(cookieConsents);
     // } else {
     //   // TODO: Determine if we should be doing something in this case. For example,
@@ -695,21 +695,21 @@ export default class CookieKitContainer extends React.PureComponent {
     // const { origin } = window.location;
 
 
-    // fetchUserPreferenceCookieConsents(accessToken, origin)
-    //   .then((userPreferenceCookieConsents) => {
-    //     if (userPreferenceCookieConsents) {
+    // fetchUsersDefaultsCookieConsents(accessToken, origin)
+    //   .then((usersDefaultsCookieConsents) => {
+    //     if (usersDefaultsCookieConsents) {
     //       this.setState({
-    //         consentsSource: "userPreference",
-    //         cookieConsents: userPreferenceCookieConsents,
+    //         consentsSource: "usersDefaults",
+    //         cookieConsents: usersDefaultsCookieConsents,
     //       });
     //     } else {
     //       const campaignName = window.location.host;
-    //       fetchCrowdIntelligenceCookieConsents(accessToken, campaignName)
-    //         .then((crowdIntelligenceCookieConsents) => {
-    //           if (crowdIntelligenceCookieConsents) {
+    //       fetchCrowdAiCookieConsents(accessToken, campaignName)
+    //         .then((crowdAiCookieConsents) => {
+    //           if (crowdAiCookieConsents) {
     //             this.setState({
-    //               consentsSource: "crowdIntelligence",
-    //               cookieConsents: crowdIntelligenceCookieConsents,
+    //               consentsSource: "crowdAi",
+    //               cookieConsents: crowdAiCookieConsents,
     //             });
     //           }
     //         });
@@ -753,19 +753,19 @@ export default class CookieKitContainer extends React.PureComponent {
   //       const { userCursor, xcoobeeId } = userSettings;
   //       cookieConsents = await fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor);
   //       if (cookieConsents) {
-  //         consentsSource = "userSettings";
+  //         consentsSource = "usersSaved";
   //       } else {
   //         if (userSettings.acceptCrowdAI) {
   //           const campaignName = window.location.host;
   //           cookieConsents = await fetchCrowdAiCookieConsents(accessToken, campaignName);
   //           if (cookieConsents) {
-  //             consentsSource = "crowdIntelligence";
+  //             consentsSource = "crowdAi";
   //           }
   //         }
   //         if (!cookieConsents) {
   //           cookieConsents = fetchUsersDefaultCookieConsents(userSettings);
   //           if (cookieConsents) {
-  //             consentsSource = "userPreference";
+  //             consentsSource = "usersDefaults";
   //           }
   //         }
   //       }
@@ -774,25 +774,25 @@ export default class CookieKitContainer extends React.PureComponent {
   //   if (!cookieConsents) {
   //     cookieConsents = fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes);
   //     if (cookieConsents) {
-  //       consentsSource = "companyPreference";
+  //       consentsSource = "hostsDefaults";
   //     }
   //   }
   //   if (cookieConsents) {
   //     this.setState({ consentsSource, cookieConsents });
 
-  //     saveLocally(cookieConsents);
+  //     cache(cookieConsents);
 
-  //     const cookieConsentLut = {};
+  //     const consentSettings = {};
   //     cookieConsents.forEach((consent) => {
-  //       cookieConsentLut[consent.type] = consent.checked;
+  //       consentSettings[consent.type] = consent.checked;
   //     });
 
   //     if (cookieHandler) {
-  //       callCookieHandler(cookieHandler, cookieConsentLut);
+  //       callCookieHandler(cookieHandler, consentSettings);
   //     }
 
   //     if (targetUrl) {
-  //       callTargetUrl(targetUrl, cookieConsentLut);
+  //       callTargetUrl(targetUrl, consentSettings);
   //     }
   //   } else {
   //     // TODO: Determine if we should be doing something in this case. For example,
@@ -804,21 +804,21 @@ export default class CookieKitContainer extends React.PureComponent {
   //   // const { origin } = window.location;
 
 
-  //   // fetchUserPreferenceCookieConsents(accessToken, origin)
-  //   //   .then((userPreferenceCookieConsents) => {
-  //   //     if (userPreferenceCookieConsents) {
+  //   // fetchUsersDefaultsCookieConsents(accessToken, origin)
+  //   //   .then((usersDefaultsCookieConsents) => {
+  //   //     if (usersDefaultsCookieConsents) {
   //   //       this.setState({
-  //   //         consentsSource: "userPreference",
-  //   //         cookieConsents: userPreferenceCookieConsents,
+  //   //         consentsSource: "usersDefaults",
+  //   //         cookieConsents: usersDefaultsCookieConsents,
   //   //       });
   //   //     } else {
   //   //       const campaignName = window.location.host;
-  //   //       fetchCrowdIntelligenceCookieConsents(accessToken, campaignName)
-  //   //         .then((crowdIntelligenceCookieConsents) => {
-  //   //           if (crowdIntelligenceCookieConsents) {
+  //   //       fetchCrowdAiCookieConsents(accessToken, campaignName)
+  //   //         .then((crowdAiCookieConsents) => {
+  //   //           if (crowdAiCookieConsents) {
   //   //             this.setState({
-  //   //               consentsSource: "crowdIntelligence",
-  //   //               cookieConsents: crowdIntelligenceCookieConsents,
+  //   //               consentsSource: "crowdAi",
+  //   //               cookieConsents: crowdAiCookieConsents,
   //   //             });
   //   //           }
   //   //         });
@@ -833,13 +833,13 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setState({ consentStatus: nextConsentStatus });
   };
 
-  handleCookieConsentsChange = (cookieConsentLut) => {
+  handleCookieConsentsChange = (consentSettings) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
-    // console.log("cookieConsentLut:", cookieConsentLut);
+    // console.log("consentSettings:", consentSettings);
 
     const cookieConsents = cookieTypes.map(type => ({
       type,
-      checked: !!cookieConsentLut[type],
+      checked: !!consentSettings[type],
     }));
 
     const { campaignReference } = this.props;
@@ -847,12 +847,12 @@ export default class CookieKitContainer extends React.PureComponent {
     saveRemotely(accessToken, cookieConsents, campaignReference)
       .catch(handleErrors);
 
-    this.setCookieConsents("userSettings", cookieConsents);
+    this.setCookieConsents("usersSaved", cookieConsents);
 
-    // saveLocally(cookieConsents);
+    // cache(cookieConsents);
 
     // this.setState({
-    //   consentsSource: "userSettings",
+    //   consentsSource: "usersSaved",
     //   consentStatus: COMPLETE,
     //   cookieConsents,
     // });
@@ -864,17 +864,17 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#callCallbacks");
     const { cookieHandler, targetUrl } = this.props;
 
-    const cookieConsentLut = {};
+    const consentSettings = {};
     cookieConsents.forEach((cookieConsent) => {
-      cookieConsentLut[cookieConsent.type] = cookieConsent.checked;
+      consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
 
     if (cookieHandler) {
-      callCookieHandler(cookieHandler, cookieConsentLut);
+      callCookieHandler(cookieHandler, consentSettings);
     }
 
     if (targetUrl) {
-      callTargetUrl(targetUrl, cookieConsentLut);
+      callTargetUrl(targetUrl, consentSettings);
     }
   }
 
@@ -895,13 +895,13 @@ export default class CookieKitContainer extends React.PureComponent {
           fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor)
             .then((usersSiteCookieConsents) => {
               if (usersSiteCookieConsents) {
-                // const consentsSource = "userSettings";
+                // const consentsSource = "usersSaved";
                 // const consentStatus = COMPLETE;
                 // const cookieConsents = usersSiteCookieConsents;
                 // this.setState({ consentsSource, consentStatus, cookieConsents });
-                // saveLocally(cookieConsents);
+                // cache(cookieConsents);
                 // this.callCallbacks(cookieConsents);
-                this.setCookieConsents("userSettings", usersSiteCookieConsents);
+                this.setCookieConsents("usersSaved", usersSiteCookieConsents);
                 return;
               }
 
@@ -916,23 +916,23 @@ export default class CookieKitContainer extends React.PureComponent {
                 if (crowdAiCookieConsents) {
                   // const cookieConsents = crowdAiCookieConsents;
                   // const consentStatus = COMPLETE;
-                  // const consentsSource = "crowdIntelligence";
+                  // const consentsSource = "crowdAi";
                   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                  // saveLocally(cookieConsents);
+                  // cache(cookieConsents);
                   // this.callCallbacks(cookieConsents);
-                  this.setCookieConsents("crowdIntelligence", crowdAiCookieConsents);
+                  this.setCookieConsents("crowdAi", crowdAiCookieConsents);
                   return;
                 }
 
                 const usersDefaultCookieConsents = fetchUsersDefaultCookieConsents(userSettings);
                 if (usersDefaultCookieConsents) {
-                  // const consentsSource = "userPreference";
+                  // const consentsSource = "usersDefaults";
                   // const consentStatus = COMPLETE;
                   // const cookieConsents = usersDefaultCookieConsents;
                   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                  // saveLocally(cookieConsents);
+                  // cache(cookieConsents);
                   // this.callCallbacks(cookieConsents);
-                  this.setCookieConsents("userPreference", usersDefaultCookieConsents);
+                  this.setCookieConsents("usersDefaults", usersDefaultCookieConsents);
                   return;
                 }
 
@@ -941,7 +941,7 @@ export default class CookieKitContainer extends React.PureComponent {
                   checked: checkByDefaultTypes.includes(type),
                 }));
                 if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-                  this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+                  this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
                 } else {
                   const consentsSource = "unknown";
                   const cookieConsents = hostsDefaultCookieConsents;
@@ -954,13 +954,13 @@ export default class CookieKitContainer extends React.PureComponent {
                 //   checkByDefaultTypes,
                 // );
                 // if (hostsDefaultCookieConsents) {
-                //   // const consentsSource = "companyPreference";
+                //   // const consentsSource = "hostsDefaults";
                 //   // const consentStatus = COMPLETE;
                 //   // const cookieConsents = hostsDefaultCookieConsents;
                 //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                //   // saveLocally(cookieConsents);
+                //   // cache(cookieConsents);
                 //   // this.callCallbacks(cookieConsents);
-                //   this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+                //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
                 //   return;
                 // }
                 // const consentsSource = "unknown";
@@ -977,7 +977,7 @@ export default class CookieKitContainer extends React.PureComponent {
             checked: checkByDefaultTypes.includes(type),
           }));
           if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-            this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+            this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
           } else {
             const consentsSource = "unknown";
             const cookieConsents = hostsDefaultCookieConsents;
@@ -989,13 +989,13 @@ export default class CookieKitContainer extends React.PureComponent {
           //   checkByDefaultTypes,
           // );
           // if (hostsDefaultCookieConsents) {
-          //   // const consentsSource = "companyPreference";
+          //   // const consentsSource = "hostsDefaults";
           //   // const consentStatus = COMPLETE;
           //   // const cookieConsents = hostsDefaultCookieConsents;
           //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-          //   // saveLocally(cookieConsents);
+          //   // cache(cookieConsents);
           //   // this.callCallbacks(cookieConsents);
-          //   this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
+          //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
           //   return;
           // }
           // const consentsSource = "unknown";

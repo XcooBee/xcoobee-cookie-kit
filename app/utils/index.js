@@ -51,17 +51,25 @@ const links = {
   manage: "/user/consentCenter/cookies",
 };
 const animations = {
-  noAnimation: "default",
-  userPreference: "blue", // actually user's default settings
-  userSettings: "green", // actually user's site settings
-  crowdIntelligence: "yellow",
-  companyPreference: "red", // host's default settings
-  savedConsents: "green",
+  cached: "green",
+  crowdAi: "yellow",
+  hostsDefaults: "red",
+  usersDefaults: "blue",
+  usersSaved: "green",
+  unknown: "default",
 };
 const cssHref = "xcoobee-cookie-kit.min.css";
 const euCountries = ["AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT",
   "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB"];
 const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+const consentsSources = [
+  "cached",
+  "crowdAi",
+  "hostsDefaults",
+  "usersDefaults",
+  "usersSaved",
+  "unknown",
+];
 const consentStatuses = {
   open: "open",
   complete: "complete",
@@ -85,12 +93,13 @@ const configFields = [
   "testMode",
   "textMessage",
 ];
-// Expiration time of cookie preferences saved locally (in milliseconds)
+// Expiration time of cookie preferences cached locally (in milliseconds)
 const expirationTime = 86400000;
 
 export {
   animations,
   configFields,
+  consentsSources,
   consentStatuses,
   cookieDefns,
   cookieTypes,
