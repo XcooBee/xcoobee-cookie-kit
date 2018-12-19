@@ -10,7 +10,9 @@ const defaultConfig = {
     "en-us": "This site uses cookies. Use this panel to adjust your preferences.",
   },
 };
+
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
+
 const cookieDefns = [
   {
     id: 0,
@@ -41,15 +43,20 @@ const cookieDefns = [
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/advertising-and-marketing-cookies",
   },
 ];
+
 const cookieTypes = cookieDefns.map(defn => defn.type);
+
 const locales = ["EN", "DE", "FR", "ES"];
+
 const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
+
 const links = {
   poweredBy: "https://www.xcoobee.com",
   login: "/auth/minlogin",
   manage: "/user/consentCenter/cookies",
 };
+
 const animations = {
   cached: "green",
   crowdAi: "yellow",
@@ -58,10 +65,15 @@ const animations = {
   usersSaved: "green",
   unknown: "default",
 };
+
 const cssHref = "xcoobee-cookie-kit.min.css";
-const euCountries = ["AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT",
-  "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB"];
-const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+
+const euCountries = [
+  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
+  "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+  "GB",
+];
+
 const consentsSources = [
   "cached",
   "crowdAi",
@@ -70,11 +82,13 @@ const consentsSources = [
   "usersSaved",
   "unknown",
 ];
+
 const consentStatuses = {
   open: "open",
   complete: "complete",
   closed: "closed",
 };
+
 const configFields = [
   "campaignReference",
   "checkByDefaultTypes",
@@ -93,7 +107,9 @@ const configFields = [
   "testMode",
   "textMessage",
 ];
-// Expiration time of cookie preferences cached locally (in milliseconds)
+const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+
+// Expiration time of cookie consents cached locally (in milliseconds)
 const expirationTime = 86400000;
 
 export {

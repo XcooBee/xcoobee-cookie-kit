@@ -124,7 +124,6 @@ export function fetchCountryCode() {
 
 export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
   // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetching...");
-
   const query = `query getCrowdRating($campaignName: String!) {
     crowd_rating(campaign_name: $campaignName) {
       cookie_type
@@ -153,103 +152,6 @@ export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
 
   return crowdAiCookieConsents;
 }
-
-// export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
-//   // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetching...");
-//   return fetchUserSettings(accessToken)
-//     .then((userSettings) => {
-//       let crowdAiCookieConsents = null;
-
-//       if (userSettings.acceptCrowdAI) {
-//         const query = `query getCrowdRating($campaignName: String!) {
-//           crowd_rating(campaign_name: $campaignName) {
-//             cookie_type
-//             value
-//           }
-//         }`;
-
-//         crowdAiCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
-//           .then((res) => {
-//             let cookieConsents = null;
-//             const crowdRatings = res ? res.crowd_rating : null;
-
-//             if (Array.isArray(crowdRatings)) {
-//               cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-//                 const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
-//                 const checked = ratedCookie && ratedCookie.value >= 0.8;
-//                 return {
-//                   type: cookieDefn.type,
-//                   checked,
-//                 };
-//               });
-//             }
-//             return cookieConsents;
-//           });
-//       }
-
-//       // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetched.");
-//       return crowdAiCookieConsents;
-//     });
-// }
-
-// export function fetchUsersDefaultsCookieConsents(accessToken, origin) {
-//   // console.log("CookieConsentsManager#fetchUsersDefaultsCookieConsents fetching...");
-//   return fetchUserSettings(accessToken)
-//     .then((userSettings) => {
-//       let usersDefaultsCookieConsents = null;
-
-//       if (userSettings) {
-//         usersDefaultsCookieConsents = fetchUsersSiteCookieConsents(
-//           accessToken,
-//           origin,
-//           userSettings.xcoobeeId,
-//           userSettings.userCursor,
-//         )
-//           .then((siteCookieConsents) => {
-//             let cookieConsents = siteCookieConsents;
-
-//             if (!cookieConsents) {
-//               if (userSettings.acceptCookies.length > 0) {
-//                 cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-//                   const checked = userSettings.acceptCookies.includes(cookieDefn.dbKey);
-//                   return {
-//                     type: cookieDefn.type,
-//                     checked,
-//                   };
-//                 });
-//               }
-//             }
-
-//             return cookieConsents;
-//           });
-//       }
-
-//       // console.log("CookieConsentsManager#fetchUsersDefaultsCookieConsents fetched.");
-//       return usersDefaultsCookieConsents;
-//     });
-// }
-
-// export function fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
-//   // console.log("CookieConsentsManager#fetchHostsDefaultCookieConsents fetching...");
-//   let hostsDefaultCookieConsents = null;
-
-//   if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-//     hostsDefaultCookieConsents = cookieTypes.map(type => ({
-//       type,
-//       checked: checkByDefaultTypes.includes(type),
-//     }));
-//     // hostsDefaultCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-//     //   const checked = checkByDefaultTypes.includes(cookieDefn.type);
-//     //   return {
-//     //     type: cookieDefn.type,
-//     //     checked,
-//     //   };
-//     // });
-//   }
-
-//   // console.log("CookieConsentsManager#fetchHostsDefaultCookieConsents fetched.");
-//   return hostsDefaultCookieConsents;
-// }
 
 export function saveRemotely(accessToken, cookieConsents, campaignReference) {
   // console.log("CookieConsentsManager#saveRemotely saving...");

@@ -145,13 +145,10 @@ export default class CookieKit extends React.PureComponent {
     // console.dir(nextConsentSettings);
     const {
       hideOnComplete,
-      // onConsentStatusChange,
       onCookieConsentsChange,
     } = this.props;
 
     onCookieConsentsChange(nextConsentSettings);
-    // I believe complete is implied when onCookieConsentsChange is called.
-    // onConsentStatusChange(consentStatuses.complete);
 
     this.clearTimers();
     this.setState({ isOpen: false });
