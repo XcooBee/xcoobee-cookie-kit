@@ -39,6 +39,7 @@ export default class CookieKitPopup extends React.PureComponent {
   };
 
   constructor(props) {
+    // console.log('CookieKitPopup#constructor');
     super(props);
 
     const { cookieConsents } = this.props;
@@ -57,10 +58,12 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   componentWillUnmount() {
+    // console.log('CookieKitPopup#componentWillUnmount');
     window.removeEventListener("message", this.onMessage);
   }
 
   onMessage = (event) => {
+    // console.log('CookieKitPopup#onMessage');
     const { onLogin } = this.props;
     const { token } = event.data;
 
@@ -70,10 +73,12 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   handleLocaleChange = (locale) => {
+    // console.log('CookieKitPopup#handleLocaleChange');
     this.setState({ selectedLocale: locale, isShown: false });
   }
 
   handleCookieCheck = (e, type) => {
+    // console.log('CookieKitPopup#handleCookieCheck');
     const { cookieConsentLut } = this.state;
     const checked = {
       ...cookieConsentLut,
@@ -85,6 +90,7 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   handleCheckAll = () => {
+    // console.log('CookieKitPopup#handleCheckAll');
     const { cookieConsentLut } = this.state;
 
     const isAllChecked = Object.values(cookieConsentLut).every(checked => checked);
@@ -105,6 +111,7 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   handleSubmit = () => {
+    // console.log('CookieKitPopup#handleSubmit');
     const { onSubmit } = this.props;
     const { cookieConsentLut } = this.state;
 
@@ -112,6 +119,7 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   renderTextMessage(JSON) {
+    // console.log('CookieKitPopup#renderTextMessage');
     const { selectedLocale } = this.state;
 
     switch (selectedLocale) {
@@ -129,6 +137,7 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   render() {
+    // console.log('CookieKitPopup#render');
     const {
       companyLogo,
       countryCode,

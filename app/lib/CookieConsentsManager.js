@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 import CryptoJS from "crypto-js";
 
 import {
   cookieDefns as allAvailCookieDefns,
-  euCountries,
+  // cookieTypes,
+  // euCountries,
   expirationTime,
   xcoobeeCookiesKey,
 } from "../utils";
@@ -27,8 +27,12 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
     });
 }
 
-function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
+export function fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor) {
   // console.log("fetchUsersSiteCookieConsents fetching...");
+
+  const message = `${origin.toLowerCase()}${xcoobeeId}`;
+  const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
+
   return fetchUsersSitesCookieConsents(accessToken, userCursor)
     .then((usersSitesCookieConsents) => {
       let siteCookieConsents = null;
@@ -60,9 +64,24 @@ function fetchUsersSiteCookieConsents(accessToken, userCursor, encodedSite) {
     });
 }
 
-// TODO: See if we should cache the results of this query.
-function fetchUserInfo(accessToken) {
-  // console.log("fetchUserInfo fetching...");
+export function fetchUsersDefaultCookieConsents(userSettings) {
+  // console.log("fetchUsersDefaultCookieConsents fetching...");
+  let cookieConsents = null;
+  if (userSettings.acceptCookies.length > 0) {
+    cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
+      const checked = userSettings.acceptCookies.includes(cookieDefn.dbKey);
+      return {
+        type: cookieDefn.type,
+        checked,
+      };
+    });
+  }
+  // console.log("fetchUsersDefaultCookieConsents fetched.");
+  return cookieConsents;
+}
+
+export function fetchUserSettings(accessToken) {
+  // console.log("fetchUserSettings fetching...");
   const query = `query getUserCookieConsentPreferences {
     user {
       cursor
@@ -78,23 +97,23 @@ function fetchUserInfo(accessToken) {
   return graphQLRequest(query, null, accessToken)
     .then((res) => {
       const { user } = res;
-      let userInfo = null;
+      let userSettings = null;
 
       if (user) {
-        userInfo = {
+        userSettings = {
           acceptCookies: [],
           acceptCrowdAI: false,
           userCursor: user.cursor,
           xcoobeeId: user.xcoobee_id,
         };
         if (user.settings.consent) {
-          userInfo.acceptCookies = user.settings.consent.accept_cookies || [];
-          userInfo.acceptCrowdAI = user.settings.consent.use_crowd_ai;
+          userSettings.acceptCookies = user.settings.consent.accept_cookies || [];
+          userSettings.acceptCrowdAI = user.settings.consent.use_crowd_ai;
         }
       }
 
-      // console.log("fetchUserInfo fetched.");
-      return userInfo;
+      // console.log("fetchUserSettings fetched.");
+      return userSettings;
     });
 }
 
@@ -113,43 +132,75 @@ export function fetchCountryCode() {
     });
 }
 
-export function fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
-  // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
-  return fetchUserInfo(accessToken)
-    .then((userInfo) => {
-      let crowdIntelligenceCookieConsents = null;
+export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
+  // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetching...");
 
-      if (userInfo.acceptCrowdAI) {
-        const query = `query getCrowdRating($campaignName: String!) {
-          crowd_rating(campaign_name: $campaignName) {
-            cookie_type
-            value
-          }
-        }`;
+  const query = `query getCrowdRating($campaignName: String!) {
+    crowd_rating(campaign_name: $campaignName) {
+      cookie_type
+      value
+    }
+  }`;
 
-        crowdIntelligenceCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
-          .then((res) => {
-            let cookieConsents = null;
-            const crowdRatings = res ? res.crowd_rating : null;
+  const crowdAiCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
+    .then((res) => {
+      let cookieConsents = null;
+      const crowdRatings = res ? res.crowd_rating : null;
 
-            if (Array.isArray(crowdRatings)) {
-              cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-                const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
-                const checked = ratedCookie && ratedCookie.value >= 0.8;
-                return {
-                  type: cookieDefn.type,
-                  checked,
-                };
-              });
-            }
-            return cookieConsents;
-          });
+      if (Array.isArray(crowdRatings)) {
+        cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
+          const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
+          const checked = ratedCookie && ratedCookie.value >= 0.8;
+          return {
+            type: cookieDefn.type,
+            checked,
+          };
+        });
       }
-
-      // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetched.");
-      return crowdIntelligenceCookieConsents;
+      // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetched.");
+      return cookieConsents;
     });
+
+  return crowdAiCookieConsents;
 }
+
+// export function fetchCrowdIntelligenceCookieConsents(accessToken, campaignName) {
+//   // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetching...");
+//   return fetchUserSettings(accessToken)
+//     .then((userSettings) => {
+//       let crowdIntelligenceCookieConsents = null;
+
+//       if (userSettings.acceptCrowdAI) {
+//         const query = `query getCrowdRating($campaignName: String!) {
+//           crowd_rating(campaign_name: $campaignName) {
+//             cookie_type
+//             value
+//           }
+//         }`;
+
+//         crowdIntelligenceCookieConsents = graphQLRequest(query, { campaignName }, accessToken)
+//           .then((res) => {
+//             let cookieConsents = null;
+//             const crowdRatings = res ? res.crowd_rating : null;
+
+//             if (Array.isArray(crowdRatings)) {
+//               cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
+//                 const ratedCookie = crowdRatings.find(item => item.cookie_type === cookieDefn.dbKey);
+//                 const checked = ratedCookie && ratedCookie.value >= 0.8;
+//                 return {
+//                   type: cookieDefn.type,
+//                   checked,
+//                 };
+//               });
+//             }
+//             return cookieConsents;
+//           });
+//       }
+
+//       // console.log("CookieConsentsManager#fetchCrowdIntelligenceCookieConsents fetched.");
+//       return crowdIntelligenceCookieConsents;
+//     });
+// }
 
 export function fetchSavedCookieConsents() {
   // console.log("CookieConsentsManager#fetchSavedCookieConsents fetching...");
@@ -177,57 +228,64 @@ export function fetchSavedCookieConsents() {
   return Promise.resolve(cookieConsents);
 }
 
-export function fetchUserPreferenceCookieConsents(accessToken, origin) {
-  // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
-  return fetchUserInfo(accessToken)
-    .then((userInfo) => {
-      let userPreferenceCookieConsents = null;
+// export function fetchUserPreferenceCookieConsents(accessToken, origin) {
+//   // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetching...");
+//   return fetchUserSettings(accessToken)
+//     .then((userSettings) => {
+//       let userPreferenceCookieConsents = null;
 
-      if (userInfo) {
-        const message = `${origin.toLowerCase()}${userInfo.xcoobeeId}`;
-        const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
-        userPreferenceCookieConsents = fetchUsersSiteCookieConsents(accessToken, userInfo.userCursor, encodedSite)
-          .then((siteCookieConsents) => {
-            let cookieConsents = siteCookieConsents;
+//       if (userSettings) {
+//         userPreferenceCookieConsents = fetchUsersSiteCookieConsents(
+//           accessToken,
+//           origin,
+//           userSettings.xcoobeeId,
+//           userSettings.userCursor,
+//         )
+//           .then((siteCookieConsents) => {
+//             let cookieConsents = siteCookieConsents;
 
-            if (cookieConsents) {
-              if (userInfo.acceptCookies.length > 0) {
-                cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-                  const checked = userInfo.acceptCookies.includes(cookieDefn.dbKey);
-                  return {
-                    type: cookieDefn.type,
-                    checked,
-                  };
-                });
-              }
-            }
+//             if (!cookieConsents) {
+//               if (userSettings.acceptCookies.length > 0) {
+//                 cookieConsents = allAvailCookieDefns.map((cookieDefn) => {
+//                   const checked = userSettings.acceptCookies.includes(cookieDefn.dbKey);
+//                   return {
+//                     type: cookieDefn.type,
+//                     checked,
+//                   };
+//                 });
+//               }
+//             }
 
-            return cookieConsents;
-          });
-      }
+//             return cookieConsents;
+//           });
+//       }
 
-      // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetched.");
-      return userPreferenceCookieConsents;
-    });
-}
+//       // console.log("CookieConsentsManager#fetchUserPreferenceCookieConsents fetched.");
+//       return userPreferenceCookieConsents;
+//     });
+// }
 
-export function fetchCompanyPreferenceCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
-  // console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetching...");
-  let companyPreferenceCookieConsents = null;
+// export function fetchHostsDefaultCookieConsents(countryCode, displayOnlyForEU, checkByDefaultTypes) {
+//   // console.log("CookieConsentsManager#fetchHostsDefaultCookieConsents fetching...");
+//   let hostsDefaultCookieConsents = null;
 
-  if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-    companyPreferenceCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
-      const checked = checkByDefaultTypes.includes(cookieDefn.type);
-      return {
-        type: cookieDefn.type,
-        checked,
-      };
-    });
-  }
+//   if (!euCountries.includes(countryCode) && displayOnlyForEU) {
+//     hostsDefaultCookieConsents = cookieTypes.map(type => ({
+//       type,
+//       checked: checkByDefaultTypes.includes(type),
+//     }));
+//     // hostsDefaultCookieConsents = allAvailCookieDefns.map((cookieDefn) => {
+//     //   const checked = checkByDefaultTypes.includes(cookieDefn.type);
+//     //   return {
+//     //     type: cookieDefn.type,
+//     //     checked,
+//     //   };
+//     // });
+//   }
 
-  // console.log("CookieConsentsManager#fetchCompanyPreferenceCookieConsents fetched.");
-  return Promise.resolve(companyPreferenceCookieConsents);
-}
+//   // console.log("CookieConsentsManager#fetchHostsDefaultCookieConsents fetched.");
+//   return hostsDefaultCookieConsents;
+// }
 
 export function saveLocally(cookieConsents) {
   // console.log("CookieConsentsManager#saveLocally saving...");
@@ -255,9 +313,10 @@ export function saveRemotely(accessToken, cookieConsents, campaignReference) {
         consent_cursor
       }
     }`;
+    const domain = window.location.origin;
     promise = graphQLRequest(addConsentQuery, {
       campaign_reference: campaignReference,
-      domain: window.location.origin,
+      domain,
     }, accessToken)
       .then((res) => {
         if (!res || !res.add_consents) {
@@ -286,11 +345,24 @@ export function saveRemotely(accessToken, cookieConsents, campaignReference) {
           }
         }`;
         return graphQLRequest(modifyConsentsQuery, { consentConfig }, accessToken);
+      })
+      .catch((error) => {
+        let msg;
+        if (Array.isArray(error) && error.length > 0) {
+          msg = error[0].message;
+        } else {
+          msg = error.message;
+        }
+        console.error([
+          `Failed to save user's cookie consents for domain "${domain}"`,
+          `using campaign "${campaignReference}"`,
+          msg ? `due to "${msg}".` : ".",
+        ].join(" "));
       });
   }
   promise = promise || Promise.resolve();
-  promise.then(() => {
-    // console.log("CookieConsentsManager#saveRemotely saved.");
-  });
+  // promise.then(() => {
+  //   console.log("CookieConsentsManager#saveRemotely saved.");
+  // });
   return promise;
 }

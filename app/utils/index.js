@@ -52,10 +52,10 @@ const links = {
 };
 const animations = {
   noAnimation: "default",
-  userPreference: "blue",
-  userSettings: "green",
+  userPreference: "blue", // actually user's default settings
+  userSettings: "green", // actually user's site settings
   crowdIntelligence: "yellow",
-  companyPreference: "red",
+  companyPreference: "red", // host's default settings
   savedConsents: "green",
 };
 const cssHref = "xcoobee-cookie-kit.min.css";
