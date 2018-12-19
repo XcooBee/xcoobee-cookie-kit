@@ -1,12 +1,6 @@
 import CryptoJS from "crypto-js";
 
-import {
-  cookieDefns as allAvailCookieDefns,
-  // cookieTypes,
-  // euCountries,
-  expirationTime,
-  xcoobeeCookiesKey,
-} from "../utils";
+import { cookieDefns as allAvailCookieDefns } from "../utils";
 
 import graphQLRequest from "../utils/graphql";
 
@@ -117,10 +111,6 @@ export function fetchUserSettings(accessToken) {
     });
 }
 
-export function clearCached() {
-  localStorage.removeItem(xcoobeeCookiesKey);
-}
-
 export function fetchCountryCode() {
   // console.log("CookieConsentsManager#fetchCountryCode fetching...");
   return fetch("http://ip-api.com/json")
@@ -202,32 +192,6 @@ export function fetchCrowdAiCookieConsents(accessToken, campaignName) {
 //     });
 // }
 
-export function fetchCachedCookieConsents() {
-  // console.log("CookieConsentsManager#fetchCachedCookieConsents fetching...");
-  let cookieConsents = null;
-
-  if (localStorage[xcoobeeCookiesKey]) {
-    try {
-      const xcoobeeCookies = JSON.parse(localStorage[xcoobeeCookiesKey]);
-      const { cookies: consents, timestamp } = xcoobeeCookies;
-
-      // If the cached cookie consents have not expired, then extract it.
-      if ((Date.now() - timestamp) < expirationTime) {
-        cookieConsents = allAvailCookieDefns.map(cookieDefn => ({
-          type: cookieDefn.type,
-          checked: consents[cookieDefn.id],
-        }));
-      }
-    } catch (err) {
-      cookieConsents = null;
-      console.error(err);
-    }
-  }
-
-  // console.log("CookieConsentsManager#fetchCachedCookieConsents fetched.");
-  return Promise.resolve(cookieConsents);
-}
-
 // export function fetchUsersDefaultsCookieConsents(accessToken, origin) {
 //   // console.log("CookieConsentsManager#fetchUsersDefaultsCookieConsents fetching...");
 //   return fetchUserSettings(accessToken)
@@ -286,23 +250,6 @@ export function fetchCachedCookieConsents() {
 //   // console.log("CookieConsentsManager#fetchHostsDefaultCookieConsents fetched.");
 //   return hostsDefaultCookieConsents;
 // }
-
-export function cache(cookieConsents) {
-  // console.log("CookieConsentsManager#cache caching...");
-  // TODO: Save as a LUT instead of an array.
-  const xcoobeeCookies = { timestamp: Date.now(), cookies: [] };
-  allAvailCookieDefns.forEach((cookieDefn) => {
-    const cookieConsent = cookieConsents.find(item => item.type === cookieDefn.type);
-
-    if (cookieConsent && cookieConsent.checked) {
-      xcoobeeCookies.cookies.push(true);
-    } else {
-      xcoobeeCookies.cookies.push(false);
-    }
-  });
-  localStorage.setItem(xcoobeeCookiesKey, JSON.stringify(xcoobeeCookies));
-  // console.log("CookieConsentsManager#cache cached.");
-}
 
 export function saveRemotely(accessToken, cookieConsents, campaignReference) {
   // console.log("CookieConsentsManager#saveRemotely saving...");

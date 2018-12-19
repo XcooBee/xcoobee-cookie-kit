@@ -8,14 +8,12 @@ import {
   getAccessToken,
   saveAccessToken,
 } from "../lib/AccessTokenManager";
+import cookieConsentsCache from "../lib/cookieConsentsCache";
 import {
-  cache,
-  clearCached,
   fetchCountryCode,
   // fetchCrowdAiCookieConsents,
   fetchCrowdAiCookieConsents,
   // fetchHostsDefaultCookieConsents,
-  fetchCachedCookieConsents,
   // fetchUsersDefaultsCookieConsents,
   fetchUsersDefaultCookieConsents,
   fetchUsersSiteCookieConsents,
@@ -30,8 +28,6 @@ import {
   cssHref,
   euCountries,
   positions,
-  tokenKey,
-  xcoobeeCookiesKey,
 } from "../utils";
 
 import CookieKit from "./CookieKit";
@@ -91,7 +87,7 @@ function handleErrors(error) {
 
 function refresh() {
   clearAccessToken();
-  clearCached();
+  cookieConsentsCache.clear();
   window.location.reload();
 }
 
@@ -179,15 +175,11 @@ export default class CookieKitContainer extends React.PureComponent {
       initializing: true,
     };
 
-    const promises = [
-      fetchCountryCode(),
-      fetchCachedCookieConsents(),
-    ];
-
-    Promise.all(promises)
-      .then(([countryCode, cachedCookieConsents]) => {
+    fetchCountryCode()
+      .then(([countryCode]) => {
         this.setState({ countryCode });
 
+        const cachedCookieConsents = cookieConsentsCache.get();
         if (cachedCookieConsents) {
           // console.log("Using cached cookie consents!");
           this.setCookieConsents("cached", cachedCookieConsents);
@@ -284,7 +276,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //             // const consentStatus = COMPLETE;
   //         //             // const cookieConsents = usersSiteCookieConsents;
   //         //             // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //             // cache(cookieConsents);
+  //         //             // cookieConsentsCache.put(cookieConsents);
   //         //             // this.callCallbacks(cookieConsents);
   //         //             this.setCookieConsents("usersSaved", usersSiteCookieConsents);
   //         //             return;
@@ -303,7 +295,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //               // const consentStatus = COMPLETE;
   //         //               // const consentsSource = "crowdAi";
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // cache(cookieConsents);
+  //         //               // cookieConsentsCache.put(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
   //         //               this.setCookieConsents("crowdAi", crowdAiCookieConsents);
   //         //               return;
@@ -315,7 +307,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //               // const consentStatus = COMPLETE;
   //         //               // const cookieConsents = usersDefaultCookieConsents;
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // cache(cookieConsents);
+  //         //               // cookieConsentsCache.put(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
   //         //               this.setCookieConsents("usersDefaults", usersDefaultCookieConsents);
   //         //               return;
@@ -331,7 +323,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //               // const consentStatus = COMPLETE;
   //         //               // const cookieConsents = hostsDefaultCookieConsents;
   //         //               // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //               // cache(cookieConsents);
+  //         //               // cookieConsentsCache.put(cookieConsents);
   //         //               // this.callCallbacks(cookieConsents);
   //         //               this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         //               return;
@@ -355,7 +347,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //         // const consentStatus = COMPLETE;
   //         //         // const cookieConsents = hostsDefaultCookieConsents;
   //         //         // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //         // cache(cookieConsents);
+  //         //         // cookieConsentsCache.put(cookieConsents);
   //         //         // this.callCallbacks(cookieConsents);
   //         //         this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         //         return;
@@ -391,7 +383,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //         //   // const consentStatus = COMPLETE;
   //         //   // const cookieConsents = hostsDefaultCookieConsents;
   //         //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-  //         //   // cache(cookieConsents);
+  //         //   // cookieConsentsCache.put(cookieConsents);
   //         //   // this.callCallbacks(cookieConsents);
   //         //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
   //         // } else {
@@ -600,7 +592,7 @@ export default class CookieKitContainer extends React.PureComponent {
   // Convenience method
   setCookieConsents(consentsSource, cookieConsents) {
     // console.log("CookieKitContainer#setCookieConsents");
-    cache(cookieConsents);
+    cookieConsentsCache.put(cookieConsents);
     const consentStatus = COMPLETE;
     this.setState({
       consentsSource,
@@ -683,7 +675,7 @@ export default class CookieKitContainer extends React.PureComponent {
     // }
     // if (cookieConsents) {
     //   this.setState({ consentsSource, cookieConsents });
-    //   cache(cookieConsents);
+    //   cookieConsentsCache.put(cookieConsents);
     //   this.callCallbacks(cookieConsents);
     // } else {
     //   // TODO: Determine if we should be doing something in this case. For example,
@@ -780,7 +772,7 @@ export default class CookieKitContainer extends React.PureComponent {
   //   if (cookieConsents) {
   //     this.setState({ consentsSource, cookieConsents });
 
-  //     cache(cookieConsents);
+  //     cookieConsentsCache.put(cookieConsents);
 
   //     const consentSettings = {};
   //     cookieConsents.forEach((consent) => {
@@ -843,13 +835,13 @@ export default class CookieKitContainer extends React.PureComponent {
     }));
 
     const { campaignReference } = this.props;
-    const accessToken = getAccessToken();
+    const { accessToken } = this.state;
     saveRemotely(accessToken, cookieConsents, campaignReference)
       .catch(handleErrors);
 
     this.setCookieConsents("usersSaved", cookieConsents);
 
-    // cache(cookieConsents);
+    // cookieConsentsCache.put(cookieConsents);
 
     // this.setState({
     //   consentsSource: "usersSaved",
@@ -899,7 +891,7 @@ export default class CookieKitContainer extends React.PureComponent {
                 // const consentStatus = COMPLETE;
                 // const cookieConsents = usersSiteCookieConsents;
                 // this.setState({ consentsSource, consentStatus, cookieConsents });
-                // cache(cookieConsents);
+                // cookieConsentsCache.put(cookieConsents);
                 // this.callCallbacks(cookieConsents);
                 this.setCookieConsents("usersSaved", usersSiteCookieConsents);
                 return;
@@ -918,7 +910,7 @@ export default class CookieKitContainer extends React.PureComponent {
                   // const consentStatus = COMPLETE;
                   // const consentsSource = "crowdAi";
                   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                  // cache(cookieConsents);
+                  // cookieConsentsCache.put(cookieConsents);
                   // this.callCallbacks(cookieConsents);
                   this.setCookieConsents("crowdAi", crowdAiCookieConsents);
                   return;
@@ -930,7 +922,7 @@ export default class CookieKitContainer extends React.PureComponent {
                   // const consentStatus = COMPLETE;
                   // const cookieConsents = usersDefaultCookieConsents;
                   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                  // cache(cookieConsents);
+                  // cookieConsentsCache.put(cookieConsents);
                   // this.callCallbacks(cookieConsents);
                   this.setCookieConsents("usersDefaults", usersDefaultCookieConsents);
                   return;
@@ -958,7 +950,7 @@ export default class CookieKitContainer extends React.PureComponent {
                 //   // const consentStatus = COMPLETE;
                 //   // const cookieConsents = hostsDefaultCookieConsents;
                 //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-                //   // cache(cookieConsents);
+                //   // cookieConsentsCache.put(cookieConsents);
                 //   // this.callCallbacks(cookieConsents);
                 //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
                 //   return;
@@ -993,7 +985,7 @@ export default class CookieKitContainer extends React.PureComponent {
           //   // const consentStatus = COMPLETE;
           //   // const cookieConsents = hostsDefaultCookieConsents;
           //   // this.setState({ consentsSource, consentStatus, cookieConsents });
-          //   // cache(cookieConsents);
+          //   // cookieConsentsCache.put(cookieConsents);
           //   // this.callCallbacks(cookieConsents);
           //   this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
           //   return;
@@ -1023,10 +1015,10 @@ export default class CookieKitContainer extends React.PureComponent {
       testMode,
       textMessage,
     } = this.props;
-    const { consentsSource, cookieConsents, countryCode, initializing } = this.state;
+    const { accessToken, consentsSource, cookieConsents, countryCode, initializing } = this.state;
 
     const renderRefreshButton = testMode
-      && (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]);
+      && (accessToken || cookieConsentsCache.get());
 
     // console.log('initializing:', initializing);
 
