@@ -176,7 +176,6 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus: OPEN,
       cookieConsents: null,
       countryCode: "US",
-      hasConsented: false,
       initializing: true,
     };
 
@@ -214,8 +213,9 @@ export default class CookieKitContainer extends React.PureComponent {
           if (displayOnlyForEU && !euCountries.includes(countryCode)) {
             this.setCookieConsents("companyPreference", hostsDefaultCookieConsents);
           } else {
+            const consentsSource = "unknown";
             const cookieConsents = hostsDefaultCookieConsents;
-            this.setState({ cookieConsents, hasConsented: false, initializing: false });
+            this.setState({ consentsSource, cookieConsents, initializing: false });
           }
         }
       })
@@ -597,6 +597,7 @@ export default class CookieKitContainer extends React.PureComponent {
     return cookieConsentSettings;
   }
 
+  // Convenience method
   setCookieConsents(consentsSource, cookieConsents) {
     // console.log("CookieKitContainer#setCookieConsents");
     saveLocally(cookieConsents);
@@ -605,7 +606,6 @@ export default class CookieKitContainer extends React.PureComponent {
       consentsSource,
       consentStatus,
       cookieConsents,
-      hasConsented: true,
       initializing: false,
     });
     this.callCallbacks(cookieConsents);
@@ -981,7 +981,7 @@ export default class CookieKitContainer extends React.PureComponent {
           } else {
             const consentsSource = "unknown";
             const cookieConsents = hostsDefaultCookieConsents;
-            this.setState({ consentsSource, cookieConsents });
+            this.setState({ consentsSource, cookieConsents, initializing: false });
           }
           // const hostsDefaultCookieConsents = fetchHostsDefaultCookieConsents(
           //   countryCode,
@@ -1023,7 +1023,7 @@ export default class CookieKitContainer extends React.PureComponent {
       testMode,
       textMessage,
     } = this.props;
-    const { consentsSource, cookieConsents, countryCode, hasConsented, initializing } = this.state;
+    const { consentsSource, cookieConsents, countryCode, initializing } = this.state;
 
     const renderRefreshButton = testMode
       && (localStorage[tokenKey] || localStorage[xcoobeeCookiesKey]);
@@ -1041,7 +1041,6 @@ export default class CookieKitContainer extends React.PureComponent {
               cookieConsents={cookieConsents}
               countryCode={countryCode}
               expirationTime={expirationTime}
-              hasConsented={hasConsented}
               hideBrandTag={hideBrandTag}
               hideOnComplete={hideOnComplete}
               onAuthentication={this.handleAuthentication}

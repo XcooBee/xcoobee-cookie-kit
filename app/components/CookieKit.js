@@ -28,7 +28,6 @@ export default class CookieKit extends React.PureComponent {
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string.isRequired,
     expirationTime: PropTypes.number,
-    hasConsented: PropTypes.bool.isRequired,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
     onAuthentication: PropTypes.func.isRequired,
@@ -61,9 +60,10 @@ export default class CookieKit extends React.PureComponent {
     // console.log("CookieKit#constructor");
     super(props);
 
+    const isOpen = props.consentsSource === "unknown";
     this.state = {
       hasClosed: false,
-      isOpen: !props.hasConsented,
+      isOpen,
       isShown: true,
       pulsing: false,
     };
@@ -71,7 +71,9 @@ export default class CookieKit extends React.PureComponent {
     this.timers = [];
 
     this.startPulsing();
-    this.startDismissTimer();
+    if (!isOpen) {
+      this.startDismissTimer();
+    }
   }
 
   // componentDidMount() {
@@ -216,7 +218,6 @@ export default class CookieKit extends React.PureComponent {
       consentsSource,
       cookieConsents,
       countryCode,
-      hasConsented,
       hideBrandTag,
       position,
       privacyUrl,
@@ -228,11 +229,11 @@ export default class CookieKit extends React.PureComponent {
 
     const animation = animations[consentsSource] || animations.noAnimation;
 
-    const renderPopup = isOpen || (!hasConsented && !hasClosed);
+    const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
+    // console.log("consentsSource:", consentsSource);
     // console.log("hasClosed:", hasClosed);
-    // console.log("hasConsented:", hasConsented);
     // console.log("pulsing:", pulsing);
 
     return (
