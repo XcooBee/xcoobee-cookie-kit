@@ -14,6 +14,8 @@ import {
 
 import CookieKitPopup from "./CookieKitPopup";
 
+const BLOCK = "xb-cookie-kit";
+
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
     campaignReference: PropTypes.string,
@@ -232,7 +234,7 @@ export default class CookieKit extends React.PureComponent {
       <div
         className={
           cx(
-            "xb-cookie-kit",
+            BLOCK,
             position,
             {
               transparent: !isShown,
@@ -259,16 +261,16 @@ export default class CookieKit extends React.PureComponent {
         {renderButton && (
           <button
             type="button"
-            className="xb-cookie-kit__button xb-cookie-kit__cookie-button"
+            className={`${BLOCK}__button ${BLOCK}__cookie-button`}
             onClick={this.handleOpen}
           >
             <div
               className={
                 cx(
-                  "xb-cookie-kit__cookie-icon",
-                  `xb-cookie-kit__cookie-icon--${animation}`,
+                  `${BLOCK}__cookie-icon`,
+                  `${BLOCK}__cookie-icon--${animation}`,
                   {
-                    "xb-cookie-kit__pulsing": pulsing,
+                    [`${BLOCK}__pulsing`]: pulsing,
                   },
                 )
               }

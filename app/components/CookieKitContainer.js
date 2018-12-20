@@ -329,9 +329,9 @@ export default class CookieKitContainer extends React.PureComponent {
           const { origin } = window.location;
           const { userCursor, xcoobeeId } = userSettings;
           fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor)
-            .then((usersSiteCookieConsents) => {
-              if (usersSiteCookieConsents) {
-                this.setCookieConsents("usersSaved", usersSiteCookieConsents);
+            .then((usersSavedCookieConsents) => {
+              if (usersSavedCookieConsents) {
+                this.setCookieConsents("usersSaved", usersSavedCookieConsents);
                 return;
               }
 

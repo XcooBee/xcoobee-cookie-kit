@@ -15,6 +15,8 @@ import {
 } from "../utils";
 import renderText from "../utils/locales/renderText";
 
+const BLOCK = "xb-cookie-kit-popup";
+
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
     companyLogo: PropTypes.string,
@@ -164,48 +166,48 @@ export default class CookieKitPopup extends React.PureComponent {
     );
 
     return (
-      <div className="xb-cookie-kit-popup">
-        <div className="xb-cookie-kit-popup__header">
-          <div className="xb-cookie-kit-popup__logo">
+      <div className={BLOCK}>
+        <div className={`${BLOCK}__header`}>
+          <div className={`${BLOCK}__logo`}>
             {
               isConnected && companyLogo && (
                 <img
-                  className="xb-cookie-kit-popup__company-logo"
+                  className={`${BLOCK}__company-logo`}
                   src={companyLogo}
                   alt="Company logo"
                 />
               )
             }
           </div>
-          <div className="xb-cookie-kit-popup__title">{renderText("CookieKit.Title", selectedLocale)}</div>
+          <div className={`${BLOCK}__title`}>{renderText("CookieKit.Title", selectedLocale)}</div>
           <button
             type="button"
-            className="xb-cookie-kit__button xb-cookie-kit-popup__close-button"
+            className={`xb-cookie-kit__button ${BLOCK}__close-button`}
             onClick={onClose}
           >
             <img
-              className="xb-cookie-kit-popup__close-button-icon"
+              className={`${BLOCK}__close-button-icon`}
               src={`${xcoobeeConfig.domain}/close-icon.svg`}
               alt="close-icon"
             />
           </button>
         </div>
-        <div className="xb-cookie-kit-popup__text-container">
-          <div className="xb-cookie-kit-popup__text">
+        <div className={`${BLOCK}__text-container`}>
+          <div className={`${BLOCK}__text`}>
             { typeof textMessage === "string"
               ? textMessage : this.renderTextMessage(textMessage) }
           </div>
-          <div className="xb-cookie-kit-popup__locale-container">
-            <div className="xb-cookie-kit-popup__locale">
+          <div className={`${BLOCK}__locale-container`}>
+            <div className={`${BLOCK}__locale`}>
               <button
                 type="button"
-                className="xb-cookie-kit__button xb-cookie-kit-popup__language-picker"
+                className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
                 onClick={() => this.setState({ isShown: !isShown })}
               >
                 { selectedLocale }
               </button>
               { countryCode && (
-                <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--sm">
+                <div className={`${BLOCK}__block ${BLOCK}__block--sm`}>
                   <div>
                     <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
                   </div>
@@ -213,10 +215,10 @@ export default class CookieKitPopup extends React.PureComponent {
               )}
             </div>
             { isShown && (
-              <div className="xb-cookie-kit-popup__custom-select">
+              <div className={`${BLOCK}__custom-select`}>
                 { locales.map(locale => (
                   <button
-                    className="xb-cookie-kit__button xb-cookie-kit-popup__language-picker-button"
+                    className={`xb-cookie-kit__button ${BLOCK}__language-picker-button`}
                     type="button"
                     onClick={() => this.handleLocaleChange(locale)}
                   >
@@ -226,10 +228,10 @@ export default class CookieKitPopup extends React.PureComponent {
             )}
           </div>
         </div>
-        <div className="xb-cookie-kit-popup__cookie-list">
+        <div className={`${BLOCK}__cookie-list`}>
           { cookieDefns.map(cookieDefn => (
-            <div className="xb-cookie-kit-popup__cookie">
-              <div className="xb-cookie-kit-popup__block xb-cookie-kit-popup__block--lg">
+            <div className={`${BLOCK}__cookie`}>
+              <div className={`${BLOCK}__block ${BLOCK}__block--lg`}>
                 <div>
                   <input
                     id={`xbCheckbox_${cookieDefn.id}`}
@@ -239,12 +241,12 @@ export default class CookieKitPopup extends React.PureComponent {
                   />
                   <label
                     htmlFor={`xbCheckbox_${cookieDefn.id}`}
-                    className="xb-cookie-kit-popup__checkbox"
+                    className={`${BLOCK}__checkbox`}
                   />
                 </div>
-                <div className="xb-cookie-kit-popup__cookie-title">
+                <div className={`${BLOCK}__cookie-title`}>
                   <a
-                    className="xb-cookie-kit-popup__cookie-title-link"
+                    className={`${BLOCK}__cookie-title-link`}
                     href={cookieDefn.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -258,26 +260,26 @@ export default class CookieKitPopup extends React.PureComponent {
         </div>
         <button
           type="button"
-          className="xb-cookie-kit__button xb-cookie-kit-popup__check-all"
+          className={`xb-cookie-kit__button ${BLOCK}__check-all`}
           onClick={this.handleCheckAll}
         >
           {isAllChecked
             ? renderText("CookieKit.UncheckButton", selectedLocale)
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
-        <div className="xb-cookie-kit-popup__actions">
+        <div className={`${BLOCK}__actions`}>
           { !hideBrandTag && (
-            <div className="xb-cookie-kit-popup__privacy-partner-container">
+            <div className={`${BLOCK}__privacy-partner-container`}>
               <a
-                className="xb-cookie-kit-popup__privacy-partner-link"
+                className={`${BLOCK}__privacy-partner-link`}
                 href={links.poweredBy}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <div className="xb-cookie-kit-popup__privacy-partner">
+                <div className={`${BLOCK}__privacy-partner`}>
                   {renderText("CookieKit.PoweredByText", selectedLocale)}
                   <img
-                    className="xb-cookie-kit-popup__privacy-partner-logo"
+                    className={`${BLOCK}__privacy-partner-logo`}
                     src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
                     alt="XcooBee logo"
                   />
@@ -285,21 +287,21 @@ export default class CookieKitPopup extends React.PureComponent {
               </a>
             </div>
           )}
-          <div className="xb-cookie-kit-popup__button-container">
+          <div className={`${BLOCK}__button-container`}>
             <button
               type="button"
-              className="xb-cookie-kit__button xb-cookie-kit-popup__button"
+              className={`xb-cookie-kit__button ${BLOCK}__button`}
               onClick={this.handleSubmit}
             >
               {renderText("CookieKit.OkButton", selectedLocale)}
             </button>
           </div>
         </div>
-        <div className="xb-cookie-kit-popup__links">
+        <div className={`${BLOCK}__links`}>
           { isConnected && (isAuthorized
             ? (
               <a
-                className="xb-cookie-kit-popup__link"
+                className={`${BLOCK}__link`}
                 href={`${xcoobeeConfig.origin}${links.manage}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -309,7 +311,7 @@ export default class CookieKitPopup extends React.PureComponent {
             )
             : (
               <button
-                className="xb-cookie-kit__button xb-cookie-kit-popup__link"
+                className={`xb-cookie-kit__button ${BLOCK}__link`}
                 type="button"
                 onClick={() => window.open(`${xcoobeeConfig.origin}${links.login}?targetUrl=${targetUrl}`)}
               >
@@ -318,7 +320,7 @@ export default class CookieKitPopup extends React.PureComponent {
             )
           )}
           <a
-            className="xb-cookie-kit-popup__link"
+            className={`${BLOCK}__link`}
             href={termsUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -326,7 +328,7 @@ export default class CookieKitPopup extends React.PureComponent {
             {renderText("CookieKit.TermsLink", selectedLocale)}
           </a>
           <a
-            className="xb-cookie-kit-popup__link"
+            className={`${BLOCK}__link`}
             href={privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -335,10 +337,10 @@ export default class CookieKitPopup extends React.PureComponent {
           </a>
         </div>
         { !hideBrandTag && (
-          <div className="xb-cookie-kit-popup__powered-by">
+          <div className={`${BLOCK}__powered-by`}>
             Powered by
             <a
-              className="xb-cookie-kit-popup__powered-by-link"
+              className={`${BLOCK}__powered-by-link`}
               href={links.poweredBy}
               target="_blank"
               rel="noopener noreferrer"
