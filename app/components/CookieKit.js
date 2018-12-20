@@ -18,6 +18,7 @@ const BLOCK = "xb-cookie-kit";
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
+    accessToken: PropTypes.string,
     campaignReference: PropTypes.string,
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
@@ -47,6 +48,7 @@ export default class CookieKit extends React.PureComponent {
   };
 
   static defaultProps = {
+    accessToken: null,
     campaignReference: null,
     companyLogo: null,
     expirationTime: 0,
@@ -206,6 +208,7 @@ export default class CookieKit extends React.PureComponent {
   render() {
     // console.log("CookieKit#render");
     const {
+      accessToken,
       campaignReference,
       companyLogo,
       consentsSource,
@@ -244,6 +247,7 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
+            accessToken={accessToken}
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}

@@ -4,7 +4,6 @@ import ReactCountryFlag from "react-country-flag";
 
 import xcoobeeConfig from "../config/xcoobeeConfig";
 
-import { getAccessToken } from "../lib/AccessTokenManager";
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
@@ -19,6 +18,7 @@ const BLOCK = "xb-cookie-kit-popup";
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
+    accessToken: PropTypes.string,
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
@@ -36,6 +36,7 @@ export default class CookieKitPopup extends React.PureComponent {
   };
 
   static defaultProps = {
+    accessToken: null,
     companyLogo: null,
     countryCode: "US",
   };
@@ -141,6 +142,7 @@ export default class CookieKitPopup extends React.PureComponent {
   render() {
     // console.log('CookieKitPopup#render');
     const {
+      accessToken,
       companyLogo,
       countryCode,
       hideBrandTag,
@@ -155,7 +157,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
     // console.log("countryCode:", countryCode);
 
-    const isAuthorized = getAccessToken();
+    const appearsToBeLoggedIn = !!accessToken;
     const targetUrl = encodeURIComponent(window.location.origin);
 
     const isAllChecked = Object.values(consentSettings).every(checked => checked);
@@ -297,7 +299,7 @@ export default class CookieKitPopup extends React.PureComponent {
           </div>
         </div>
         <div className={`${BLOCK}__links`}>
-          { isConnected && (isAuthorized
+          { isConnected && (appearsToBeLoggedIn
             ? (
               <a
                 className={`${BLOCK}__link`}

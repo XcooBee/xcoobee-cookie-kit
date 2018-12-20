@@ -390,6 +390,7 @@ export default class CookieKitContainer extends React.PureComponent {
         {!initializing && (
           <React.Fragment>
             <CookieKit
+              accessToken={accessToken}
               campaignReference={campaignReference}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
