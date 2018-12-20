@@ -152,6 +152,9 @@ export default class CookieKitPopup extends React.PureComponent {
       textMessage,
     } = this.props;
     const { consentSettings, isShown, selectedLocale } = this.state;
+
+    // console.log("countryCode:", countryCode);
+
     const isAuthorized = getAccessToken();
     const targetUrl = encodeURIComponent(window.location.origin);
 
