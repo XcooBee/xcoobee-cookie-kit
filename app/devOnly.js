@@ -9,8 +9,10 @@ window.theCookieHandler = (cookieConsents) => {
 XcooBee.kit.setParam("campaignReference", "abcdefgh1234567890");
 
 XcooBee.kit.setParam("checkByDefaultTypes", [
+  // "advertising",
   "application",
   "statistics",
+  // "usage",
 ]);
 
 XcooBee.kit.setParam("companyLogo", "http://lorempixel.com/output/city-q-c-300-100-4.jpg");
@@ -39,8 +41,8 @@ XcooBee.kit.setParam("position", "left_bottom");
 XcooBee.kit.setParam("privacyUrl", "https://xcoobee.com/privacy");
 
 XcooBee.kit.setParam("requestDataTypes", [
-  "application",
   "advertising",
+  "application",
   "statistics",
   // "usage",
 ]);

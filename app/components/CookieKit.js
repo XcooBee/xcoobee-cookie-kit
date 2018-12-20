@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import cx from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
@@ -7,6 +6,7 @@ import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
   animations,
+  consentsSources,
   consentStatuses,
   cookieTypes,
   positions,
@@ -14,17 +14,13 @@ import {
 
 import CookieKitPopup from "./CookieKitPopup";
 
+const BLOCK = "xb-cookie-kit";
+
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
     campaignReference: PropTypes.string,
     companyLogo: PropTypes.string,
-    consentsSource: PropTypes.oneOf([
-      "companyPreference",
-      "crowdIntelligence",
-      "userPreferences",
-      "userSettings",
-      "unknown",
-    ]).isRequired,
+    consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string.isRequired,
     expirationTime: PropTypes.number,
@@ -60,8 +56,10 @@ export default class CookieKit extends React.PureComponent {
     // console.log("CookieKit#constructor");
     super(props);
 
+    const isOpen = props.consentsSource === "unknown";
     this.state = {
-      isOpen: false,
+      hasClosed: false,
+      isOpen,
       isShown: true,
       pulsing: false,
     };
@@ -69,7 +67,9 @@ export default class CookieKit extends React.PureComponent {
     this.timers = [];
 
     this.startPulsing();
-    this.startTimer();
+    if (!isOpen) {
+      this.startDismissTimer();
+    }
   }
 
   // componentDidMount() {
@@ -97,6 +97,7 @@ export default class CookieKit extends React.PureComponent {
   handleOpen = () => {
     // console.log("CookieKit#handleOpen");
     this.clearTimers();
+    this.stopPulsing();
 
     this.setState({ isOpen: true });
   }
@@ -108,9 +109,17 @@ export default class CookieKit extends React.PureComponent {
     onConsentStatusChange(consentStatuses.closed);
 
     this.clearTimers();
-    this.startTimer();
 
-    this.setState({ isOpen: false });
+    this.setState({ hasClosed: true, isOpen: false });
+
+    // HACK: Because `startPulsing` depends on `props.consentsSource` and it
+    // could be changed in `onConsentStatusChange` in what seems to be the next
+    // event loop, we are also delaying the calls to these methods in the next
+    // event loop. Without this, the pulsing is not started.
+    setTimeout(() => {
+      this.startPulsing();
+      this.startDismissTimer();
+    }, 1);
   }
 
   handlePopupLogin = (accessToken) => {
@@ -120,31 +129,43 @@ export default class CookieKit extends React.PureComponent {
     onAuthentication(accessToken);
 
     this.clearTimers();
-    this.startPulsing();
-    this.startTimer();
 
     this.setState({ isOpen: false });
+
+    // HACK: Because `startPulsing` depends on `props.consentsSource` and it
+    // could be changed in `onAuthentication` in what seems to be the next
+    // event loop, we are also delaying the calls to these methods in the next
+    // event loop. Without this, the pulsing is not started.
+    setTimeout(() => {
+      this.startPulsing();
+      this.startDismissTimer();
+    }, 1);
   }
 
-  handlePopupSubmit = (nextCookieConsentLut) => {
+  handlePopupSubmit = (nextConsentSettings) => {
     // console.log("CookieKit#handlePopupSubmit");
-    // console.dir(nextCookieConsentLut);
+    // console.dir(nextConsentSettings);
     const {
       hideOnComplete,
-      onConsentStatusChange,
       onCookieConsentsChange,
     } = this.props;
 
-    onCookieConsentsChange(nextCookieConsentLut);
-    onConsentStatusChange(consentStatuses.complete);
+    onCookieConsentsChange(nextConsentSettings);
 
     this.clearTimers();
-    this.startPulsing();
-    this.startTimer();
     this.setState({ isOpen: false });
 
     if (hideOnComplete) {
-      this.setState({ isShown: false });
+      this.setState({ isShown: false, pulsing: false });
+    } else {
+      // HACK: Because `startPulsing` depends on `props.consentsSource` and it
+      // is changed in `onCookieConsentsChange` in what seems to be the next
+      // event loop, we are also delaying the calls to these methods in the next
+      // event loop. Without this, the pulsing is not started.
+      setTimeout(() => {
+        this.startPulsing();
+        this.startDismissTimer();
+      }, 1);
     }
   }
 
@@ -156,12 +177,22 @@ export default class CookieKit extends React.PureComponent {
 
   startPulsing() {
     // console.log("CookieKit#startPulsing");
-    this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 1000));
-    this.timers.push(setTimeout(() => this.setState({ pulsing: false }), 4500));
+    const { consentsSource } = this.props;
+    const animation = animations[consentsSource];
+
+    if (animation && animation !== "default") {
+      this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 500));
+      this.timers.push(setTimeout(() => this.stopPulsing(), 4500));
+    }
   }
 
-  startTimer() {
-    // console.log("CookieKit#startTimer");
+  stopPulsing() {
+    // console.log("CookieKit#startPulsing");
+    this.setState({ pulsing: false });
+  }
+
+  startDismissTimer() {
+    // console.log("CookieKit#startDismissTimer");
     const { expirationTime } = this.props;
     const timeOut = expirationTime;
 
@@ -187,18 +218,23 @@ export default class CookieKit extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { isOpen, isShown, pulsing } = this.state;
+    const { hasClosed, isOpen, isShown, pulsing } = this.state;
 
-    const animation = animations[consentsSource] || animations.noAnimation;
+    const animation = animations[consentsSource];
 
-    const renderButton = !isOpen;
-    const renderPopup = isOpen;
+    const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
+    const renderButton = !renderPopup;
+
+    // console.log("animation:", animation);
+    // console.log("consentsSource:", consentsSource);
+    // console.log("hasClosed:", hasClosed);
+    // console.log("pulsing:", pulsing);
 
     return (
       <div
         className={
           cx(
-            "xb-cookie-kit",
+            BLOCK,
             position,
             {
               transparent: !isShown,
@@ -225,16 +261,16 @@ export default class CookieKit extends React.PureComponent {
         {renderButton && (
           <button
             type="button"
-            className="xb-cookie-kit__button xb-cookie-kit__cookie-button"
+            className={`${BLOCK}__button ${BLOCK}__cookie-button`}
             onClick={this.handleOpen}
           >
             <div
               className={
                 cx(
-                  "xb-cookie-kit__cookie-icon",
-                  `xb-cookie-kit__cookie-icon--${animation}`,
+                  `${BLOCK}__cookie-icon`,
+                  `${BLOCK}__cookie-icon--${animation}`,
                   {
-                    "xb-cookie-kit__pulsing": pulsing,
+                    [`${BLOCK}__pulsing`]: pulsing,
                   },
                 )
               }

@@ -87,11 +87,11 @@ class CookitKitInitializer {
   }
 
   getCookieTypes() {
-    let cookieConsentSettings;
+    let consentSettings;
     if (this._compRef.current) {
-      cookieConsentSettings = this._compRef.current.getCookieTypes();
+      consentSettings = this._compRef.current.getCookieTypes();
     }
-    return cookieConsentSettings || {};
+    return consentSettings || {};
   }
 
   render(dom = document.body) {
