@@ -158,10 +158,6 @@ export default class CookieKitPopup extends React.PureComponent {
     const isAuthorized = getAccessToken();
     const targetUrl = encodeURIComponent(window.location.origin);
 
-    // TODO: Move the following to CSS. Use media query.
-    const width = window.innerWidth || document.body.clientWidth;
-    const flagSize = width > 400 ? "25px" : "20px";
-
     const isAllChecked = Object.values(consentSettings).every(checked => checked);
 
     const cookieDefns = allAvailCookieDefns.filter(
@@ -211,8 +207,8 @@ export default class CookieKitPopup extends React.PureComponent {
               </button>
               { countryCode && (
                 <div className={`${BLOCK}__block ${BLOCK}__block--sm`}>
-                  <div>
-                    <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+                  <div className={`${BLOCK}__flag`}>
+                    <ReactCountryFlag code={countryCode} svg />
                   </div>
                 </div>
               )}
