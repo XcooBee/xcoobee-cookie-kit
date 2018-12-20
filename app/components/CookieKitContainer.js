@@ -170,11 +170,7 @@ export default class CookieKitContainer extends React.PureComponent {
           return;
         }
 
-        const {
-          campaignReference,
-          checkByDefaultTypes,
-          displayOnlyForEU,
-        } = this.props;
+        const { campaignReference } = this.props;
 
         const isConnected = !!campaignReference;
         const { accessToken } = this.state;
@@ -182,17 +178,7 @@ export default class CookieKitContainer extends React.PureComponent {
         if (isConnected && accessToken) {
           this.resolveConnectedCookieConsents().catch(handleErrors);
         } else {
-          const hostsDefaultCookieConsents = cookieTypes.map(type => ({
-            type,
-            checked: checkByDefaultTypes.includes(type),
-          }));
-          if (displayOnlyForEU && !euCountries.includes(countryCode)) {
-            this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
-          } else {
-            const consentsSource = "unknown";
-            const cookieConsents = hostsDefaultCookieConsents;
-            this.setState({ consentsSource, cookieConsents, initializing: false });
-          }
+          this.fallBackToHostDefaults();
         }
       })
       .catch(handleErrors);
@@ -312,16 +298,32 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
+  // Convenience method
+  fallBackToHostDefaults() {
+    const {
+      checkByDefaultTypes,
+      displayOnlyForEU,
+    } = this.props;
+    const { countryCode } = this.state;
+
+    const hostsDefaultCookieConsents = cookieTypes.map(type => ({
+      type,
+      checked: checkByDefaultTypes.includes(type),
+    }));
+    if (!euCountries.includes(countryCode) && displayOnlyForEU) {
+      this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
+    } else {
+      const consentsSource = "unknown";
+      const cookieConsents = hostsDefaultCookieConsents;
+      this.setState({ consentsSource, cookieConsents, initializing: false });
+    }
+  }
+
   resolveConnectedCookieConsents() {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
-    const { accessToken, countryCode } = this.state;
+    const { accessToken } = this.state;
     return fetchUserSettings(accessToken)
       .then((userSettings) => {
-        const {
-          checkByDefaultTypes,
-          displayOnlyForEU,
-        } = this.props;
-
         if (userSettings) {
           // Check to see if user already has consent settings for the current site
           const { origin } = window.location;
@@ -352,31 +354,11 @@ export default class CookieKitContainer extends React.PureComponent {
                   return;
                 }
 
-                const hostsDefaultCookieConsents = cookieTypes.map(type => ({
-                  type,
-                  checked: checkByDefaultTypes.includes(type),
-                }));
-                if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-                  this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
-                } else {
-                  const consentsSource = "unknown";
-                  const cookieConsents = hostsDefaultCookieConsents;
-                  this.setState({ consentsSource, cookieConsents, initializing: false });
-                }
+                this.fallBackToHostDefaults();
               });
             });
         } else {
-          const hostsDefaultCookieConsents = cookieTypes.map(type => ({
-            type,
-            checked: checkByDefaultTypes.includes(type),
-          }));
-          if (!euCountries.includes(countryCode) && displayOnlyForEU) {
-            this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
-          } else {
-            const consentsSource = "unknown";
-            const cookieConsents = hostsDefaultCookieConsents;
-            this.setState({ consentsSource, cookieConsents, initializing: false });
-          }
+          this.fallBackToHostDefaults();
         }
       });
   }
