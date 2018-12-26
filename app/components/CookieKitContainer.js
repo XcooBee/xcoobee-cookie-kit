@@ -164,7 +164,7 @@ export default class CookieKitContainer extends React.PureComponent {
     };
 
     fetchCountryCode()
-      .then(([countryCode]) => {
+      .then((countryCode) => {
         this.setState({ countryCode });
 
         const cachedCookieConsents = cookieConsentsCache.get();
@@ -394,6 +394,7 @@ export default class CookieKitContainer extends React.PureComponent {
         {!initializing && (
           <React.Fragment>
             <CookieKit
+              accessToken={accessToken}
               campaignReference={campaignReference}
               companyLogo={companyLogo}
               consentsSource={consentsSource}

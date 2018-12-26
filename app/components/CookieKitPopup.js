@@ -4,7 +4,6 @@ import ReactCountryFlag from "react-country-flag";
 
 import xcoobeeConfig from "../config/xcoobeeConfig";
 
-import { getAccessToken } from "../lib/AccessTokenManager";
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
@@ -19,6 +18,7 @@ const BLOCK = "xb-cookie-kit-popup";
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
+    accessToken: PropTypes.string,
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
@@ -36,6 +36,7 @@ export default class CookieKitPopup extends React.PureComponent {
   };
 
   static defaultProps = {
+    accessToken: null,
     companyLogo: null,
     countryCode: "US",
   };
@@ -141,6 +142,7 @@ export default class CookieKitPopup extends React.PureComponent {
   render() {
     // console.log('CookieKitPopup#render');
     const {
+      accessToken,
       companyLogo,
       countryCode,
       hideBrandTag,
@@ -152,12 +154,11 @@ export default class CookieKitPopup extends React.PureComponent {
       textMessage,
     } = this.props;
     const { consentSettings, isShown, selectedLocale } = this.state;
-    const isAuthorized = getAccessToken();
-    const targetUrl = encodeURIComponent(window.location.origin);
 
-    // TODO: Move the following to CSS. Use media query.
-    const width = window.innerWidth || document.body.clientWidth;
-    const flagSize = width > 400 ? "25px" : "20px";
+    // console.log("countryCode:", countryCode);
+
+    const appearsToBeLoggedIn = !!accessToken;
+    const targetUrl = encodeURIComponent(window.location.origin);
 
     const isAllChecked = Object.values(consentSettings).every(checked => checked);
 
@@ -208,8 +209,8 @@ export default class CookieKitPopup extends React.PureComponent {
               </button>
               { countryCode && (
                 <div className={`${BLOCK}__block ${BLOCK}__block--sm`}>
-                  <div>
-                    <ReactCountryFlag code={countryCode} svg styleProps={{ width: flagSize, height: flagSize }} />
+                  <div className={`${BLOCK}__flag`}>
+                    <ReactCountryFlag code={countryCode} svg />
                   </div>
                 </div>
               )}
@@ -298,7 +299,7 @@ export default class CookieKitPopup extends React.PureComponent {
           </div>
         </div>
         <div className={`${BLOCK}__links`}>
-          { isConnected && (isAuthorized
+          { isConnected && (appearsToBeLoggedIn
             ? (
               <a
                 className={`${BLOCK}__link`}

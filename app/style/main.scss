@@ -275,6 +275,19 @@ $duration: .2s;
       }
     }
 
+    &__flag {
+      // Use of !important is required to override inline styles added by JavaScript.
+      [role~=img] {
+        width: 25px !important;
+        height: 25px !important;
+
+        @media (max-width: 500px) {
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+    }
+
     &__header {
       display: flex;
       justify-content: space-between;
