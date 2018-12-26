@@ -4,16 +4,16 @@ import { cookieDefns as allAvailCookieDefns } from "../utils";
 
 import graphQLRequest from "../utils/graphql";
 
-function fetchUsersSitesCookieConsents(accessToken, userCursor) {
+ function fetchUsersSitesCookieConsents(accessToken, userCursor, origin) {
   // console.log("fetchUsersSitesCookieConsents fetching...");
-  const query = `query getUsersSitesCookieConsents($userCursor: String!) {
-    cookie_consents(user_cursor: $userCursor) {
+  const query = `query getUsersSitesCookieConsents($userCursor: String!, $campaignName: String) {
+    cookie_consents(user_cursor: $userCursor, campaign_name: $campaignName) {
       site
       cookies
     }
   }`;
 
-  return graphQLRequest(query, { userCursor }, accessToken)
+  return graphQLRequest(query, { userCursor, campaignName: origin }, accessToken)
     .then((res) => {
       const usersSitesCookieConsents = res.cookie_consents;
       // console.log("fetchUsersSitesCookieConsents fetched.");
@@ -24,15 +24,15 @@ function fetchUsersSitesCookieConsents(accessToken, userCursor) {
 export function fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor) {
   // console.log("fetchUsersSiteCookieConsents fetching...");
 
-  const message = `${origin.toLowerCase()}${xcoobeeId}`;
-  const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
+  // const message = `${origin.toLowerCase()}${xcoobeeId}`;
+  // const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
 
-  return fetchUsersSitesCookieConsents(accessToken, userCursor)
+  return fetchUsersSitesCookieConsents(accessToken, userCursor, origin)
     .then((usersSitesCookieConsents) => {
       let siteCookieConsents = null;
 
-      if (Array.isArray(usersSitesCookieConsents)) {
-        siteCookieConsents = usersSitesCookieConsents.find(consent => consent.site === encodedSite);
+      if (Array.isArray(usersSitesCookieConsents) && usersSitesCookieConsents.length) {
+        siteCookieConsents = usersSitesCookieConsents[0];
       }
 
       return siteCookieConsents;
