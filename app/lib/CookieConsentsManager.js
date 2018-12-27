@@ -1,10 +1,8 @@
-import CryptoJS from "crypto-js";
-
 import { cookieDefns as allAvailCookieDefns } from "../utils";
 
 import graphQLRequest from "../utils/graphql";
 
- function fetchUsersSitesCookieConsents(accessToken, userCursor, origin) {
+function fetchUsersSitesCookieConsents(accessToken, userCursor, origin) {
   // console.log("fetchUsersSitesCookieConsents fetching...");
   const query = `query getUsersSitesCookieConsents($userCursor: String!, $campaignName: String) {
     cookie_consents(user_cursor: $userCursor, campaign_name: $campaignName) {
@@ -24,15 +22,12 @@ import graphQLRequest from "../utils/graphql";
 export function fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor) {
   // console.log("fetchUsersSiteCookieConsents fetching...");
 
-  // const message = `${origin.toLowerCase()}${xcoobeeId}`;
-  // const encodedSite = CryptoJS.SHA256(message).toString(CryptoJS.enc.Base64);
-
   return fetchUsersSitesCookieConsents(accessToken, userCursor, origin)
     .then((usersSitesCookieConsents) => {
       let siteCookieConsents = null;
 
       if (Array.isArray(usersSitesCookieConsents) && usersSitesCookieConsents.length) {
-        siteCookieConsents = usersSitesCookieConsents[0];
+        [siteCookieConsents] = usersSitesCookieConsents;
       }
 
       return siteCookieConsents;
