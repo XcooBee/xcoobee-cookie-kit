@@ -38,7 +38,7 @@ export default class CookieKitPopup extends React.PureComponent {
   static defaultProps = {
     accessToken: null,
     companyLogo: null,
-    countryCode: "US",
+    countryCode: null,
   };
 
   constructor(props) {

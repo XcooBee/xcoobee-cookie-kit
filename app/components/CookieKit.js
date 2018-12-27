@@ -23,7 +23,7 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    countryCode: PropTypes.string.isRequired,
+    countryCode: PropTypes.string,
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
@@ -51,6 +51,7 @@ export default class CookieKit extends React.PureComponent {
     accessToken: null,
     campaignReference: null,
     companyLogo: null,
+    countryCode: null,
     expirationTime: 0,
   };
 

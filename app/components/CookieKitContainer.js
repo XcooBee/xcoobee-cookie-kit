@@ -155,12 +155,18 @@ export default class CookieKitContainer extends React.PureComponent {
       consentsSource: "unknown",
       consentStatus: OPEN,
       cookieConsents: null,
-      countryCode: "US",
+      countryCode: null,
       initializing: true,
     };
 
     fetchCountryCode()
+      .catch((error) => {
+        // console.log("CookieKitContainer#constructor#fetchCountryCode#catch");
+        console.error(error);
+        return null;
+      })
       .then((countryCode) => {
+        // console.log("CookieKitContainer#constructor#fetchCountryCode#then");
         this.setState({ countryCode });
 
         const cachedCookieConsents = cookieConsentsCache.get();
@@ -310,7 +316,10 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: checkByDefaultTypes.includes(type),
     }));
-    if (!euCountries.includes(countryCode) && displayOnlyForEU) {
+    // If we were unable to resolve the user's country code, then assume it is in
+    // the EU.
+    const cCode = countryCode || euCountries[0];
+    if (displayOnlyForEU && !euCountries.includes(cCode)) {
       this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
     } else {
       const consentsSource = "unknown";
@@ -383,7 +392,7 @@ export default class CookieKitContainer extends React.PureComponent {
     const renderRefreshButton = testMode
       && (accessToken || cookieConsentsCache.get());
 
-    // console.log('initializing:', initializing);
+    // console.log("initializing:", initializing);
 
     return (
       <React.Fragment>
