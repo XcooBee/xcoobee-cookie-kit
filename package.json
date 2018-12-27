@@ -2,8 +2,24 @@
   "name": "xcoobee-cookie-kit",
   "version": "1.0.0",
   "description": "Cookie Consent Management for Websites",
-  "main": "index.js",
-  "author": "Bilal Soylu, Vladimir Maklyakov",
+  "keywords": [
+    "consent",
+    "cookie",
+    "management",
+    "xcoobee"
+  ],
+  "license": "Apache-2.0",
+  "author": "XcooBee LLC",
+  "contributors": [
+    "Bilal Soylu",
+    "Danny Hurlburt",
+    "Vladimir Maklyakov"
+  ],
+  "files": [
+    "app/",
+    "dist/"
+  ],
+  "browser": "dist/xcoobee-cookie-kit.min.js",
   "scripts": {
     "build": "npm run build:beta",
     "build:beta": "cross-env-shell NODE_ENV=beta webpack",
@@ -15,10 +31,8 @@
     "solanobuild": "node  ./node_modules/webpack/bin/webpack.js",
     "eslint": "eslint ./app"
   },
-  "license": "Apache-2.0",
   "dependencies": {
     "classnames": "^2.2.6",
-    "cssnano": "^4.1.8",
     "fetch-polyfill": "^0.8.2",
     "graphql": "^14.0.2",
     "isomorphic-fetch": "^2.2.1",
@@ -49,6 +63,7 @@
     "core-js": "^2.6.1",
     "cross-env": "^5.1.6",
     "css-loader": "^2.1.0",
+    "cssnano": "^4.1.8",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-babel": "^5.2.1",
