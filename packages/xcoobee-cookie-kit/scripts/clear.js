@@ -16,7 +16,7 @@ process.on('unhandledRejection', err => {
   console.log("error during delete: ", err)
 });
 
-const dirsToDelete =  ["app","node_modules",".git"]
+const dirsToDelete =  ["src","node_modules",".git"]
 
 
 function deleteFile(dir, file) {
@@ -69,7 +69,7 @@ function deleteDirectory(dir) {
 };
 
 // run actual delete process
-dirsToDelete.forEach((relDir) => {   
+dirsToDelete.forEach((relDir) => {
     console.log("processing for delete: ", path.resolve(relDir));
     deleteDirectory(path.resolve(relDir));
 });

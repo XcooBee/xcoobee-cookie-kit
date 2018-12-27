@@ -1,16 +1,15 @@
 import cx from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
-
-import CookieConsentShape from "../lib/CookieConsentShape";
-
 import {
   animations,
   consentsSources,
   consentStatuses,
   cookieTypes,
   positions,
-} from "../utils";
+} from "xcoobee-cookie-kit-core/src/configs";
+
+import CookieConsentShape from "../lib/CookieConsentShape";
 
 import CookieKitPopup from "./CookieKitPopup";
 
@@ -45,6 +44,7 @@ export default class CookieKit extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    xbOrigin: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -227,6 +227,7 @@ export default class CookieKit extends React.PureComponent {
       requestDataTypes,
       termsUrl,
       textMessage,
+      xbOrigin,
     } = this.props;
     const { hasClosed, isOpen, isShown, pulsing } = this.state;
 
@@ -270,6 +271,7 @@ export default class CookieKit extends React.PureComponent {
             requestDataTypes={requestDataTypes}
             termsUrl={termsUrl}
             textMessage={textMessage}
+            xbOrigin={xbOrigin}
           />
         )}
         {renderButton && (

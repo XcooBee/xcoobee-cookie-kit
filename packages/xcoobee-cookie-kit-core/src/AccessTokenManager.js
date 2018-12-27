@@ -1,4 +1,4 @@
-import { tokenKey } from "../utils";
+import { tokenKey } from "./configs";
 
 export function clearAccessToken() {
   localStorage.removeItem(tokenKey);

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { consentStatuses } from "../utils";
+import { consentStatuses } from "xcoobee-cookie-kit-core/src/configs";
 
 const ConsentStatusShape = PropTypes.oneOf(Object.values(consentStatuses));
 

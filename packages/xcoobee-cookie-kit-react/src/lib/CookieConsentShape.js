@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { cookieTypes } from "../utils";
+import { cookieTypes } from "xcoobee-cookie-kit-core/src/configs";
 
 const CookieConsentShape = PropTypes.shape({
   checked: PropTypes.bool.isRequired,

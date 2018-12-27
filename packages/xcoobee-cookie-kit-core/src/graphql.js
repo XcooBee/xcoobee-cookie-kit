@@ -1,8 +1,8 @@
 import fetch from "isomorphic-fetch";
 
-import NotAuthorizedError from "../lib/NotAuthorizedError";
+import NotAuthorizedError from "./NotAuthorizedError";
 
-export default function graphQLRequest(query, variables, token) {
+function graphQLRequest(xbApiUrl, query, variables, token) {
   const init = {
     method: "post",
     mode: "cors",
@@ -17,7 +17,7 @@ export default function graphQLRequest(query, variables, token) {
     }),
   };
 
-  return fetch(`${XB_API_URL}/graphql`, init)
+  return fetch(`${xbApiUrl}/graphql`, init)
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
@@ -45,4 +45,10 @@ export default function graphQLRequest(query, variables, token) {
 
       return Promise.resolve(data.data);
     });
+}
+
+export default function (xbApiUrl) {
+  return (query, variables, token) => {
+    return graphQLRequest(xbApiUrl, query, variables, token);
+  };
 }

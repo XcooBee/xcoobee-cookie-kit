@@ -29,9 +29,9 @@ XcooBee.kit.setParam("displayOnlyForEU", true);
 
 XcooBee.kit.setParam("expirationTime", 0);
 
-XcooBee.kit.setParam("hideBrandTag", true);
+// XcooBee.kit.setParam("hideBrandTag", true);
 
-XcooBee.kit.setParam("hideOnComplete", true);
+// XcooBee.kit.setParam("hideOnComplete", true);
 
 XcooBee.kit.setParam("position", "left_bottom");
 // XcooBee.kit.setParam("position", "left_top");

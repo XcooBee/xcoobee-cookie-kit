@@ -3,7 +3,7 @@ import {
   cookieDefns,
   expirationTime,
   xcoobeeCookiesKey,
-} from "../utils";
+} from "./configs";
 
 const cookieConsentsCache = {
   clear() {

@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const ENV = process.env.NODE_ENV || 'development';
 const CONFIG = require('./config');
@@ -91,14 +90,6 @@ module.exports = Object.assign({}, WEBPACK_CONFIG, {
     [
       new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(ENV === 'production' ? 'production' : 'development') }),
       new webpack.HashedModuleIdsPlugin(),
-      new webpack.ProvidePlugin({
-        React: 'react',
-        xcoobeeConfig: CONFIG.config(ENV),
-      }),
-      new CopyWebpackPlugin([{
-        from: `${CONFIG.entry}/assets`,
-        to: CONFIG.dest
-      }]),
     ],
     WEBPACK_CONFIG.plugins || [],
   )

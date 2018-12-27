@@ -1,7 +1,7 @@
-import en from "./messages.en-us.json";
-import de from "./messages.de-de.json";
-import es from "./messages.es-419.json";
-import fr from "./messages.fr-fr.json";
+import en from "./l10n/messages.en-us.json";
+import de from "./l10n/messages.de-de.json";
+import es from "./l10n/messages.es-419.json";
+import fr from "./l10n/messages.fr-fr.json";
 
 export default function renderText(key, locale) {
   switch (locale) {

@@ -1,29 +1,20 @@
 import PropTypes from "prop-types";
 import React from "react";
-
 import {
   clearAccessToken,
   getAccessToken,
   saveAccessToken,
-} from "../lib/AccessTokenManager";
-import cookieConsentsCache from "../lib/cookieConsentsCache";
-import {
-  fetchCountryCode,
-  fetchCrowdAiCookieConsents,
-  fetchUsersDefaultCookieConsents,
-  fetchUsersSiteCookieConsents,
-  fetchUserSettings,
-  saveRemotely,
-} from "../lib/CookieConsentsManager";
-import NotAuthorizedError from "../lib/NotAuthorizedError";
-
+} from "xcoobee-cookie-kit-core/src/AccessTokenManager";
 import {
   consentStatuses,
   cookieTypes,
   cssHref,
   euCountries,
   positions,
-} from "../utils";
+} from "xcoobee-cookie-kit-core/src/configs";
+import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
+import CookieConsentsManagerFactory from "xcoobee-cookie-kit-core/src/CookieConsentsManager";
+import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 
 import CookieKit from "./CookieKit";
 
@@ -128,6 +119,9 @@ export default class CookieKitContainer extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    xbApiUrl: PropTypes.string.isRequired,
+    xbOrigin: PropTypes.string.isRequired,
+    xckDomain: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -159,7 +153,9 @@ export default class CookieKitContainer extends React.PureComponent {
       initializing: true,
     };
 
-    fetchCountryCode()
+    this.cookieConsentsManager = CookieConsentsManagerFactory(props.xbApiUrl);
+
+    this.cookieConsentsManager.fetchCountryCode()
       .catch((error) => {
         // console.log("CookieKitContainer#constructor#fetchCountryCode#catch");
         console.error(error);
@@ -193,7 +189,7 @@ export default class CookieKitContainer extends React.PureComponent {
       const linkDom = document.createElement("link");
 
       linkDom.setAttribute("rel", "stylesheet");
-      linkDom.setAttribute("href", `${XCK_DOMAIN}/${cssHref}`);
+      linkDom.setAttribute("href", `${props.xckDomain}/${cssHref}`);
 
       document.head.appendChild(linkDom);
     }
@@ -280,7 +276,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const { campaignReference } = this.props;
     const { accessToken } = this.state;
-    saveRemotely(accessToken, cookieConsents, campaignReference)
+    this.cookieConsentsManager.saveRemotely(accessToken, cookieConsents, campaignReference)
       .catch(handleErrors);
 
     this.setCookieConsents("usersSaved", cookieConsents);
@@ -330,6 +326,12 @@ export default class CookieKitContainer extends React.PureComponent {
 
   resolveConnectedCookieConsents() {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
+    const {
+      fetchCrowdAiCookieConsents,
+      fetchUsersDefaultCookieConsents,
+      fetchUserSettings,
+      fetchUsersSiteCookieConsents,
+    } = this.cookieConsentsManager;
     const { accessToken } = this.state;
     return fetchUserSettings(accessToken)
       .then((userSettings) => {
@@ -386,6 +388,7 @@ export default class CookieKitContainer extends React.PureComponent {
       termsUrl,
       testMode,
       textMessage,
+      xbOrigin,
     } = this.props;
     const { accessToken, consentsSource, cookieConsents, countryCode, initializing } = this.state;
 
@@ -416,6 +419,7 @@ export default class CookieKitContainer extends React.PureComponent {
               requestDataTypes={requestDataTypes}
               termsUrl={termsUrl}
               textMessage={textMessage}
+              xbOrigin={xbOrigin}
             />
             {renderRefreshButton && (<RefreshButton />)}
           </React.Fragment>

@@ -75,9 +75,9 @@ module.exports = {
       }
     }),
     new webpack.DefinePlugin({
-      'XB_ORIGIN': JSON.stringify(xcoobeeConfig.origin),
-      'XCK_DOMAIN': JSON.stringify(xcoobeeConfig.domain),
-      'XB_API_URL': JSON.stringify(xcoobeeConfig.apiUrl)
+      "process.env.XB_ORIGIN": JSON.stringify(xcoobeeConfig.origin),
+      "process.env.XCK_DOMAIN": JSON.stringify(xcoobeeConfig.domain),
+      "process.env.XB_API_URL": JSON.stringify(xcoobeeConfig.apiUrl),
     }),
     new HtmlWebpackPlugin(),
     new HtmlWebpackInlineSourcePlugin(),
