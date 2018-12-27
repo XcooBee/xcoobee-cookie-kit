@@ -1,7 +1,5 @@
 import fetch from "isomorphic-fetch";
 
-import xcoobeeConfig from "../config/xcoobeeConfig";
-
 import NotAuthorizedError from "../lib/NotAuthorizedError";
 
 export default function graphQLRequest(query, variables, token) {
@@ -19,7 +17,7 @@ export default function graphQLRequest(query, variables, token) {
     }),
   };
 
-  return fetch(`${xcoobeeConfig.apiUrl}/graphql`, init)
+  return fetch(`${XB_API_URL}/graphql`, init)
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);

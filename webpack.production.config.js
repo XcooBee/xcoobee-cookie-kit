@@ -1,4 +1,4 @@
-const cssnano = require('cssnano')
+const cssnano = require('cssnano');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
@@ -6,6 +6,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const CONFIG = require('./config');
+const xcoobeeConfig = require(CONFIG.config('production'));
 
 module.exports = {
   module: {
@@ -51,6 +52,11 @@ module.exports = {
       root: CONFIG.root,
       verbose: true,
       dry: false
+    }),
+    new webpack.DefinePlugin({
+      'XB_ORIGIN': JSON.stringify(xcoobeeConfig.origin),
+      'XCK_DOMAIN': JSON.stringify(xcoobeeConfig.domain),
+      'XB_API_URL': JSON.stringify(xcoobeeConfig.apiUrl)
     }),
     new MiniCssExtractPlugin({
       filename: 'xcoobee-cookie-kit.min.css'
