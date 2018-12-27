@@ -71,9 +71,7 @@ function handleErrors(error) {
         clearAccessToken();
         console.error(error.message);
       } else {
-        error.forEach((e) => {
-          throw Error(e.message);
-        });
+        throw Error(e.message);
       }
     });
   } else if (error) {
