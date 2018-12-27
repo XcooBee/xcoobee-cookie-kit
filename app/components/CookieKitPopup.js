@@ -32,7 +32,15 @@ export default class CookieKitPopup extends React.PureComponent {
       PropTypes.oneOf(cookieTypes).isRequired,
     ).isRequired,
     termsUrl: PropTypes.string.isRequired,
-    textMessage: PropTypes.string.isRequired,
+    textMessage: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.shape({
+        "de-de": PropTypes.string,
+        "en-us": PropTypes.string,
+        "es-419": PropTypes.string,
+        "fr-fr": PropTypes.string,
+      }).isRequired,
+    ]).isRequired,
   };
 
   static defaultProps = {
@@ -121,21 +129,21 @@ export default class CookieKitPopup extends React.PureComponent {
     onSubmit(consentSettings);
   }
 
-  renderTextMessage(JSON) {
+  renderTextMessage(textMessage) {
     // console.log('CookieKitPopup#renderTextMessage');
     const { selectedLocale } = this.state;
 
     switch (selectedLocale) {
       case "EN":
-        return JSON["en-us"];
+        return textMessage["en-us"];
       case "DE":
-        return JSON["de-de"] || JSON["en-us"];
+        return textMessage["de-de"] || textMessage["en-us"];
       case "ES":
-        return JSON["es-419"] || JSON["en-us"];
+        return textMessage["es-419"] || textMessage["en-us"];
       case "FR":
-        return JSON["fr-fr"] || JSON["en-us"];
+        return textMessage["fr-fr"] || textMessage["en-us"];
       default:
-        return JSON["en-us"];
+        return textMessage["en-us"];
     }
   }
 
@@ -231,7 +239,7 @@ export default class CookieKitPopup extends React.PureComponent {
         </div>
         <div className={`${BLOCK}__cookie-list`}>
           { cookieDefns.map(cookieDefn => (
-            <div className={`${BLOCK}__cookie`}>
+            <div key={cookieDefn.type} className={`${BLOCK}__cookie`}>
               <div className={`${BLOCK}__block ${BLOCK}__block--lg`}>
                 <div>
                   <input
