@@ -1,3 +1,4 @@
+const cssnano = require('cssnano')
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
@@ -18,20 +19,16 @@ module.exports = {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: {
-                discardComments: { removeAll: true }
-              }
-            }
-          },
+          'css-loader',
           {
             loader: 'postcss-loader',
             options: {
-              plugins: function () {
-                return [autoprefixer];
-              }
+              plugins: () => [
+                autoprefixer,
+                cssnano({
+                  preset: 'default',
+                }),
+              ],
             }
           },
           { loader: 'sass-loader' }
@@ -45,7 +42,7 @@ module.exports = {
       debug: false
     }),
     new CompressionPlugin({
-      asset: '[path].gz',
+      filename: '[path].gz',
       algorithm: 'gzip',
       threshold: 10240,
       minRatio: 0.8
