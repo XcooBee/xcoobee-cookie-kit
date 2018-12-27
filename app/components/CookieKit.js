@@ -99,6 +99,12 @@ export default class CookieKit extends React.PureComponent {
 
   handleOpen = () => {
     // console.log("CookieKit#handleOpen");
+    const { pulsing } = this.state;
+
+    if (pulsing) {
+      return;
+    }
+
     this.clearTimers();
     this.stopPulsing();
 
@@ -243,6 +249,9 @@ export default class CookieKit extends React.PureComponent {
             {
               transparent: !isShown,
             },
+            {
+              scroll: isOpen,
+            }
           )
         }
       >

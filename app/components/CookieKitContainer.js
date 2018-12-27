@@ -69,16 +69,20 @@ function handleErrors(error) {
     error.forEach((e) => {
       if (e instanceof NotAuthorizedError) {
         clearAccessToken();
+        console.error(error.message);
+      } else {
+        error.forEach((e) => {
+          throw Error(e.message);
+        });
       }
-    });
-    error.forEach((e) => {
-      throw Error(e.message);
     });
   } else if (error) {
     if (error instanceof NotAuthorizedError) {
       clearAccessToken();
+      console.error(error.message);
+    } else {
+      throw Error(error.message);
     }
-    throw Error(error.message);
   }
 }
 
