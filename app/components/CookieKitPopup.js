@@ -2,8 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactCountryFlag from "react-country-flag";
 
-import xcoobeeConfig from "../config/xcoobeeConfig";
-
 import CookieConsentShape from "../lib/CookieConsentShape";
 
 import {
@@ -196,7 +194,7 @@ export default class CookieKitPopup extends React.PureComponent {
           >
             <img
               className={`${BLOCK}__close-button-icon`}
-              src={`${xcoobeeConfig.domain}/close-icon.svg`}
+              src={`${XCK_DOMAIN}/close-icon.svg`}
               alt="close-icon"
             />
           </button>
@@ -289,7 +287,7 @@ export default class CookieKitPopup extends React.PureComponent {
                   {renderText("CookieKit.PoweredByText", selectedLocale)}
                   <img
                     className={`${BLOCK}__privacy-partner-logo`}
-                    src={`${xcoobeeConfig.domain}/xcoobee-logo.svg`}
+                    src={`${XCK_DOMAIN}/xcoobee-logo.svg`}
                     alt="XcooBee logo"
                   />
                 </div>
@@ -311,7 +309,7 @@ export default class CookieKitPopup extends React.PureComponent {
             ? (
               <a
                 className={`${BLOCK}__link`}
-                href={`${xcoobeeConfig.origin}${links.manage}`}
+                href={`${XB_ORIGIN}${links.manage}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -322,7 +320,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 className={`xb-cookie-kit__button ${BLOCK}__link`}
                 type="button"
-                onClick={() => window.open(`${xcoobeeConfig.origin}${links.login}?targetUrl=${targetUrl}`)}
+                onClick={() => window.open(`${XB_ORIGIN}${links.login}?targetUrl=${targetUrl}`)}
               >
                 {renderText("CookieKit.LoginLink", selectedLocale)}
               </button>

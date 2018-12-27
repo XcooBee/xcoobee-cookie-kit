@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import xcoobeeConfig from "../config/xcoobeeConfig";
-
 import {
   clearAccessToken,
   getAccessToken,
@@ -195,7 +193,7 @@ export default class CookieKitContainer extends React.PureComponent {
       const linkDom = document.createElement("link");
 
       linkDom.setAttribute("rel", "stylesheet");
-      linkDom.setAttribute("href", `${xcoobeeConfig.domain}/${cssHref}`);
+      linkDom.setAttribute("href", `${XCK_DOMAIN}/${cssHref}`);
 
       document.head.appendChild(linkDom);
     }

@@ -4,12 +4,12 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const AsyncStylesheetWebpackPlugin = require('async-stylesheet-webpack-plugin');
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
 const CONFIG = require('./config');
+const xcoobeeConfig = require(CONFIG.config('development'));
+
 const WEBPACK_PORT = CONFIG.port + 1;
-const ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
   entry: { devOnly: CONFIG.devOnly },
@@ -73,6 +73,11 @@ module.exports = {
         target: `localhost:${WEBPACK_PORT}`,
         middleware: CONFIG.api.map(api => proxyMiddleware(api, { target: CONFIG.proxy }))
       }
+    }),
+    new webpack.DefinePlugin({
+      'XB_ORIGIN': JSON.stringify(xcoobeeConfig.origin),
+      'XCK_DOMAIN': JSON.stringify(xcoobeeConfig.domain),
+      'XB_API_URL': JSON.stringify(xcoobeeConfig.apiUrl)
     }),
     new HtmlWebpackPlugin(),
     new HtmlWebpackInlineSourcePlugin(),
