@@ -1,13 +1,16 @@
-const webpack = require('webpack');
-const proxyMiddleware = require('http-proxy-middleware');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const autoprefixer = require('autoprefixer');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+/* eslint-disable import/no-dynamic-require, import/no-extraneous-dependencies */
 
-const CONFIG = require('./config');
-const xcoobeeConfig = require(CONFIG.config('development'));
+const autoprefixer = require("autoprefixer");
+const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
+const proxyMiddleware = require("http-proxy-middleware");
+const HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require("webpack");
+
+const CONFIG = require("./config");
+
+const xcoobeeConfig = require(CONFIG.config("development"));
 
 const WEBPACK_PORT = CONFIG.port + 1;
 
@@ -18,71 +21,67 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
-        use: [
-          { loader: 'babel-loader' }
-        ]
+        use: "babel-loader",
       },
       {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          'css-loader',
+          "css-loader",
           {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
             options: {
-              plugins: function () {
-                return [autoprefixer];
-              }
-            }
+              plugins: () => [autoprefixer],
+            },
           },
-          { loader: 'sass-loader' }
-        ]
-      }
-    ]
+          "sass-loader",
+        ],
+      },
+    ],
   },
   watch: true,
-  devtool: 'inline-source-map',
   devServer: {
-    clientLogLevel: 'none',
+    clientLogLevel: "none",
+    disableHostCheck: true,
     historyApiFallback: true,
     inline: true,
-    quiet: false,
     noInfo: false,
-    disableHostCheck: true,
+    port: WEBPACK_PORT,
+    quiet: false,
     stats: {
       assets: false,
+      chunkModules: false,
+      chunks: true,
       colors: true,
-      version: false,
       hash: false,
       timings: false,
-      chunks: true,
-      chunkModules: false
+      version: false,
     },
-    port: WEBPACK_PORT
   },
+  devtool: "inline-source-map",
   plugins: [
     new webpack.LoaderOptionsPlugin({
+      debug: true,
       errorDetails: true,
-      debug: true
     }),
     new BrowserSyncPlugin({
-      open: CONFIG.mode,
       host: CONFIG.host,
+      open: CONFIG.mode,
       port: CONFIG.port,
       proxy: {
+        middleware: CONFIG.api.map(api => proxyMiddleware(api, { target: CONFIG.proxy })),
         target: `localhost:${WEBPACK_PORT}`,
-        middleware: CONFIG.api.map(api => proxyMiddleware(api, { target: CONFIG.proxy }))
-      }
+      },
     }),
     new webpack.DefinePlugin({
+      "process.env.XB_API_URL": JSON.stringify(xcoobeeConfig.apiUrl),
       "process.env.XB_ORIGIN": JSON.stringify(xcoobeeConfig.origin),
       "process.env.XCK_DOMAIN": JSON.stringify(xcoobeeConfig.domain),
-      "process.env.XB_API_URL": JSON.stringify(xcoobeeConfig.apiUrl),
     }),
     new HtmlWebpackPlugin(),
     new HtmlWebpackInlineSourcePlugin(),
     new MiniCssExtractPlugin({
-      filename: 'xcoobee-cookie-kit.min.css'
-    })
-  ]
+      filename: "xcoobee-cookie-kit.min.css",
+    }),
+  ],
 };

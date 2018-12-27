@@ -1,48 +1,58 @@
-const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+/* eslint-disable import/no-dynamic-require */
 
-const ENV = process.env.NODE_ENV || 'development';
-const CONFIG = require('./config');
-const WEBPACK_CONFIG = require('./webpack.' + ENV + '.config.js');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const webpack = require("webpack");
+
+const CONFIG = require("./config");
+
+const ENV = process.env.NODE_ENV || "development";
+
+const WEBPACK_CONFIG = require(`./webpack.${ENV}.config.js`);
 
 const xcoobeeConfig = require(CONFIG.config(ENV));
 
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
   entry: Object.assign({}, {
-    'xcoobee-cookie-kit': ['core-js/shim', 'core-js/es6/promise', 'core-js/es6/symbol', 'fetch-polyfill', CONFIG.entry]
+    "xcoobee-cookie-kit": [
+      "core-js/shim",
+      "core-js/es6/promise",
+      "core-js/es6/symbol",
+      "fetch-polyfill",
+      CONFIG.entry,
+    ],
   }, WEBPACK_CONFIG.entry || {}),
   output: {
+    chunkFilename: "[chunkhash].min.js",
+    filename: "[name].min.js",
     path: CONFIG.dest,
-    filename: '[name].min.js',
-    chunkFilename: '[chunkhash].min.js',
-    publicPath: `${xcoobeeConfig.domain}${CONFIG.publicPath}`
+    publicPath: `${xcoobeeConfig.domain}${CONFIG.publicPath}`,
   },
   module: {
     rules: [].concat(
-      WEBPACK_CONFIG.module && WEBPACK_CONFIG.module.rules || [],
+      (WEBPACK_CONFIG.module && WEBPACK_CONFIG.module.rules) || [],
       [
         {
           test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
           use: {
-            loader: 'url-loader',
-            options: { limit: 10000, minetype: 'application/font-woff' }
-          }
+            loader: "url-loader",
+            options: { limit: 10000, minetype: "application/font-woff" },
+          },
         },
         {
           test: /\.(ttf|eot|svg|png|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-          use: 'file-loader'
-        }
-      ]
-    )
+          use: "file-loader",
+        },
+      ],
+    ),
   },
   optimization: {
     splitChunks: {
-      chunks: 'async',
+      chunks: "async",
       cacheGroups: {
-        default: false
-      }
+        default: false,
+      },
     },
-    minimize: ENV === 'production',
+    minimize: ENV === "production",
     minimizer: [
       new UglifyJsPlugin({
         uglifyOptions: {
@@ -77,20 +87,22 @@ module.exports = Object.assign({}, WEBPACK_CONFIG, {
           warnings: false,
           passes: 1,
           output: {
-            comments: false
-          }
+            comments: false,
+          },
         },
         sourceMap: false,
-        parallel: true
-      })
-    ]
+        parallel: true,
+      }),
+    ],
   },
-  mode: ENV === 'production' ? 'production' : 'development',
+  mode: ENV === "production" ? "production" : "development",
   plugins: [].concat(
     [
-      new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify(ENV === 'production' ? 'production' : 'development') }),
+      new webpack.DefinePlugin({
+        "process.env.NODE_ENV": JSON.stringify(ENV === "production" ? "production" : "development"),
+      }),
       new webpack.HashedModuleIdsPlugin(),
     ],
     WEBPACK_CONFIG.plugins || [],
-  )
+  ),
 });

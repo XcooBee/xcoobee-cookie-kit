@@ -2,9 +2,8 @@ const presets = [
   [
     "@babel/preset-env",
     {
-      // "modules": false,
-      "targets": {
-        "browsers": [
+      targets: {
+        browsers: [
           "last 2 versions",
           "ie >= 11",
         ],

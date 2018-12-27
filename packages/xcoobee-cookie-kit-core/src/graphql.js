@@ -48,7 +48,5 @@ function graphQLRequest(xbApiUrl, query, variables, token) {
 }
 
 export default function (xbApiUrl) {
-  return (query, variables, token) => {
-    return graphQLRequest(xbApiUrl, query, variables, token);
-  };
+  return (query, variables, token) => graphQLRequest(xbApiUrl, query, variables, token);
 }

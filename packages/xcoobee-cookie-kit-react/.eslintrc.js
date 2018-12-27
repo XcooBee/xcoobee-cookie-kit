@@ -1,24 +1,20 @@
 module.exports = {
-  "extends": "airbnb",
-  "env": {
-      "browser": true,
-      "es6": true
+  extends: "airbnb",
+  env: {
+      browser: true,
+      es6: true
   },
-  "globals": {
-      "React": true,
-      "XcooBee": true
-  },
-  "rules": {
+  parser: "babel-eslint",
+  rules: {
       "linebreak-style": ["off", "unix"],
-      "quotes": ["error", "double", { "avoidEscape": true }],
+      "max-len": ["error", { code: 120, ignoreUrls: true }],
+      "no-console": ["error", { allow: ["error"] }],
+      "no-param-reassign": "off",
       "no-underscore-dangle": "off",
-      "react/jsx-filename-extension": "off",
       "object-curly-newline": "off",
+      quotes: ["error", "double", { avoidEscape: true }],
       "jsx-a11y/label-has-associated-control": "off",
       "jsx-a11y/label-has-for": "off",
-      "no-param-reassign": "off",
-      "max-len": ["error", { "code": 120, "ignoreUrls": true }],
-      "no-console": ["error", { "allow": ["error"] }]
+      "react/jsx-filename-extension": "off",
   },
-  "parser": "babel-eslint"
 };

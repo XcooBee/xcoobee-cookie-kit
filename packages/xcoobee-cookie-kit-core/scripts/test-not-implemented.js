@@ -1,4 +1,4 @@
-/* eslint-disable guard-for-in */
+/* eslint-disable guard-for-in, no-console */
 
 const fs = require("fs");
 

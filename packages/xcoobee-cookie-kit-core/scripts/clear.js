@@ -1,4 +1,4 @@
-"use strict";
+/* eslint-disable no-console */
 
 // This script will DELETE all non build directories. We use it for the build process.
 // DO NOT RUN IN DEVELOPMENT
@@ -11,62 +11,67 @@ const path = require("path");
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
 // we do not stop for errors
-process.on('unhandledRejection', err => {
+process.on("unhandledRejection", (err) => {
   // throw err;
-  console.log("error during delete: ", err)
+  console.error("error during delete: ", err);
 });
 
-const dirsToDelete = ["src","node_modules",".git"]
+const dirsToDelete = ["src", "node_modules", ".git"];
 
+function deleteDirectory(dir) {
+  if (dir.length < 5) {
+    return Promise.reject(Error(`insufficient length for directory [${dir}]`));
+  }
+  return new Promise((resolve, reject) => {
+    fs.access(dir, (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      fs.readdir(dir, (err1, files) => {
+        if (err1) {
+          reject(err1);
+          return;
+        }
+        // eslint-disable-next-line no-use-before-define
+        Promise.all(files.map(file => deleteFile(dir, file)))
+          .then(() => {
+            fs.rmdir(dir, (err2) => {
+              if (err2) {
+                reject(err2);
+                return;
+              }
+              resolve();
+            });
+          })
+          .catch(reject);
+      });
+    });
+  });
+}
 
 function deleteFile(dir, file) {
-  return new Promise(function (resolve, reject) {
-    var filePath = path.join(dir, file);
-    fs.lstat(filePath, function (err, stats) {
+  return new Promise((resolve, reject) => {
+    const filePath = path.join(dir, file);
+    fs.lstat(filePath, (err, stats) => {
       if (err) {
-        return reject(err);
+        reject(err);
+        return;
       }
       if (stats.isDirectory()) {
         resolve(deleteDirectory(filePath));
       } else {
-        fs.unlink(filePath, function (err) {
-          if (err) {
-            return reject(err);
+        fs.unlink(filePath, (err1) => {
+          if (err1) {
+            reject(err1);
+            return;
           }
           resolve();
         });
       }
     });
   });
-};
-
-function deleteDirectory(dir) {
-  if (dir.length < 5) {
-    return Promise.reject(`insufficient length for directory [${dir}]`)
-  }
-  return new Promise(function (resolve, reject) {
-    fs.access(dir, function (err) {
-      if (err) {
-        return reject(err);
-      }
-      fs.readdir(dir, function (err, files) {
-        if (err) {
-          return reject(err);
-        }
-        Promise.all(files.map(function (file) {
-          return deleteFile(dir, file);
-        })).then(function () {
-          fs.rmdir(dir, function (err) {
-            if (err) {
-              return reject(err);
-            }
-            resolve();
-          });
-        }).catch(reject);
-      });
-    });
-  });
-};
+}
 
 // run actual delete process
 dirsToDelete.forEach((relDir) => {

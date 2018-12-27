@@ -48,11 +48,11 @@ Our pizza application demonstrates the use of the XCK in a request/response base
 
 ### The Cookie
 
-![the cookie](cookie.png)
+![the cookie](docs/assets/cookie.png)
 
 The XCK displays a floating cookie icon on the screen in a corner of your choice. By clicking on the cookie icon, users open a popup consent dialog that allows them to interact with your site.
 
-![showing XCK cookie popup](cookie_popup.png)
+![showing XCK cookie popup](docs/assets/cookie_popup.png)
 
 The XCK can automatically determine when a full consent dialog or just the cookie is needed. Thus, making the site visit more pleasant and frictionless.
 
@@ -94,19 +94,19 @@ You set the needed cookies using a JavaScript handler process that gets invoked 
 
 The cookie kit uses a short cut evaluation method to check whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon that is placed into a designated corner, pulses in different colors to indicate a shortcut selection has occurred.
 
-![green cookie pulse](green.png)
+![green cookie pulse](docs/assets/green.png)
 
 The green pulse indicates that the user has visited this site before and the site's cookie consent settings are known and can be reapplied.
 
-![blue cookie pulse](blue.png)
+![blue cookie pulse](docs/assets/blue.png)
 
 The blue pulse indicates that though the user has not visited this site before, the user has set consent preferences for new sites which can be applied. This is only possible when user and website are XcooBee network members.
 
-![yellow cookie pulse](yellow.png)
+![yellow cookie pulse](docs/assets/yellow.png)
 
 The yellow pulse indicates that the user has elected to participate in the XcooBee Crowd AI program for cookies. The XcooBee network will use a crowd based analysis and set the cookies based on feedback from website visitors. This is only possible when user and website are XcooBee network members.
 
-![red cookie pulse](red.png)
+![red cookie pulse](docs/assets/red.png)
 
 The red pulse indicates that we do not have any information directly from the user. In such a case, the website owner can select to use the website preference for cookies instead of user preferences. This can only be done if website and user are located outside the EU.
 
@@ -143,7 +143,7 @@ In the following we explain how each mode works.
 
 ### Disconnected Mode
 
-![diagram showing XCK in disconnected mode](offline.png)
+![diagram showing XCK in disconnected mode](docs/assets/offline.png)
 
 In disconnected mode,
 1. your web site loads and renders its content without setting cookies
@@ -156,7 +156,7 @@ Your site, then, sets the cookies according to user preferences.
 
 ### Connected Mode
 
-![alt text](online.png "diagram showing XCK in connected mode")
+![alt text](docs/assets/online.png "diagram showing XCK in connected mode")
 
 Connected mode is similar in process with differences in each step to reflect additional tools:
 

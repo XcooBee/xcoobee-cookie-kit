@@ -1,14 +1,14 @@
-import AccessTokenManager from './AccessTokenManager';
-import config from './config';
-import cookieConsentsCache from './cookieConsentsCache';
-import CookieConsentsManager from './CookieConsentsManager';
-import graphql from './graphql';
-import NotAuthorizedError from './NotAuthorizedError';
-import renderText from './renderText';
+import AccessTokenManager from "./AccessTokenManager";
+import configs from "./configs";
+import cookieConsentsCache from "./cookieConsentsCache";
+import CookieConsentsManager from "./CookieConsentsManager";
+import graphql from "./graphql";
+import NotAuthorizedError from "./NotAuthorizedError";
+import renderText from "./renderText";
 
 const core = {
   AccessTokenManager,
-  config,
+  configs,
   cookieConsentsCache,
   CookieConsentsManager,
   graphql,

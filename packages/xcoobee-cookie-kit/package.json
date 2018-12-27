@@ -16,8 +16,7 @@
     "Vladimir Maklyakov"
   ],
   "files": [
-    "dist/",
-    "src/"
+    "dist/"
   ],
   "browser": "dist/xcoobee-cookie-kit.min.js",
   "scripts": {
@@ -29,7 +28,7 @@
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
     "test": "node scripts/test-not-implemented.js",
-    "solanobuild": "node  ./node_modules/webpack/bin/webpack.js",
+    "solanobuild": "echo 'what should this be?'",
     "eslint": "eslint ./src"
   },
   "dependencies": {

@@ -215,18 +215,10 @@ export default function (xbApiUrl) {
   const graphQLRequest = graphQLRequestFactory(xbApiUrl);
   return {
     fetchCountryCode,
-    fetchCrowdAiCookieConsents: (...args) => {
-      return fetchCrowdAiCookieConsents(graphQLRequest, ...args);
-    },
+    fetchCrowdAiCookieConsents: (...args) => fetchCrowdAiCookieConsents(graphQLRequest, ...args),
     fetchUsersDefaultCookieConsents,
-    fetchUserSettings: (...args) => {
-      return fetchUserSettings(graphQLRequest, ...args);
-    },
-    fetchUsersSiteCookieConsents: (...args) => {
-      return fetchUsersSiteCookieConsents(graphQLRequest, ...args);
-    },
-    saveRemotely: (...args) => {
-      return saveRemotely(graphQLRequest, ...args);
-    },
+    fetchUserSettings: (...args) => fetchUserSettings(graphQLRequest, ...args),
+    fetchUsersSiteCookieConsents: (...args) => fetchUsersSiteCookieConsents(graphQLRequest, ...args),
+    saveRemotely: (...args) => saveRemotely(graphQLRequest, ...args),
   };
 }
