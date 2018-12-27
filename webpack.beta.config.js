@@ -1,4 +1,4 @@
-const cssnano = require('cssnano')
+const cssnano = require('cssnano');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
