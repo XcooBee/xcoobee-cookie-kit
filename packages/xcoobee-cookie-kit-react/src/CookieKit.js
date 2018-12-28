@@ -44,7 +44,6 @@ export default class CookieKit extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
-    xbOrigin: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -227,7 +226,6 @@ export default class CookieKit extends React.PureComponent {
       requestDataTypes,
       termsUrl,
       textMessage,
-      xbOrigin,
     } = this.props;
     const { hasClosed, isOpen, isShown, pulsing } = this.state;
 
@@ -271,7 +269,6 @@ export default class CookieKit extends React.PureComponent {
             requestDataTypes={requestDataTypes}
             termsUrl={termsUrl}
             textMessage={textMessage}
-            xbOrigin={xbOrigin}
           />
         )}
         {renderButton && (

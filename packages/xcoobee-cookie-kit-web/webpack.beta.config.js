@@ -8,8 +8,6 @@ const webpack = require("webpack");
 
 const CONFIG = require("./config");
 
-const xcoobeeConfig = require(CONFIG.config("beta"));
-
 module.exports = {
   module: {
     rules: [
@@ -56,9 +54,9 @@ module.exports = {
       verbose: true,
     }),
     new webpack.DefinePlugin({
-      "process.env.XB_API_URL": JSON.stringify(xcoobeeConfig.apiUrl),
-      "process.env.XB_ORIGIN": JSON.stringify(xcoobeeConfig.origin),
-      "process.env.XCK_DOMAIN": JSON.stringify(xcoobeeConfig.domain),
+      "process.env.XB_API_URL": process.env.XB_API_URL,
+      "process.env.XB_ORIGIN": process.env.XB_ORIGIN,
+      "process.env.XCK_DOMAIN": process.env.XCK_DOMAIN,
     }),
     new MiniCssExtractPlugin({
       filename: "xcoobee-cookie-kit.min.css",

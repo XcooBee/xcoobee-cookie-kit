@@ -1,3 +1,5 @@
+const xbApiUrl = process.env.XB_API_URL || "https://api.xcoobee.net";
+
 const defaultConfig = {
   checkByDefaultTypes: [],
   cssAutoLoad: true,
@@ -128,5 +130,6 @@ export {
   positions,
   requiredFields,
   tokenKey,
+  xbApiUrl,
   xcoobeeCookiesKey,
 };

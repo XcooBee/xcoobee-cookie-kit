@@ -1,8 +1,8 @@
 import { cookieDefns as allAvailCookieDefns } from "./configs";
 
-import graphQLRequestFactory from "./graphql";
+import graphQLRequest from "./graphql";
 
-function fetchUsersSitesCookieConsents(graphQLRequest, accessToken, userCursor, origin) {
+function fetchUsersSitesCookieConsents(accessToken, userCursor, origin) {
   // console.log("fetchUsersSitesCookieConsents fetching...");
   const query = `query getUsersSitesCookieConsents($userCursor: String!, $campaignName: String) {
     cookie_consents(user_cursor: $userCursor, campaign_name: $campaignName) {
@@ -19,10 +19,10 @@ function fetchUsersSitesCookieConsents(graphQLRequest, accessToken, userCursor, 
     });
 }
 
-function fetchUsersSiteCookieConsents(graphQLRequest, accessToken, origin, xcoobeeId, userCursor) {
+function fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor) {
   // console.log("fetchUsersSiteCookieConsents fetching...");
 
-  return fetchUsersSitesCookieConsents(graphQLRequest, accessToken, userCursor, origin)
+  return fetchUsersSitesCookieConsents(accessToken, userCursor, origin)
     .then((usersSitesCookieConsents) => {
       let siteCookieConsents = null;
 
@@ -69,7 +69,7 @@ function fetchUsersDefaultCookieConsents(userSettings) {
   return cookieConsents;
 }
 
-function fetchUserSettings(graphQLRequest, accessToken) {
+function fetchUserSettings(accessToken) {
   // console.log("fetchUserSettings fetching...");
   const query = `query getUserCookieConsentPreferences {
     user {
@@ -117,7 +117,7 @@ function fetchCountryCode() {
     });
 }
 
-function fetchCrowdAiCookieConsents(graphQLRequest, accessToken, campaignName) {
+function fetchCrowdAiCookieConsents(accessToken, campaignName) {
   // console.log("CookieConsentsManager#fetchCrowdAiCookieConsents fetching...");
   const query = `query getCrowdRating($campaignName: String!) {
     crowd_rating(campaign_name: $campaignName) {
@@ -148,7 +148,7 @@ function fetchCrowdAiCookieConsents(graphQLRequest, accessToken, campaignName) {
   return crowdAiCookieConsents;
 }
 
-function saveRemotely(graphQLRequest, accessToken, cookieConsents, campaignReference) {
+function saveRemotely(accessToken, cookieConsents, campaignReference) {
   // console.log("CookieConsentsManager#saveRemotely saving...");
   let promise;
   if (campaignReference && accessToken) {
@@ -211,14 +211,11 @@ function saveRemotely(graphQLRequest, accessToken, cookieConsents, campaignRefer
   return promise;
 }
 
-export default function (xbApiUrl) {
-  const graphQLRequest = graphQLRequestFactory(xbApiUrl);
-  return {
-    fetchCountryCode,
-    fetchCrowdAiCookieConsents: (...args) => fetchCrowdAiCookieConsents(graphQLRequest, ...args),
-    fetchUsersDefaultCookieConsents,
-    fetchUserSettings: (...args) => fetchUserSettings(graphQLRequest, ...args),
-    fetchUsersSiteCookieConsents: (...args) => fetchUsersSiteCookieConsents(graphQLRequest, ...args),
-    saveRemotely: (...args) => saveRemotely(graphQLRequest, ...args),
-  };
-}
+export default {
+  fetchCountryCode,
+  fetchCrowdAiCookieConsents,
+  fetchUsersDefaultCookieConsents,
+  fetchUserSettings,
+  fetchUsersSiteCookieConsents,
+  saveRemotely,
+};

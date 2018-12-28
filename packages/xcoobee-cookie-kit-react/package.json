@@ -48,8 +48,6 @@
     "babel-plugin-tailcall-optimization": "^2.0.0",
     "babel-plugin-transform-imports": "^1.5.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.21",
-    "core-js": "^2.6.1",
-    "cross-env": "^5.1.6",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-babel": "^5.2.1",

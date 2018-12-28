@@ -14,6 +14,8 @@ import xbLogo from "./assets/xcoobee-logo.svg";
 
 import CookieConsentShape from "./lib/CookieConsentShape";
 
+import { xbOrigin } from "./configs";
+
 const BLOCK = "xb-cookie-kit-popup";
 
 export default class CookieKitPopup extends React.PureComponent {
@@ -41,7 +43,6 @@ export default class CookieKitPopup extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }).isRequired,
     ]).isRequired,
-    xbOrigin: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -161,7 +162,6 @@ export default class CookieKitPopup extends React.PureComponent {
       requestDataTypes,
       termsUrl,
       textMessage,
-      xbOrigin,
     } = this.props;
     const { consentSettings, isShown, selectedLocale } = this.state;
 

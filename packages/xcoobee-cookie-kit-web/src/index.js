@@ -9,7 +9,6 @@ import {
 import CookieKitContainer from "xcoobee-cookie-kit-react";
 
 const xbCfg = {
-  xbApiUrl: process.env.XB_API_URL,
   xbOrigin: process.env.XB_ORIGIN,
   xckDomain: process.env.XCK_DOMAIN,
 };

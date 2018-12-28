@@ -10,8 +10,6 @@ const webpack = require("webpack");
 
 const CONFIG = require("./config");
 
-const xcoobeeConfig = require(CONFIG.config("development"));
-
 const WEBPACK_PORT = CONFIG.port + 1;
 
 module.exports = {
@@ -74,9 +72,9 @@ module.exports = {
       },
     }),
     new webpack.DefinePlugin({
-      "process.env.XB_API_URL": JSON.stringify(xcoobeeConfig.apiUrl),
-      "process.env.XB_ORIGIN": JSON.stringify(xcoobeeConfig.origin),
-      "process.env.XCK_DOMAIN": JSON.stringify(xcoobeeConfig.domain),
+      "process.env.XB_API_URL": process.env.XB_API_URL,
+      "process.env.XB_ORIGIN": process.env.XB_ORIGIN,
+      "process.env.XCK_DOMAIN": process.env.XCK_DOMAIN,
     }),
     new HtmlWebpackPlugin(),
     new HtmlWebpackInlineSourcePlugin(),

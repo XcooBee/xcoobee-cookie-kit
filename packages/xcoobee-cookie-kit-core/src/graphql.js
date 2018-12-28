@@ -2,7 +2,9 @@ import fetch from "isomorphic-fetch";
 
 import NotAuthorizedError from "./NotAuthorizedError";
 
-function graphQLRequest(xbApiUrl, query, variables, token) {
+import { xbApiUrl } from "./configs";
+
+function graphQLRequest(query, variables, token) {
   const init = {
     method: "post",
     mode: "cors",
@@ -47,6 +49,4 @@ function graphQLRequest(xbApiUrl, query, variables, token) {
     });
 }
 
-export default function (xbApiUrl) {
-  return (query, variables, token) => graphQLRequest(xbApiUrl, query, variables, token);
-}
+export default graphQLRequest;

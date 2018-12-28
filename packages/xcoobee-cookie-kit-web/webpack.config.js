@@ -10,8 +10,6 @@ const APP_STAGE = process.env.APP_STAGE || ENV;
 
 const WEBPACK_CONFIG = require(`./webpack.${APP_STAGE}.config.js`);
 
-const xcoobeeConfig = require(CONFIG.config(APP_STAGE));
-
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
   entry: Object.assign({}, {
     "xcoobee-cookie-kit": [
@@ -27,7 +25,7 @@ module.exports = Object.assign({}, WEBPACK_CONFIG, {
     chunkFilename: "[chunkhash].min.js",
     filename: "[name].min.js",
     path: CONFIG.dest,
-    publicPath: `${xcoobeeConfig.domain}${CONFIG.publicPath}`,
+    publicPath: `${process.env.XCK_DOMAIN}${CONFIG.publicPath}`,
   },
   module: {
     rules: [].concat(

@@ -32,6 +32,15 @@ const presets = [
 const plugins = [
   "@babel/plugin-proposal-class-properties",
   "@babel/plugin-syntax-dynamic-import",
+  [
+    "transform-inline-environment-variables", {
+      include: [
+        "XB_API_URL",
+        "XB_ORIGIN",
+        "XCK_DOMAIN",
+      ],
+    },
+  ],
 ];
 
 module.exports = {
