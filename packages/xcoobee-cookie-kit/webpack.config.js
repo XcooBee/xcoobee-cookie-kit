@@ -6,10 +6,11 @@ const webpack = require("webpack");
 const CONFIG = require("./config");
 
 const ENV = process.env.NODE_ENV || "development";
+const APP_STAGE = process.env.APP_STAGE || ENV;
 
-const WEBPACK_CONFIG = require(`./webpack.${ENV}.config.js`);
+const WEBPACK_CONFIG = require(`./webpack.${APP_STAGE}.config.js`);
 
-const xcoobeeConfig = require(CONFIG.config(ENV));
+const xcoobeeConfig = require(CONFIG.config(APP_STAGE));
 
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
   entry: Object.assign({}, {
