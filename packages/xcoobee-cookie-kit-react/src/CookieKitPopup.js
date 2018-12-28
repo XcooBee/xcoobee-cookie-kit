@@ -9,10 +9,10 @@ import {
 } from "xcoobee-cookie-kit-core/src/configs";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
 
-import closeIcon from "../assets/close-icon.svg";
-import xbLogo from "../assets/xcoobee-logo.svg";
+import closeIcon from "./assets/close-icon.svg";
+import xbLogo from "./assets/xcoobee-logo.svg";
 
-import CookieConsentShape from "../lib/CookieConsentShape";
+import CookieConsentShape from "./lib/CookieConsentShape";
 
 const BLOCK = "xb-cookie-kit-popup";
 

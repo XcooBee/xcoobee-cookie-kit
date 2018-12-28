@@ -9,7 +9,7 @@ import {
   positions,
 } from "xcoobee-cookie-kit-core/src/configs";
 
-import CookieConsentShape from "../lib/CookieConsentShape";
+import CookieConsentShape from "./lib/CookieConsentShape";
 
 import CookieKitPopup from "./CookieKitPopup";
 

@@ -18,7 +18,7 @@ import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 
 import CookieKit from "./CookieKit";
 
-import "../style/main.scss";
+import "./main.scss";
 
 // const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;

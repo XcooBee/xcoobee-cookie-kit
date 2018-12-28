@@ -6,7 +6,7 @@ import {
   defaultConfig,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
-import CookieKitContainer from "xcoobee-cookie-kit-react/src/components/CookieKitContainer";
+import CookieKitContainer from "xcoobee-cookie-kit-react";
 
 const xbCfg = {
   xbApiUrl: process.env.XB_API_URL,

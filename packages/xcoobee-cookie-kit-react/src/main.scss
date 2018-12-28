@@ -85,20 +85,20 @@ $duration: .2s;
     height: 4vw;
 
     &--default {
-      background-image: url(../assets/cookie.svg);
+      background-image: url(./assets/cookie.svg);
     }
 
     &--blue {
       animation: xb-cookie-blue 5s;
-      background-image: url(../assets/cookie.svg);
+      background-image: url(./assets/cookie.svg);
 
       @keyframes xb-cookie-blue {
         30%, 90% {
-          background-image: url(../assets/cookie-blue.svg);
+          background-image: url(./assets/cookie-blue.svg);
         }
 
         100% {
-          background-image: url(../assets/cookie.svg);
+          background-image: url(./assets/cookie.svg);
 
           &:before {
             animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
@@ -113,7 +113,7 @@ $duration: .2s;
 
     &--green {
       animation: xb-cookie-green 5s;
-      background-image: url(../assets/cookie.svg);
+      background-image: url(./assets/cookie.svg);
 
       &:before {
         background-color: $green-cookie;
@@ -121,11 +121,11 @@ $duration: .2s;
 
       @keyframes xb-cookie-green {
         30%, 90% {
-          background-image: url(../assets/cookie-green.svg);
+          background-image: url(./assets/cookie-green.svg);
         }
 
         100% {
-          background-image: url(../assets/cookie.svg);
+          background-image: url(./assets/cookie.svg);
 
           &:before {
             animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
@@ -136,7 +136,7 @@ $duration: .2s;
 
     &--yellow {
       animation: xb-cookie-yellow 5s;
-      background-image: url(../assets/cookie.svg);
+      background-image: url(./assets/cookie.svg);
 
       &:before {
         background-color: $yellow-cookie;
@@ -144,11 +144,11 @@ $duration: .2s;
 
       @keyframes xb-cookie-yellow {
         30%, 90% {
-          background-image: url(../assets/cookie-yellow.svg);
+          background-image: url(./assets/cookie-yellow.svg);
         }
 
         100% {
-          background-image: url(../assets/cookie.svg);
+          background-image: url(./assets/cookie.svg);
 
           &:before {
             animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
@@ -159,7 +159,7 @@ $duration: .2s;
 
     &--red {
       animation: xb-cookie-red 5s;
-      background-image: url(../assets/cookie.svg);
+      background-image: url(./assets/cookie.svg);
 
       &:before {
         background-color: $red-cookie;
@@ -167,11 +167,11 @@ $duration: .2s;
 
       @keyframes xb-cookie-red {
         30%, 90% {
-          background-image: url(../assets/cookie-red.svg);
+          background-image: url(./assets/cookie-red.svg);
         }
 
         100% {
-          background-image: url(../assets/cookie.svg);
+          background-image: url(./assets/cookie.svg);
 
           &:before {
             animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
