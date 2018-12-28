@@ -229,6 +229,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <div className={`${BLOCK}__custom-select`}>
                 { locales.map(locale => (
                   <button
+                    key={locale}
                     className={`xb-cookie-kit__button ${BLOCK}__language-picker-button`}
                     type="button"
                     onClick={() => this.handleLocaleChange(locale)}
