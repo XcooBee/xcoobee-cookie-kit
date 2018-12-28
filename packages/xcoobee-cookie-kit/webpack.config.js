@@ -15,10 +15,11 @@ const xcoobeeConfig = require(CONFIG.config(APP_STAGE));
 module.exports = Object.assign({}, WEBPACK_CONFIG, {
   entry: Object.assign({}, {
     "xcoobee-cookie-kit": [
-      "core-js/shim",
-      "core-js/es6/promise",
-      "core-js/es6/symbol",
-      "fetch-polyfill",
+      "core-js/modules/es6.array.find", // Needed for IE 11
+      "core-js/modules/es6.promise", // Needed for IE 11
+      "core-js/modules/es6.string.from-code-point", // Needed for IE 11
+      "core-js/modules/es7.array.includes", // Needed for IE 11
+      "core-js/modules/es7.object.values", // Needed for IE 11
       CONFIG.entry,
     ],
   }, WEBPACK_CONFIG.entry || {}),
