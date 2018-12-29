@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+
 import {
   clearAccessToken,
   getAccessToken,
@@ -19,8 +20,6 @@ import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 import { xckDomain } from "./configs";
 
 import CookieKit from "./CookieKit";
-
-import "./main.scss";
 
 // const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;

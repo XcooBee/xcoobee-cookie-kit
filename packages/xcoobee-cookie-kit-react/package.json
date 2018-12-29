@@ -21,7 +21,7 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && babel src --out-dir dist --copy-files",
+    "build": "npm run clean && node-sass src/xck-react.scss dist/xck-react.css && babel src --out-dir dist --ignore src/xck-react.scss --copy-files && rimraf dist/xck-react.scss",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
     "test": "node scripts/test-not-implemented.js",
@@ -51,6 +51,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "node-sass": "^4.11.0",
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
