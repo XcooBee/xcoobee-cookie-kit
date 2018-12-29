@@ -6,12 +6,7 @@ import {
   defaultConfig,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
-import CookieKitContainer from "xcoobee-cookie-kit-react";
-
-const xbCfg = {
-  xbOrigin: process.env.XB_ORIGIN,
-  xckDomain: process.env.XCK_DOMAIN,
-};
+import CookieKitContainer from "xcoobee-cookie-kit-react/src";
 
 function checkRequiredFields(config) {
   const errors = [];
@@ -110,7 +105,6 @@ class CookitKitInitializer {
         <CookieKitContainer
           ref={this._compRef}
           {...this._config}
-          {...xbCfg}
         />,
         placeHolderDom,
       );
