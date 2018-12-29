@@ -27,9 +27,9 @@
     "dev": "npm run clean && env-cmd development webpack-dev-server --hot --progress",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "test": "node scripts/test-not-implemented.js",
+    "lint": "eslint src",
     "solanobuild": "echo 'what should this be?'",
-    "eslint": "eslint ./src"
+    "test": "node scripts/test-not-implemented.js"
   },
   "dependencies": {
     "core-js": "^2.6.1",
@@ -81,7 +81,7 @@
     "webpack-dev-server": "^3.1.14"
   },
   "peerDependencies": {
-    "react": "^16.2.1",
+    "react": "^16.2",
     "react-dom": "^16.2.1"
   }
 }

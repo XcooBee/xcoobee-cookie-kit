@@ -235,7 +235,8 @@ export default class CookieKitPopup extends React.PureComponent {
                     onClick={() => this.handleLocaleChange(locale)}
                   >
                     {locale}
-                  </button>))}
+                  </button>
+                ))}
               </div>
             )}
           </div>

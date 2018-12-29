@@ -24,9 +24,9 @@
     "build": "npm run clean && node-sass src/xck-react.scss dist/xck-react.css && babel src --out-dir dist --ignore src/xck-react.scss --copy-files && rimraf dist/xck-react.scss",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "test": "node scripts/test-not-implemented.js",
+    "lint": "eslint src",
     "solanobuild": "echo 'what should this be?'",
-    "eslint": "eslint ./src"
+    "test": "node scripts/test-not-implemented.js"
   },
   "dependencies": {
     "classnames": "^2.2.6",
@@ -55,7 +55,7 @@
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
-    "react": "^16.2.1",
+    "react": "^16.2",
     "react-dom": "^16.2.1"
   }
 }

@@ -23,9 +23,9 @@
     "build": "npm run clean && babel src --out-dir dist --copy-files",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "test": "node scripts/test-not-implemented.js",
+    "lint": "eslint src",
     "solanobuild": "echo 'what should this be?'",
-    "eslint": "eslint ./src"
+    "test": "node scripts/test-not-implemented.js"
   },
   "dependencies": {
     "graphql": "^14.0.2",
