@@ -1,3 +1,9 @@
+import "core-js/modules/es6.array.find"; // Needed for IE 11
+import "core-js/modules/es6.promise"; // Needed for IE 11
+import "core-js/modules/es6.string.from-code-point"; // Needed for IE 11
+import "core-js/modules/es7.array.includes"; // Needed for IE 11
+import "core-js/modules/es7.object.values"; // Needed for IE 11
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
