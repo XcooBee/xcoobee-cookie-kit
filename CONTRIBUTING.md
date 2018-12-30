@@ -18,7 +18,7 @@ For example, it will locally install Lerna.
 Then run the following to install all the dependencies of the packages.
 
 ```sh
-npx lerna bootstrap
+npx lerna bootstrap --hoist
 ```
 
 Note: This command takes several minutes to run. It may appear to hang during
@@ -34,7 +34,7 @@ See https://github.com/lerna/lerna for more info.
 To install the dependencies of this project's packages, use
 
 ```sh
-npx lerna bootstrap
+npx lerna bootstrap --hoist
 ```
 
 In addition to running `npm install`, Lerna also links together each package.
@@ -42,14 +42,14 @@ In addition to running `npm install`, Lerna also links together each package.
 **Adding New Dependencies**
 
 ```sh
-# Add `some-package` as a dependency for all packages:
-npx lerna add some-package
+# Add a package as a dependency for all packages:
+npx lerna add <package>
 
-# Add `some-package` as a dependency for packages matching `glob`:
-npx lerna add some-package --scope glob
+# Add a package as a dependency for packages matching `glob`:
+npx lerna add <package> --scope <glob>
 
-# Add `some-package` as a devDependency for packages matching `glob`:
-npx lerna add --dev some-package --scope glob
+# Add a package as a devDependency for packages matching `glob`:
+npx lerna add <package> --scope <glob> --dev
 ```
 
 The `lerna add` command is similar to `npm install` or `yarn add`. However, it
@@ -59,7 +59,7 @@ will maintain the links between the packages of this monorepo.
 
 ```sh
 npx lerna run <script>
-npx lerna run <script> --scope glob
+npx lerna run <script> --scope <glob>
 ```
 
 **Building All Packages**
