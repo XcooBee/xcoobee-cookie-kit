@@ -1,5 +1,3 @@
-const path = require("path");
-
 const autoprefixer = require("autoprefixer");
 const BrowserSyncPlugin = require("browser-sync-webpack-plugin");
 const cssnano = require("cssnano");
@@ -9,23 +7,23 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const proxyMiddleware = require("http-proxy-middleware");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const config = require("./config");
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-const isEnvDevelopment = NODE_ENV === 'development';
-const isEnvProduction = NODE_ENV === 'production';
+const isEnvDevelopment = NODE_ENV === "development";
+const isEnvProduction = NODE_ENV === "production";
 
 const devServerPort = config.port + 1;
 
-const analyze = process.argv.includes('--analyze');
+const analyze = process.argv.includes("--analyze");
 
-// console.log('webpack.config.js');
-// console.log('NODE_ENV:', NODE_ENV);
-// console.log('isEnvDevelopment:', isEnvDevelopment);
-// console.log('isEnvProduction:', isEnvProduction);
+// console.log("webpack.config.js");
+// console.log("NODE_ENV:", NODE_ENV);
+// console.log("isEnvDevelopment:", isEnvDevelopment);
+// console.log("isEnvProduction:", isEnvProduction);
 
 const webpackConfig = {
   mode: isEnvProduction ? "production" : "development",
@@ -122,13 +120,6 @@ const webpackConfig = {
     isEnvDevelopment && new HtmlWebpackInlineSourcePlugin(),
     analyze && new BundleAnalyzerPlugin(),
   ].filter(Boolean),
-  resolve: {
-    alias: {
-      // Note: This prevents React from accidentally being bundle twice. Without this,
-      // webpack includes React for `xcoobee-cookie-kit-react` *AND* for this package.
-      react: path.resolve(__dirname, 'node_modules/react'),
-    },
-  },
   devServer: isEnvDevelopment
     ? {
       port: devServerPort,
@@ -138,7 +129,7 @@ const webpackConfig = {
   watch: isEnvDevelopment,
 };
 
-// console.log('webpackConfig:');
+// console.log("webpackConfig:");
 // console.dir(webpackConfig);
 
 module.exports = webpackConfig;
