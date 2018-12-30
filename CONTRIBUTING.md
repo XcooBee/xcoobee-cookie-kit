@@ -18,7 +18,7 @@ For example, it will locally install Lerna.
 Then run the following to install all the dependencies of the packages.
 
 ```sh
-npx lerna bootstrap
+npx lerna bootstrap --hoist
 ```
 
 Note: This command takes several minutes to run. It may appear to hang during
@@ -34,7 +34,7 @@ See https://github.com/lerna/lerna for more info.
 To install the dependencies of this project's packages, use
 
 ```sh
-npx lerna bootstrap
+npx lerna bootstrap --hoist
 ```
 
 In addition to running `npm install`, Lerna also links together each package.
