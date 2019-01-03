@@ -1,10 +1,10 @@
 hooks:
-  pre_setup: npm install && npx lerna bootstrap
-  post_build: npm run web:build && npm run web:clear
+  pre_setup: npm install
+  post_build: npm run build && npm run clear
 nodejs:
   version: '8.10.0'
 tests:
-  - npm web:test
+  - npm test
 environment:
   PORT: '3000'
   XBEE_STAGE: 'test'

@@ -1,0 +1,61 @@
+{
+  "name": "xcoobee-cookie-kit-react",
+  "version": "0.0.0",
+  "description": "Cookie Consent Management for Websites built with React.",
+  "keywords": [
+    "consent",
+    "cookie",
+    "management",
+    "react",
+    "xcoobee"
+  ],
+  "license": "Apache-2.0",
+  "author": "XcooBee LLC",
+  "contributors": [
+    "Bilal Soylu",
+    "Danny Hurlburt",
+    "Vladimir Maklyakov"
+  ],
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run clean && node-sass src/xck-react.scss dist/xck-react.css && babel src --out-dir dist --ignore src/xck-react.scss --copy-files && rimraf dist/xck-react.scss",
+    "clean": "rimraf dist/",
+    "clear": "node scripts/clear.js",
+    "lint": "eslint src",
+    "solanobuild": "echo 'what should this be?'",
+    "test": "node scripts/test-not-implemented.js"
+  },
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "prop-types": "^15.6.0",
+    "react-country-flag": "^1.0.1",
+    "xcoobee-cookie-kit-core": "^0.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-transform-react-inline-elements": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-tailcall-optimization": "^2.0.0",
+    "babel-plugin-transform-imports": "^1.5.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.21",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-babel": "^5.2.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "node-sass": "^4.11.0",
+    "rimraf": "^2.6.2"
+  },
+  "peerDependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.3"
+  }
+}
