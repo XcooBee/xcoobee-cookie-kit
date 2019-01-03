@@ -486,6 +486,8 @@ You need to define your handler in JS. We are including a few helper functions t
 As outlined in a few areas, when you wish to start the XCK dialog, include the `<script>` tags in your HTML stream.
 
 ```html
+<script src="https://unpkg.com/react@16.3.2/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16.3.3/umd/react-dom.production.min.js" crossorigin></script>
 <script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
 <script>
   XcooBee.kit.initialize({
@@ -772,6 +774,8 @@ You need to place this in the HTML of your site in between `<head>` and `<body>`
 
 
 ```html
+<script src="https://unpkg.com/react@16.3.2/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16.3.3/umd/react-dom.production.min.js" crossorigin></script>
 <script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
 <script>
   XcooBee.kit.initialize({

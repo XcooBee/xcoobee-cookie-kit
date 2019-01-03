@@ -4,7 +4,8 @@
   "scripts": {
     "build": "lerna run build",
     "lint": "lerna run lint",
-    "test": "lerna run test",
+    "__comment__test": "Ignoring the React example package because it runs its tests in interactive mode, and it is a little bit of a pain to disable interactive mode.",
+    "test": "lerna run test --ignore xcoobee-cookie-kit-example-react",
     "web:build": "lerna run build --scope xcoobee-cookie-kit-web",
     "web:clear": "lerna run clear --scope xcoobee-cookie-kit-web",
     "web:start": "lerna run dev --scope xcoobee-cookie-kit-web"
