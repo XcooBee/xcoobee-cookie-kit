@@ -6,9 +6,9 @@ import {
   defaultConfig,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
-import CookieKitContainer from "xcoobee-cookie-kit-react/src";
+import CookieKitContainer from "react-cookie-kit/src";
 
-import "xcoobee-cookie-kit-react/src/xck-react.scss";
+import "react-cookie-kit/src/xck-react.scss";
 
 function checkRequiredFields(config) {
   const errors = [];
