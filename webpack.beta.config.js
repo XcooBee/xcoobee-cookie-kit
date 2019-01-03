@@ -1,3 +1,4 @@
+const cssnano = require('cssnano');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
@@ -5,6 +6,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const CONFIG = require('./config');
+const xcoobeeConfig = require(CONFIG.config('beta'));
 
 module.exports = {
   module: {
@@ -18,20 +20,16 @@ module.exports = {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              minimize: {
-                discardComments: { removeAll: true }
-              }
-            }
-          },
+          'css-loader',
           {
             loader: 'postcss-loader',
             options: {
-              plugins: function () {
-                return [autoprefixer];
-              }
+              plugins: () => [
+                autoprefixer,
+                cssnano({
+                  preset: 'default',
+                }),
+              ],
             }
           },
           { loader: 'sass-loader' }
@@ -45,7 +43,7 @@ module.exports = {
       debug: false
     }),
     new CompressionPlugin({
-      asset: '[path].gz',
+      filename: '[path].gz',
       algorithm: 'gzip',
       threshold: 10240,
       minRatio: 0.8
@@ -54,6 +52,11 @@ module.exports = {
       root: CONFIG.root,
       verbose: true,
       dry: false
+    }),
+    new webpack.DefinePlugin({
+      'XB_ORIGIN': JSON.stringify(xcoobeeConfig.origin),
+      'XCK_DOMAIN': JSON.stringify(xcoobeeConfig.domain),
+      'XB_API_URL': JSON.stringify(xcoobeeConfig.apiUrl)
     }),
     new MiniCssExtractPlugin({
       filename: 'xcoobee-cookie-kit.min.css'

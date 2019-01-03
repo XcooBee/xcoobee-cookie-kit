@@ -6,9 +6,9 @@ The objective of the XcooBee Cookie Kit (XCK) is to enable websites to manage th
 
 The XCK makes it easy to plugin cookie consent into your website. It handles all user interaction to obtain consent and lets the website know which cookies can be used for each users while they visit your website. Similarly, your website can now be informed when users change their consent even when they are not visiting it.
 
-THe XCK is one of the most transparent and frictionless ways to manage cookies on your site. It will not pop-up, in, or otherwise hinder the user experience when it is not needed. Yet, at the same time, it provides full compliance with European e-directives and related GDPR rules. 
+THe XCK is one of the most transparent and frictionless ways to manage cookies on your site. It will not pop-up, in, or otherwise hinder the user experience when it is not needed. Yet, at the same time, it provides full compliance with European e-directives and related GDPR rules.
 
-Website owners can easily react to data-requests, and report on privacy related requests if needed via the XcooBee network.
+Website owners can easily react to data-requests and report on privacy related requests if needed via the XcooBee network.
 
 The XCK does not require a XcooBee connection to work for your website. You will still have access to the majority of user consent gathering but will not have central insight and consent management.
 
@@ -19,7 +19,7 @@ The XCK is responsive and will adjust easily to different screens including mobi
 
 ## Easy Cookie Classification
 
-The XCK uses a classification system for cookies rather than listing each individual cookie with its origin. By putting cookies into logical groups the XCK removes the need for technical expertise to distinguish individual cookies. Users can make easier decision based on the intended use of the cookie rather than the domain name or any other technical criteria.
+The XCK uses a classification system for cookies rather than listing each individual cookie with its origin. By putting cookies into logical groups the XCK removes the need for technical expertise to distinguish individual cookies. Users can make an easier decision based on the intended use of the cookie rather than the domain name or any other technical criteria.
 
 The XcooBee classification system broadly places cookies into one of the following types:
 
@@ -31,26 +31,26 @@ The XcooBee classification system broadly places cookies into one of the followi
 For more information please visit [XcooBee Cookie Classification](https://www.xcoobee.com/docs/xcoobee-concepts/cookies/).
 
 
-
 ## Example Applications
 
-We have included two example applications that make use of the XCK so you can check it in action yourself.
+We have included two example applications that make use of the XCK so you can see it in action yourself.
 
 ### Single Page Application
 
-Our cafe application demonstrates the use of XCK in a single page application. You can unzip and deploy on a webserver like IIS or Apache. The files are located in `examples/cafe-spa.zip`. Review the index.html file for instructions/explanations.
+Our cafe application demonstrates the use of XCK in a single page application. You can unzip and deploy on a webserver like IIS or Apache. The files are located in `examples/cafe-spa.zip`. Review the `index.html` file for instructions/explanations.
 
 ### Sample Request/Response app based on NodeJs & Express
 
 Our pizza application demonstrates the use of the XCK in a request/response based application. You can unzip and deploy it directly on your system. You will need nodejs installed on your system. Review the `README.md` file for instructions/explanations.
- 
+
+
 ## How does this Work
 
 ### The Cookie
 
 ![the cookie](cookie.png)
 
-The XCK displays a floating cookie icon in the corner of the screen you select. By clicking on the cookie users open a popup consent dialog that allows them to interact with your site.
+The XCK displays a floating cookie icon on the screen in a corner of your choice. By clicking on the cookie icon, users open a popup consent dialog that allows them to interact with your site.
 
 ![showing XCK cookie popup](cookie_popup.png)
 
@@ -59,13 +59,11 @@ The XCK can automatically determine when a full consent dialog or just the cooki
 When using the XCK you:
 
 - a) first determine which cookies you are currently using on your site
-- b) then select which XcooBee type (classification) best fits each cookie
-- c) display to your site visitors the XCK consent dialog pop-up to ask for permission
-- d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler or target url pattern 
+- b) then select which XcooBee cookie type (classification) that best fits each cookie
+- c) display to your site visitors the XCK consent dialog popup to ask for permission
+- d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler or target url pattern
 
-After the cookie consent is already obtained, the XCK will not display another popup. You can query the status via JavaScript to set the cookies again, or track this on the backend side if you using Request/Response type application.
-
-
+If the cookie consent is already obtained, the XCK will not display another popup. You can query the status via JavaScript to set the cookies again, or track this on the backend side if you're using Request/Response type application.
 
 ### Example walk through
 
@@ -86,31 +84,29 @@ Personalization: user cookie
 
 Statistics: local webserver cookie & google analytics cookie
 
-`c` You [initialize](#c-load-xcoobee-cookie-kit) display the XCK script to displays user consent popup. 
+`c` You [initialize and render](#c-load-xcoobee-cookie-kit) the XCK script to display the user consent popup.
 
 `d` User makes selection and clicks OK.
 
 You set the needed cookies using a JavaScript handler process that gets invoked by the XCK.
 
-
 ### Cookie Pulses
 
-The cookie kit uses a short cut evaluation method  to check whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon that is placed into a designated corner, pulses in different colors to indicate a shortcut selection has occurred.
+The cookie kit uses a short cut evaluation method to check whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon that is placed into a designated corner, pulses in different colors to indicate a shortcut selection has occurred.
 
-![green cookie pulse](green.png) 
+![green cookie pulse](green.png)
 
-The green pulse indicates that the user has visited this site before and the site cookie consent settings are known and can be reapplied.
+The green pulse indicates that the user has visited this site before and the site's cookie consent settings are known and can be reapplied.
 
-
-![blue cookie pulse](blue.png) 
+![blue cookie pulse](blue.png)
 
 The blue pulse indicates that though the user has not visited this site before, the user has set consent preferences for new sites which can be applied. This is only possible when user and website are XcooBee network members.
 
-![yellow cookie pulse](yellow.png) 
+![yellow cookie pulse](yellow.png)
 
 The yellow pulse indicates that the user has elected to participate in the XcooBee Crowd AI program for cookies. The XcooBee network will use a crowd based analysis and set the cookies based on feedback from website visitors. This is only possible when user and website are XcooBee network members.
 
-![red cookie pulse](red.png) 
+![red cookie pulse](red.png)
 
 The red pulse indicates that we do not have any information directly from the user. In such a case, the website owner can select to use the website preference for cookies instead of user preferences. This can only be done if website and user are located outside the EU.
 
@@ -121,7 +117,7 @@ You activate the XCK by embedding it into your site via `<script>` tags. In addi
 
 Some of these include:
 
-- position of the hover button
+- position of the icon button
 - terms url
 - cookie policy url
 - expiration time for the widget
@@ -149,7 +145,7 @@ In the following we explain how each mode works.
 
 ![diagram showing XCK in disconnected mode](offline.png)
 
-In disconnected mode, 
+In disconnected mode,
 1. your web site loads and renders its content without setting cookies
 2. loads the XCK with your parameters
 3. the XCK handles user interaction for cookie consent
@@ -162,101 +158,96 @@ Your site, then, sets the cookies according to user preferences.
 
 ![alt text](online.png "diagram showing XCK in connected mode")
 
-The connected mode is similar in process with differences in each step to reflect additional tools:
+Connected mode is similar in process with differences in each step to reflect additional tools:
 
-In connected mode, 
+In connected mode,
+
 1. your web site loads and renders its content without setting cookies
 2. loads the XCK with your parameters including your campaign references
 3. the XCK handles user interaction for cookie consent. For XcooBee users the XCK transparently negotiates with your site based on user preferences. XcooBee users can surf sites with little interruption.
 4. XCK communicates back to your site which cookie types can be set.
 
-Your site, then, sets the cookies according to user preferences.
+   Your site, then sets the cookies according to user preferences.
 
-5. As site owner, you can review all managed cookie consent. Report on compliance issues, take action when users' change their consent even when not visiting your site. Your site visitors (users) can actively manage cookie consent centrally, and transparently surf your site without annoying pop-ups.
+5. As site owner, you can review all managed cookie consent. Report on compliance issues, take action when users change their consent even when not visiting your site. Your site visitors (users) can actively manage cookie consent centrally, and transparently surf your site without annoying popups.
 
-# How to Use the XcooBee Cookie Kit 
+
+## How to Use the XcooBee Cookie Kit
 
 This section explains how to use the XCK on your site.
 
-## How to use Cookie Kit in Single Page Application (SPA)
+### How to use Cookie Kit in Single Page Application (SPA)
 
-When  using a SPA you can specify a JavaScript handler that can receive the result of the user interaction for cookie consent. Thereafter you need to load the scripts and/or set the cookies directly based on the user's interaction.
+When using a SPA you can specify a JavaScript handler that can receive the result of the user interaction for cookie consent. Thereafter you need to load the scripts and/or set the cookies directly based on the user's interaction.
 
 Since this can change, you also need to be able to remove the cookies when users change their mind.
 
 In both cases, the XCK will invoke your handler function after the user has completed their interaction with XCK.
 
-XCK will call your JavaScript handler with JS object as function parameter. The user preferences are enumerated in the argument.
+XCK will call your JavaScript handler with a JavaScript object. The user preferences are enumerated in the argument.
 
 Here is and example object.
-
-Example JS object:
 
 ```json
 {
   "application": true,
   "usage": true,
   "statistics": false,
-  "advertising": false 
+  "advertising": false
 }
-
 ```
 
 Thus the call signature will be: `handlerFunction(cookieObject)`.
 
-For example if your handler function is named `cookieHandler` and the  function argument object is named `userCookiePreferences` this would be the signature of your function:
+For example if your handler function is named `cookieHandler` and the function argument object is named `userCookiePreferences` this would be the signature of your function:
 
-```JavaScript
-
-  cookieHandler(userCookiePreferences);
-
+```js
+cookieHandler(userCookiePreferences);
 ```
 
 Sample cookieHandler function:
 
-```JavaScript
+```js
+function cookieHandler(consentSettings) {
+  if (consentSettings.application) {
+    // set required cookies here
+    // ...
+  } else {
+    // remove required cookie here
+    // ...
+  };
 
-function cookieHandler(cookieObject) {
-    if (cookieObject.application) {
-      // set required cookies here
-      // ...
-    } else {
-      // remove required cookie here
-      // ...
-    };
+  if (consentSettings.usage) {
+    // set user personalization cookies here
+    // ...
+  } else {
+    // remove user personalization cookies here
+    // ...
+  };
 
-    if (cookieObject.usage) {
-      // set user personalization cookies here
-      // ...
-    } else {
-      // remove user personalization cookies here
-      // ...
-    };
+  if (consentSettings.statistics) {
+    // set site statistics gathering cookies here
+    // ...
+  } else {
+    // remove site statistics gathering cookies here
+    // ...
+  };
 
-    if (cookieObject.statistics) {
-      // set site statistics gathering cookies here
-      // ...
-    } else {
-      // remove site statistics gathering cookies here
-      // ...
-    };
-
-    if (cookieObject.advertising) {
-      // set advertising and marketing and tracking cookies here
-      // ...
-    } else {
-      // remove advertising and marketing and tracking cookies here
-      // ...
-    };
+  if (consentSettings.advertising) {
+    // set advertising and marketing and tracking cookies here
+    // ...
+  } else {
+    // remove advertising and marketing and tracking cookies here
+    // ...
+  };
 }
-
 ```
 
 See a more [fully developed example](#b-write-a-js-handler) later in this document.
 
-## How to use Cookie Kit with Request/Response systems like PHP, JSP, .net, CFML etc.
+### How to use Cookie Kit with Request/Response systems like PHP, JSP, .net, CFML etc.
 
-The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need an web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
+The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need a web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
 
 However, depending on your situation you still might be able to handle all interactions inside JavaScript without reloads or calls to backend (see example below)
 
@@ -264,9 +255,9 @@ The HTTP POST will be using `CONTENT-TYPE` = `application/json`
 
 The body content is a JSON object with the user selection of cookie types. Only the cookie types for which you have asked for consent will be included.
 
-```JSON
+```json
 {
-  "time": "Wed, 31 Oct 2018 16:40:28 GMT",
+  "time": "2018-10-31T16:40:28",
   "code": 200,
   "result": {
     "application": true,
@@ -292,7 +283,6 @@ A sample process to handle cookie consent via a Request/Response and a `handler-
 4. `handler-page` saves user decision and flag that user has made decision
 5. for each subsequent call, the `handler-page` checks that user decision is available and sets the cookie types
 
-
 Your `handler-page` will probably employ this kind of logic
 
 - determine whether this is a regular call (included) or call from XCK to save user decision
@@ -301,11 +291,10 @@ Your `handler-page` will probably employ this kind of logic
     - if we do not have decision -> load XCK by inserting `<script>` tags into HTML to present cookie choice to user
     - if we have user-cookie-decision -> load cookies for each allowed type
 - if called from XCK
-  - save user-cookie-decision 
+  - save user-cookie-decision
 
- 
 
-## Example use with PHP page combined with Cookie Kit
+### Example use with PHP page combined with Cookie Kit
 
 In this example we assume that we have a website running PHP engine to render webpages. As part of this process the website will load the XCK to manage user consent. You are managing cookie creation via JavaScript.
 
@@ -315,15 +304,15 @@ a. PHP page writes the values for each of cookie types into HTML/Javascript stre
 
 b. Include JS Handler Code (example below)
 
-c. Load XCK 
+c. Load XCK
 
 
-### `a` Pipe PHP variables with script tags into HTML 
+#### `a` Pipe PHP variables with script tags into HTML
 
 In this example, we assume that you have JS `<script>` tags for all the cookies that you need to create and saved them to corresponding PHP variables in this manner:
 
 ```html
-$cookie_scripts_application => the required application cookies, e.g. 
+$cookie_scripts_application => the required application cookies, e.g.
 
 for example:
 <script>
@@ -367,9 +356,9 @@ for example:
 You would output each of these be HTML encoding them, like so
 
 ```html
-<script type="JavaScript">
+<script>
 // define cookie script management scope in JS
-let myCookieScripts = {};
+var myCookieScripts = {};
 
 // most likely we can set this directly since these would be required
 myCookieScripts.application = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_application )); ?>";
@@ -379,167 +368,157 @@ myCookieScripts.user = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $co
 myCookieScripts.statistics = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_statistics )); ?>";
 
 myCookieScripts.advertising = "<?php echo htmlentities(preg_replace( "/\r|\n/", "", $cookie_scripts_advertising )); ?>";
-
 </script>
 ```
 
-### `b` write a JS Handler
+#### `b` write a JS Handler
 
 You need to define your handler in JS. We are including a few helper functions that will actually set your cookies and load your scripts.
 
-```Javascript
-     /**
-     * parse html encoded script directives
-     * @param {array} loadScripts - The array of scripts to be loaded 
-     * @return {object} the fully parsed html elements
-     */         
-    function xckParseHtml(htmlData) {
-        //parse encoded via text area
-        let txt = document.createElement("textarea");
-        txt.innerHTML = htmlData;
-        
-        // now add this as html to our mirror doc
-        let el=document.createElement("html");	
-        el.innerHTML = txt.innerText;
-        return el;
-    }
-    
-    /**
-     * Load Javascript. Can load from remote file or code.
-     * @param {object} loadScripts - The HTMLCollection of scripts to be loaded  
-     */         
-    function xckLoadJs(loadScripts) {
-        
-        let i=0;
-        if (loadScripts.length > 0){
-            for (i=0; i < loadScripts.length; i++){
-                let item = loadScripts[i];
-                let script = document.createElement("script");
-                script.type = "text/javascript";
+```js
+  /**
+   * parse html encoded script directives
+   * @param {array} loadScripts - The array of scripts to be loaded
+   * @return {object} the fully parsed html elements
+   */
+  function xckParseHtml(htmlData) {
+    //parse encoded via text area
+    var txt = document.createElement("textarea");
+    txt.innerHTML = htmlData;
 
-                if (item.src === "") {
-                    script.text = item.text;
-                } else {
-                    //load from file
-                    script.async = true; // we always load async
-                    script.src = item.src;
-                    script.onload = function(){
-                        console.log(`cookie script from ${item.src} is ready!`);                    
-                    };      
-                    
-                    // other elements
-                    if (item.integrity !== "") {
-                        script.integrity = item.integrity;
-                    }          
-                    if (item.crossOrigin !== "") {
-                        script.crossOrigin = item.crossOrigin;
-                    }                      
-                }
+    // now add this as html to our mirror doc
+    var el=document.createElement("html");
+    el.innerHTML = txt.innerText;
+    return el;
+  }
 
-                // now append to document for execution
-                document.body.appendChild(script);
+  /**
+   * Load Javascript. Can load from remote file or code.
+   * @param {object} loadScripts - The HTMLCollection of scripts to be loaded
+   */
+  function xckLoadJs(loadScripts) {
+    var i = 0;
+    if (loadScripts.length > 0){
+      for (i = 0; i < loadScripts.length; i++) {
+        var item = loadScripts[i];
+        var script = document.createElement("script");
 
+        if (item.src === "") {
+          script.text = item.text;
+        } else {
+          // load from file
+          script.async = true; // we always load async
+          script.src = item.src;
+          script.onload = function () {
+            console.log(`cookie script from ${item.src} is ready!`);
+          };
 
-            }
+          // other elements
+          if (item.integrity !== "") {
+            script.integrity = item.integrity;
+          }
+          if (item.crossOrigin !== "") {
+            script.crossOrigin = item.crossOrigin;
+          }
         }
-             
-     }
+
+        // now append to document for execution
+        document.body.appendChild(script);
+      }
+    }
+  }
 
   /**
    * This will be invoked by XCK when user clicks OK button
-   * @param {object} cookieObject - The collection containing user decisions 
-   */    
-  function myCookieHandler(cookieObject) {
+   * @param {object} consentSettings - The collection containing user decisions
+   */
+  function myCookieHandler(consentSettings) {
+    // parse cookie scripts passed from PHP
+
+    if (consentSettings.application) {
       // parse cookie scripts passed from PHP
+      let myEl = xckParseHtml(myCookieScripts.application);
+      let appScripts = myEl.getElementsByTagName("script");
+      // set required cookies here
+      xckLoadJs(appScripts);
+    } else {
+      // remove required cookie here
+      // ...
+    };
 
+    if (consentSettings.usage) {
+      // parse cookie scripts passed from PHP
+      let myEl = xckParseHtml(myCookieScripts.user);
+      let userScripts = myEl.getElementsByTagName("script");
+      // set required cookies here
+      xckLoadJs(userScripts);
+    } else {
+      // remove user personalization cookies here
+      // ...
+    };
 
-      if (cookieObject.application) {
-        // parse cookie scripts passed from PHP
-        let myEl = xckParseHtml(myCookieScripts.application);
-        let appScripts = myEl.getElementsByTagName("script");
-        // set required cookies here
-        xckLoadJs(appScripts);
-      } else {
-        // remove required cookie here
-        // ...
-      };
+    if (consentSettings.statistics) {
+      // parse cookie scripts passed from PHP
+      let myEl = xckParseHtml(myCookieScripts.statistics);
+      let statScripts = myEl.getElementsByTagName("script");
+      // set required cookies here
+      xckLoadJs(statScripts);
+    } else {
+      // remove site statistics gathering cookies here
+      // ...
+    };
 
-      if (cookieObject.usage) {
-        // parse cookie scripts passed from PHP
-        let myEl = xckParseHtml(myCookieScripts.user);
-        let userScripts = myEl.getElementsByTagName("script");
-        // set required cookies here
-        xckLoadJs(userScripts);
-      } else {
-        // remove user personalization cookies here
-        // ...
-      };
-
-      if (cookieObject.statistics) {
-        // parse cookie scripts passed from PHP
-        let myEl = xckParseHtml(myCookieScripts.statistics);
-        let statScripts = myEl.getElementsByTagName("script");
-        // set required cookies here
-        xckLoadJs(statScripts);
-      } else {
-        // remove site statistics gathering cookies here
-        // ...
-      };
-
-      if (cookieObject.advertising) {
-        // parse cookie scripts passed from PHP
-        let myEl = xckParseHtml(myCookieScripts.advertising);
-        let adsScripts = myEl.getElementsByTagName("script");
-        // set required cookies here
-        xckLoadJs(adsScripts);
-      } else {
-        // remove advertising and marketing and tracking cookies here
-        // ...
-      };
+    if (consentSettings.advertising) {
+      // parse cookie scripts passed from PHP
+      let myEl = xckParseHtml(myCookieScripts.advertising);
+      let adsScripts = myEl.getElementsByTagName("script");
+      // set required cookies here
+      xckLoadJs(adsScripts);
+    } else {
+      // remove advertising and marketing and tracking cookies here
+      // ...
+    };
   }
 ```
 
-### `c` Load XcooBee Cookie Kit
+#### `c` Load XcooBee Cookie Kit
 
 As outlined in a few areas, when you wish to start the XCK dialog, include the `<script>` tags in your HTML stream.
 
-
 ```html
-
- <script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
-
- <script type="text/javascript">
-   XcooBee.kit.initialize({
-     checkByDefaultTypes: "application",
-     cookieHandler: "myCookieHandler",
-     position: "right_bottom",
-     privacyUrl: "http://mysite.com/privacy",
-     requestDataTypes: ["application","usage","statistics"],      
-     termsUrl: "http://mysite.com/terms",
-     textMessage: "Welcome to our shopping site. We use cookies to deliver a better service to you. Please let us know if this is OK."
-   });
- </script>  
-
+<script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
+<script>
+  XcooBee.kit.initialize({
+    checkByDefaultTypes: ["application"],
+    cookieHandler: "myCookieHandler",
+    position: "right_bottom",
+    privacyUrl: "http://mysite.com/privacy",
+    requestDataTypes: ["application", "usage", "statistics"],
+    termsUrl: "http://mysite.com/terms",
+    textMessage: "Welcome to our shopping site. We use cookies to deliver a better service to you. Please let us know if this is OK."
+  });
+  XcooBee.kit.render();
+</script>
 ```
 
-## How use the XCK with XcooBee subscription and high security data exchange
+### How to use the XCK with XcooBee subscription and high security data exchange
 
-When you have a XcooBee subscription your website can also receive updates regarding the granted consent when the user if not directly online via the XcooBee network. This communication will occur through webhooks and higher level of encryption. 
+When you have a XcooBee subscription your website can also receive updates regarding the granted consent when the user is not directly online via the XcooBee network. This communication will occur through webhooks and higher level of encryption.
 
 As an alternative to direct HTTP POST, your subscription to the XcooBee network also allows event polling so you can use the XCK for sites that are not directly accessible via the internet, i.e. intranet sites or sites under development.
 
-You need to be able to process messages from XcooBee that are using PGP encryption on top of HTTPS/TLS. 
-The message pattern is the same as described previous section. 
+You need to be able to process messages from XcooBee that are using PGP encryption on top of HTTPS/TLS.
+The message pattern is the same as described previous section.
 
 You can use one of the XcooBee SDKs for simplifying this interaction:
 
 - [XcooBee JavaScript SDK](https://github.com/XcooBee/xcoobee-js-sdk)
 - [XcooBee PHP SDK](https://github.com/XcooBee/xcoobee-php-sdk)
 
-The use of the XcooBee network is not a required interaction. Users will transparently update their cookie preferences with your site every time they visit. 
+The use of the XcooBee network is not a required interaction. Users will transparently update their cookie preferences with your site every time they visit.
 
 
-# Full Parameter Reference
+## Full Parameter Reference
 
 The XCK is initialized with a set of parameters that determine the behavior of the XCK on your site. This can include rendering location, timeouts, event handlers, css etc.
 
@@ -551,8 +530,8 @@ This is an array of strings of cookie types used on your sites by default. This 
 
 Example:
 
-```json
-  checkByDefaultTypes: ["application"]
+```js
+checkByDefaultTypes: ["application"]
 ```
 
 ### cookieHandler `string` or `function`
@@ -563,7 +542,7 @@ This is related to `targetUrl`. One of `cookieHandler` or `targetUrl` is require
 
 See more information in section [`How to Use the XcooBee Cookie Kit`](#how-to-use-the-xcoobee-cookie-kit) in this document.
 
-```json
+```js
 cookieHandler: handleCookies
 ```
 
@@ -574,31 +553,29 @@ This lets the XCK know to do quick evaluation of the call context for the XCK if
 
 ### expirationTime `integer`
 
-This is the time in seconds we will display the floating cookie icon. After the expiration time has been reached the floating cookie icon will be removed from display. This time resets every time the icon is clicked and a pop-up dialog is displayed.
+This is the time in seconds we will display the floating cookie icon. After the expiration time has been reached the floating cookie icon will be removed from display. This time resets every time the icon is clicked and a popup dialog is displayed.
 
 When set to zero, the icon will not be removed.
 
 Defaults to zero.
 
-```json
+```js
 expirationTime: 0
-
 ```
 
 ### hideOnComplete `boolean`
 
 The XCK can be completely hidden once the user has made the cookie type selection or the selection can be automatically determined. To enable the immediate removal of the cookie icon set this to true. Default: false
 
-```json
+```js
 hideOnComplete: true
-
 ```
 
-### position `list`
+### position `string`
 
 The position parameter is one of [left_bottom|left_top|right_bottom|right_top] and indicates the position from which the XCK displays its window or floating cookie icon. Default: left_bottom
 
-```
+```js
 position: "left_bottom"
 ```
 
@@ -606,32 +583,33 @@ position: "left_bottom"
 
 This is the page the user will be directed to to review your Privacy Policy. The cookie kit will not start without data for Privacy Policy.
 
-```json
-termsUrl: "https://mysite.com/privacy"
+```js
+privacyUrl: "https://mysite.com/privacy"
 ```
 
 ### requestDataTypes `array`
- This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
 
- ```json
-  requestDataTypes: ["application"]
+This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
+
+```js
+requestDataTypes: ["application"]
 ```
 
 ### targetUrl `string`
 
-If you are using Request/Response technology based site, for example PHP, JSP, CFML and you set the cookies in your code, the XCK will make a call via HTTP POST to the targetUrl you specify and a body parameter with JSON payload with the user's preferences for cookies. 
+If you are using Request/Response technology based site, for example PHP, JSP, CFML and you set the cookies in your code, the XCK will make a call via HTTP POST to the targetUrl you specify and a body parameter with JSON payload with the user's preferences for cookies.
 
 Example Body Payload:
 
 ```json
 {
- "time": "Thu, 11 Oct 2018 15:40:28 GMT",
- "code": 200,
- "result": {
-   "application": true,
-   "usage": false,
-   "statistics": false
- }
+  "time": "2018-10-11T15:40:28",
+  "code": 200,
+  "result": {
+    "application": true,
+    "usage": false,
+    "statistics": false
+  }
 }
 ```
 
@@ -641,16 +619,15 @@ This is related to `cookieHandler`. One of `cookieHandler` or `targetUrl` is req
 
 See more information in section [`How to Use the XcooBee Cookie Kit`](#how-to-use-the-xcoobee-cookie-kit) in this document.
 
-```json
+```js
 targetUrl: "https://mysite.com/setCookies"
 ```
-
 
 ### termsUrl `string` `required`
 
 This is the page the user will be directed to to review your Terms of Service. The cookie kit will not start without valid terms of service.
 
-```json
+```js
 termsUrl: "https://mysite.com/terms"
 ```
 
@@ -658,7 +635,7 @@ termsUrl: "https://mysite.com/terms"
 
 The XCK can run in test mode. When it does it will display a small `reset` button under the main floating cookie. You can use it to clear the local data store. This speeds up development tasks as you do not need to clear data manually or open/close private browser windows. Default: false
 
-```json
+```js
 testMode: true
 ```
 
@@ -668,14 +645,13 @@ This is the message we will display to the user when asking for cookie preferenc
 
 Example of text entry in single language:
 
-```json
+```js
 textMessage: "This site uses cookies. Please select the cookie types that you wish to use and then click OK"
-
 ```
 
 Example of text entry in multiple languages:
 
-```json
+```js
 {
   "en-us": "English text",
   "de-de": "German text",
@@ -685,7 +661,7 @@ Example of text entry in multiple languages:
 ```
 
 
-## Initialization Parameters with XcooBee subscription
+## Initialization Parameters with XcooBee Subscription
 
 ### campaignReference
 
@@ -696,10 +672,9 @@ This connects your campaignId to the XCK. The XcooBee campaign wizard will gener
 The XCK can display your company logo. Your cookie campaign options will have the ability to upload a logo and will make available to the XCK.
 This parameter is only available when subscripting to XcooBee.
 
-### CSS override 
+### CSS override
 
 If you wish to use your own CSS, the XcooBee code generator will set this based on your selection for your Cookie Campaign. Your campaign wizard will guide you through the process.
-
 
 **IMPORTANT**
 
@@ -710,35 +685,30 @@ For example if your site runs on this url "http://www.mysite.com/product/hello" 
 
 ## Program Hooks
 
-
 You can use public methods of the XCK to set and retrieve parameter information. These are found under the `XcooBee.kit` object.
 
 ### setParam([parameter], [value])
 
-Use the `setParam()` method to set any valid parameter for the XCK. For example to set the targetUrl parameter to a different value. Where `parameter [string]` is any of the valid parameters, and `value [any]` is data for the parameter.
+Use the `setParam()` method to set any valid parameter for the XCK. For example to set the `targetUrl` parameter to a different value. Where `parameter [string]` is any of the valid parameters, and `value [any]` is data for the parameter.
 
-```JavaScript
-
-XcooBee.kit.setParam("targetUrl","https://newsite.com/cookieProcessor");
-
+```js
+XcooBee.kit.setParam("targetUrl", "https://newsite.com/cookieProcessor");
 ```
 
-If you are using a cookieHandler JavaScript function that is not exposed in global scope, you will need to let the XCK know via a setParam call. You should do this after loading the XCK and before calling `XcooBee.kit.initialize()`. 
+If you are using a `cookieHandler` JavaScript function that is not exposed in global scope, you will need to let the XCK know via a `setParam` call. You should do this after loading the XCK but before calling `XcooBee.kit.initialize()`.
 
-```JavaScript
-
+```js
 XcooBee.kit.setParam("cookieHandler", myCookieHandlerFunction);
-
 ```
 
 Alternately, you can initialize with correct function reference.
 
 ```HTML
-<script type="text/javascript">
+<script>
   XcooBee.kit.initialize({
-    requestDataTypes: ["application","usage"],
+    requestDataTypes: ["application", "usage"],
     checkByDefaultTypes: ["application"],
-    cookieHandler: myCookieHandlerFunction,    
+    cookieHandler: myCookieHandlerFunction,
    ...
   });
 </script>
@@ -752,10 +722,8 @@ Retrieves the value of actively used parameter from the XCK.
 
 Example:
 
-```JavaScript
-
+```js
 let termsSite = XcooBee.kit.getParam("termsUrl");
-
 ```
 
 ### getConsentStatus() `string`
@@ -769,10 +737,8 @@ Returns the current status of the XCK interaction with the user. Current this is
 `closed` => the user did not respond and the cookie consent has expired after `expirationTime`
 
 
-```JavaScript
-
+```js
 let consentStatus = XcooBee.kit.getConsentStatus();
-
 ```
 
 ### getCookieTypes() `object`
@@ -780,13 +746,10 @@ let consentStatus = XcooBee.kit.getConsentStatus();
 This returns the users' decision regarding the consent for each cookie type. It will always return a full object with all types or empty object `{}`.
 Only available after `getConsentStatus() = "complete"` If you call this before we have an answer from user we will return an empty object.
 
-
 Example call:
 
-```JavaScript
-
-let cookieTypeStatus = XcooBee.kit.getCookieTypes();
-
+```js
+let cookieTypes = XcooBee.kit.getCookieTypes();
 ```
 
 Example return object:
@@ -796,9 +759,8 @@ Example return object:
   "application": true,
   "usage": true,
   "statistics": false,
-  "advertising": false 
+  "advertising": false
 }
-
 ```
 
 
@@ -809,33 +771,32 @@ You will embed/install the XCK via added a script tag to your site. Here is an e
 You need to place this in the HTML of your site in between `<head>` and `<body>` tags. We suggest this as last script element.
 
 
-```javascript
-<script type="text/javascript" id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
-<script type="text/javascript">
+```html
+<script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
+<script>
   XcooBee.kit.initialize({
-    requestDataTypes: ["application","usage"],
+    requestDataTypes: ["application", "usage"],
     checkByDefaultTypes: ["application"],
-    cookieHandler: myCookieHandler,    
+    cookieHandler: myCookieHandler,
     expirationTime: 0,
     position: "left_bottom",
-    privacyUrl: "https://mysite.com/privacy",        
-    termsUrl: "https://mysite.com/terms",    
+    privacyUrl: "https://mysite.com/privacy",
+    termsUrl: "https://mysite.com/terms",
     textMessage: "This site uses cookies to make your experience better. Please let us know which type of cookies we may use."
   });
+  XcooBee.kit.render();
 </script>
 ```
 
-
-
 Here is an example of parameters and values types for the initialization:
 
-```javascript
-<script type="text/javascript" id="xcoobee-cookie-kit" src="{URL}/scripts/kit/xcoobee-cookie-kit.min.js"></script>
-<script type="text/javascript">
+```html
+<script id="xcoobee-cookie-kit" src="{URL}/scripts/kit/xcoobee-cookie-kit.min.js"></script>
+<script>
   XcooBee.kit.initialize({
-    campaignReference: <String>,    
-    checkByDefaultTypes: <Array>[application|usage|statistics|advertising]    
-    cookieHandler: <Function>,    
+    campaignReference: <String>,
+    checkByDefaultTypes: <Array>[application|usage|statistics|advertising]
+    cookieHandler: <Function>,
     expirationTime: <Number> (in seconds),
     position: <String> ("left_bottom", "left_top", "right_bottom", "right_top"),
     privacyUrl: <String>,
@@ -843,8 +804,9 @@ Here is an example of parameters and values types for the initialization:
     targetUrl: <String>,
     termsUrl: <String>,
     testMode: <Boolean>,
-    textMessage: <String>, <JSON>
+    textMessage: <String>, <Object>
   });
+  XcooBee.kit.render();
 </script>
 ```
 
@@ -859,7 +821,6 @@ All of the display elements can be overridden, however, we can not support non-s
 
 Internet Explorer 11+, Google Chrome, Mozilla Firefox, Opera, Edge.
 
-# Support
+## Support
 
 Please use the [Github issues](https://github.com/XcooBee/xcoobee-cookie-kit/issues) page
-

@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "modules": false,
         "targets": {
@@ -12,16 +12,16 @@
         }
       }
     ],
-    "stage-0",
-    "react"
+    "@babel/preset-react"
   ],
   "plugins": [
-    "transform-react-inline-elements",
-    "syntax-dynamic-import"
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-syntax-dynamic-import",
   ],
   "env": {
     "production": {
       "plugins": [
+        "@babel/plugin-transform-react-inline-elements",
         [
           "transform-react-remove-prop-types",
           {

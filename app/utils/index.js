@@ -6,83 +6,127 @@ const defaultConfig = {
   position: "right_bottom",
   requestDataTypes: ["application"],
   testMode: false,
-  textMessage: { "en-us": "This site uses cookies. Use this panel to adjust your preferences." },
+  textMessage: {
+    "en-us": "This site uses cookies. Use this panel to adjust your preferences.",
+  },
 };
+
 const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
-const cookieTypes = [
+
+const cookieDefns = [
   {
     id: 0,
-    key: "application",
+    type: "application",
     dbKey: "application_cookie",
     localeKey: "CookieKit.ApplicationCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/application-cookies",
   },
   {
     id: 1,
-    key: "usage",
+    type: "usage",
     dbKey: "usage_cookie",
     localeKey: "CookieKit.UsageCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/personalization-cookies",
   },
   {
     id: 2,
-    key: "statistics",
+    type: "statistics",
     dbKey: "statistics_cookie",
     localeKey: "CookieKit.StatisticsCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/statistics-cookies",
   },
   {
     id: 3,
-    key: "advertising",
+    type: "advertising",
     dbKey: "advertising_cookie",
     localeKey: "CookieKit.AdvertisingCookieName",
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/advertising-and-marketing-cookies",
   },
 ];
+
+const cookieTypes = cookieDefns.map(defn => defn.type);
+
 const locales = ["EN", "DE", "FR", "ES"];
+
 const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
+
 const links = {
   poweredBy: "https://www.xcoobee.com",
   login: "/auth/minlogin",
   manage: "/user/consentCenter/cookies",
 };
+
 const animations = {
-  noAnimation: "default",
-  userPreference: "blue",
-  userSettings: "green",
-  crowdIntelligence: "yellow",
-  companyPreference: "red",
+  cached: "green",
+  crowdAi: "yellow",
+  hostsDefaults: "red",
+  usersDefaults: "blue",
+  usersSaved: "green",
+  unknown: "default",
 };
+
 const cssHref = "xcoobee-cookie-kit.min.css";
-const euCountries = ["AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT",
-  "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB"];
-const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+
+const euCountries = [
+  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
+  "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+  "GB",
+];
+
+const consentsSources = [
+  "cached",
+  "crowdAi",
+  "hostsDefaults",
+  "usersDefaults",
+  "usersSaved",
+  "unknown",
+];
+
 const consentStatuses = {
   open: "open",
   complete: "complete",
   closed: "closed",
 };
-// eslint-disable-next-line
-const configFields = ["campaignReference", "checkByDefaultTypes", "companyLogo", "cookieHandler", "displayOnlyForEU", "expirationTime", "hideBrandTag", "hideOnComplete", "position", "privacyUrl", "requestDataTypes", "targetUrl", "termsUrl", "testMode", "textMessage"];
-// Expiration time of cookie preferences saved locally (in milliseconds)
+
+const configFields = [
+  "campaignReference",
+  "checkByDefaultTypes",
+  "companyLogo",
+  "cookieHandler",
+  "cssAutoLoad",
+  "displayOnlyForEU",
+  "expirationTime",
+  "hideBrandTag",
+  "hideOnComplete",
+  "position",
+  "privacyUrl",
+  "requestDataTypes",
+  "targetUrl",
+  "termsUrl",
+  "testMode",
+  "textMessage",
+];
+const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
+
+// Expiration time of cookie consents cached locally (in milliseconds)
 const expirationTime = 86400000;
-const authErrorMessage = "Failed to connect to XcooBee. Try again later.";
 
 export {
   animations,
-  authErrorMessage,
-  cookieTypes,
   configFields,
+  consentsSources,
   consentStatuses,
+  cookieDefns,
+  cookieTypes,
   cssHref,
   defaultConfig,
   euCountries,
   expirationTime,
   links,
   locales,
+  positions,
   requiredFields,
   tokenKey,
   xcoobeeCookiesKey,
-  positions,
 };

@@ -53,7 +53,7 @@ $duration: .2s;
     overflow: auto;
   }
 
-  button {
+  &__button {
     background: none;
     color: inherit;
     border: none;
@@ -63,7 +63,11 @@ $duration: .2s;
     outline: inherit;
   }
 
-  .xb-cookie-kit__refresh-button {
+  &__cookie-button {
+    width: 4vw;
+  }
+
+  &__refresh-button {
     background: #fdb81a;
     color: #fff;
     font-size: 12px;
@@ -271,6 +275,19 @@ $duration: .2s;
       }
     }
 
+    &__flag {
+      // Use of !important is required to override inline styles added by JavaScript.
+      [role~=img] {
+        width: 25px !important;
+        height: 25px !important;
+
+        @media (max-width: 500px) {
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+    }
+
     &__header {
       display: flex;
       justify-content: space-between;
@@ -280,7 +297,8 @@ $duration: .2s;
 
       > .xb-cookie-kit-popup__logo {
         .xb-cookie-kit-popup__company-logo {
-          height: 80px;
+          max-height: 80px;
+          width: 80px;
           padding: 4px;
           cursor: pointer;
         }

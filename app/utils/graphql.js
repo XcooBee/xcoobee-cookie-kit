@@ -1,6 +1,6 @@
 import fetch from "isomorphic-fetch";
 
-import { authErrorMessage } from ".";
+import NotAuthorizedError from "../lib/NotAuthorizedError";
 
 export default function graphQLRequest(query, variables, token) {
   const init = {
@@ -17,13 +17,13 @@ export default function graphQLRequest(query, variables, token) {
     }),
   };
 
-  return fetch(`${xcoobeeConfig.apiUrl}/graphql`, init)
+  return fetch(`${XB_API_URL}/graphql`, init)
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response);
       }
       if (response.status === 401) {
-        return Promise.reject(new Error(authErrorMessage));
+        return Promise.reject(new NotAuthorizedError());
       }
       return Promise.reject(response);
     })
