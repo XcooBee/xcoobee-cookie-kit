@@ -1,7 +1,7 @@
 {
-  "name": "xcoobee-cookie-kit-react",
-  "version": "0.0.0",
-  "description": "Cookie Consent Management for Websites built with React.",
+  "name": "react-cookie-kit",
+  "version": "1.0.0",
+  "description": "Cookie Consent Management for Websites using ReactJS.",
   "keywords": [
     "consent",
     "cookie",
@@ -32,7 +32,7 @@
     "classnames": "^2.2.6",
     "prop-types": "^15.6.0",
     "react-country-flag": "^1.0.1",
-    "xcoobee-cookie-kit-core": "^0.0.0"
+    "xcoobee-cookie-kit-core": "^1.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -57,5 +57,13 @@
   "peerDependencies": {
     "react": "^16.3.2",
     "react-dom": "^16.3.3"
+  },
+  "bugs": {
+    "url": "https://github.com/XcooBee/xcoobee-cookie-kit/issues"
+  },
+  "homepage": "https://www.xcoobee.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
   }
 }
