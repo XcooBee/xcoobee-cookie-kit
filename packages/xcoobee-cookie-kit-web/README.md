@@ -497,7 +497,6 @@ As outlined in a few areas, when you wish to start the XCK dialog, include the `
     termsUrl: "http://mysite.com/terms",
     textMessage: "Welcome to our shopping site. We use cookies to deliver a better service to you. Please let us know if this is OK."
   });
-  XcooBee.kit.render();
 </script>
 ```
 
@@ -784,7 +783,7 @@ You need to place this in the HTML of your site in between `<head>` and `<body>`
     termsUrl: "https://mysite.com/terms",
     textMessage: "This site uses cookies to make your experience better. Please let us know which type of cookies we may use."
   });
-  XcooBee.kit.render();
+ 
 </script>
 ```
 
@@ -806,7 +805,7 @@ Here is an example of parameters and values types for the initialization:
     testMode: <Boolean>,
     textMessage: <String>, <Object>
   });
-  XcooBee.kit.render();
+
 </script>
 ```
 
