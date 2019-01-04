@@ -20,5 +20,5 @@ The core framework (XcooBee Cookie Kit Core) has all the methods and functions t
 
 If you need to use the Cookie Kit please visit the other packages:
 
-- [XcookBee Cookie Kit Web](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web)
+- [XcooBee Cookie Kit Web](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web)
 - [React Cookie Kit](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-react)
