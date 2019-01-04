@@ -59,6 +59,7 @@ class CookitKitInitializer {
     };
 
     this._config = config;
+    this._render(this._config.renderTo);
   }
 
   getParam(field) {
@@ -94,7 +95,7 @@ class CookitKitInitializer {
     return consentSettings || {};
   }
 
-  render(dom = document.body) {
+  _render(dom = document.body) {
     const appendCookieKit = () => {
       if (!checkRequiredFields(this._config)) {
         throw Error("Configuration invalid.");
