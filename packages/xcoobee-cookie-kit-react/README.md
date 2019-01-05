@@ -50,21 +50,22 @@ inside your render() method you can, then, use the cookie kit with all the avail
         <CookieKit
           cssAutoLoad={false}
           cookieHandler={this.onCookieConsentsChange}
-          privacyUrl="https://google.com/privacy"
+          privacyUrl="https://mysite.com/privacy"
           requestDataTypes={['advertising', 'application', 'statistics', 'usage']}
-          termsUrl="https://google.com/terms"
+          termsUrl="https://mysite.com/terms"
           textMessage={{
-            "de-de": "Die Beschreibung.",
-            "en-us": "The description.",
-            "es-419": "La descripción.",
-            "fr-fr": "La description.",
+            "de-de": "Die Beschreibung. Wir benutzen Cookies.",
+            "en-us": "The description. We use Cookies.",
+            "es-419": "La descripción. Nous utilisons des cookies.",
+            "fr-fr": "La description. Usamos cookies.",
           }}
         />
 ```
 
 For further information on the type of available options and their use please consult the general documentation under Full Parameter Reference.
 
-- [Cookie Kit Options])(https://github.com/XcooBee/xcoobee-cookie-kit-web#full-parameter-reference)
+- [Cookie Kit Options](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web#full-parameter-reference)
+
 
 ### Example App
 
