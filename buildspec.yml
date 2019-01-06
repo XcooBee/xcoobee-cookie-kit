@@ -3,7 +3,7 @@ env:
   PORT: "3000"
   XBEE_STAGE: "test"
   NODE_ENV: "development"
-  CI: "true"
+
      
 phases:
   install:
