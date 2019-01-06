@@ -1,0 +1,22 @@
+version: 0.2   
+env:
+  PORT: "3000"
+  XBEE_STAGE: "test"
+  NODE_ENV: "development"
+  CI: "true"
+     
+phases:
+  install:
+    commands:
+      - npm install --no-package-lock
+      - npx lerna bootstrap --hoist
+      - npm run web:build
+           
+  build:
+    commands:
+      - npm web:test
+
+artifacts:
+  files:
+    - "packages/xcoobee-cookie-kit-web/dist/**/*"    
+  name: cookie-kit-$(date +%Y-%m-%d) 
