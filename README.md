@@ -23,9 +23,10 @@ Please run the following commands from the root project folder
 ```
 npm install --no-package-lock
 
-npx lerna bootstrap --hoist
+npx lerna bootstrap
 
 ```
+
 
 ## To Contribute
 
