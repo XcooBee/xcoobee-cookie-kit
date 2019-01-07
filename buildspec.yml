@@ -3,12 +3,13 @@ env:
   PORT: "3000"
   XBEE_STAGE: "test"
   NODE_ENV: "development"
+  CI: "true"
 
      
 phases:
   install:
     commands:
-      - npm install --no-package-lock
+      - npm install
 
   pre_build:
     commands:
