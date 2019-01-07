@@ -20,7 +20,7 @@
   ],
   "browser": "dist/xcoobee-cookie-kit.min.js",
   "scripts": {
-    "build": "npm run build:beta",
+    "build": "npm run build:prod",
     "build:beta": "npm run clean && env-cmd beta webpack",
     "build:dev": "npm run clean && env-cmd development webpack",
     "build:prod": "npm run clean && env-cmd production webpack",
