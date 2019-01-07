@@ -14,8 +14,7 @@ phases:
       - echo Installing system packages
       - echo Installing global dependencies
       - npm install -g yarn
-      - yarn global add lerna      
-      - npm install
+      - yarn global add lerna            
 
   pre_build:
     commands:
