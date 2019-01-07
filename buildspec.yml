@@ -9,12 +9,20 @@ env:
 phases:
   install:
     commands:
+      - ls -lha
+      - echo current node version `node --version`
+      - echo Installing system packages
+      - echo Installing global dependencies
+      - npm install -g yarn
+      - yarn global add lerna      
       - npm install
 
   pre_build:
     commands:
-      - npx lerna bootstrap --hoist  
-
+      - echo Bootstrap source code
+      - yarn
+      - lerna bootstrap      
+  
   build:
     commands:  
       - npm run web:build
