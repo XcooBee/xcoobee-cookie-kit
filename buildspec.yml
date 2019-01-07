@@ -25,7 +25,6 @@ phases:
   build:
     commands:  
       - npm run web:build
-      - npm run web:test
 
 artifacts:
   files:
