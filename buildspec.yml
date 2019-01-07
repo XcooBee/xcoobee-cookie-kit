@@ -9,11 +9,14 @@ phases:
   install:
     commands:
       - npm install --no-package-lock
-      - npx lerna bootstrap --hoist
-      - npm run web:build
-           
-  build:
+
+  pre_build:
     commands:
+      - npx lerna bootstrap --hoist  
+
+  build:
+    commands:  
+      - npm run web:build
       - npm web:test
 
 artifacts:
