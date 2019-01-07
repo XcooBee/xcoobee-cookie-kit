@@ -1,20 +1,13 @@
 version: 0.2   
-env:
-  PORT: "3000"
-  XBEE_STAGE: "test"
-  NODE_ENV: "development"
-  CI: "true"
 
-     
 phases:
   install:
-    commands:
-      - ls -lha
-      - echo current node version `node --version`
-      - echo Installing system packages
+    commands:      
       - echo Installing global dependencies
       - npm install -g yarn
-      - yarn global add lerna            
+      - yarn global add lerna
+      - echo creating check script
+      - echo '#!/bin/bash' > /usr/local/bin/ok; echo 'if [[ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]]; then exit 1; else exit 0; fi' >> /usr/local/bin/ok; chmod +x /usr/local/bin/ok            
 
   pre_build:
     commands:
@@ -26,6 +19,11 @@ phases:
     commands:  
       - npm run web:build
 
+  post_build: 
+    commands:
+      - echo check whether build succeeded
+      - ok && echo Build completed on `date`
+      
 artifacts:
   files:
     - "packages/xcoobee-cookie-kit-web/dist/**/*"    
