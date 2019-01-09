@@ -6,9 +6,9 @@ import {
   defaultConfig,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
-import CookieKitContainer from "xcoobee-cookie-kit-react/src";
+import CookieKitContainer from "react-cookie-kit/src";
 
-import "xcoobee-cookie-kit-react/src/xck-react.scss";
+import "react-cookie-kit/src/xck-react.scss";
 
 function checkRequiredFields(config) {
   const errors = [];
@@ -59,6 +59,7 @@ class CookitKitInitializer {
     };
 
     this._config = config;
+    this._render(this._config.renderTo);
   }
 
   getParam(field) {
@@ -94,7 +95,7 @@ class CookitKitInitializer {
     return consentSettings || {};
   }
 
-  render(dom = document.body) {
+  _render(dom = document.body) {
     const appendCookieKit = () => {
       if (!checkRequiredFields(this._config)) {
         throw Error("Configuration invalid.");

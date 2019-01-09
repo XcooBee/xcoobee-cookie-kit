@@ -37,14 +37,6 @@ const webpackConfig = {
       isEnvDevelopment ? `${__dirname}/src/devOnly.js` : config.entry,
     ],
   },
-  externals: isEnvProduction
-    ? {
-      react: "React",
-      "react-dom": "ReactDOM",
-    }
-    // Don't externalize for development. This is a convenient way to include React
-    // and ReactDOM for the webpack-dev-server.
-    : {},
   output: {
     chunkFilename: "[chunkhash].min.js",
     filename: "[name].min.js",
