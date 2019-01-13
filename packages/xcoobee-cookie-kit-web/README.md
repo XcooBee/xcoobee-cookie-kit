@@ -1,12 +1,26 @@
 # XcooBee Cookie Kit
 
+## Download and Use
+
+Published as Open Source under Apache-2.0 License
+
+https://www.npmjs.com/package/xcoobee-cookie-kit-web
+
+
+## What is the Difference
+
+The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. 
+
+Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
+
+
 ## What is the XCK
 
 The objective of the XcooBee Cookie Kit (XCK) is to enable websites to manage their Cookie consent more effectively and with less annoyance to their users. The XCK can work in concert with the XcooBee network to improve overall management for users and businesses but that is not required. When the XCK works independently of XcooBee some management functionality will not be available.
 
-The XCK makes it easy to plugin cookie consent into your website. It handles all user interaction to obtain consent and lets the website know which cookies can be used for each users while they visit your website. Similarly, your website can now be informed when users change their consent even when they are not visiting it.
+The XCK makes it easy to add cookie consent management into your website. It handles all user interaction to obtain consent and lets the website know which cookies can be used for each user while they visit your website. Similarly, your website can now be informed when users change their consent even when they are not visiting it.
 
-THe XCK is one of the most transparent and frictionless ways to manage cookies on your site. It will not pop-up, in, or otherwise hinder the user experience when it is not needed. Yet, at the same time, it provides full compliance with European e-directives and related GDPR rules.
+The XCK is one of the most transparent and frictionless ways to manage cookies on your site. It will not pop-up, in, or otherwise hinder the user experience when it is not needed. Yet, at the same time, it provides  compliance with European e-directives and related GDPR rules.
 
 Website owners can easily react to data-requests and report on privacy related requests if needed via the XcooBee network.
 
@@ -15,6 +29,30 @@ The XCK does not require a XcooBee connection to work for your website. You will
 The XCK is responsive and will adjust easily to different screens including mobile uses.
 
 [Quickstart](#examples-of-script-tag) to get to `<script>` tag examples.
+
+
+## Features
+
+With cookie kit you can:
+
+  - use XcooBee pre-classification of cookies to present simplified and clear details of how you will use cookies
+  - share your cookie policies
+  - share your terms of service
+  - share your privacy policy
+  - determine cookie setter/unsetter interactions
+  - integrate with backend-services for cookie notifications
+  - transparently determine whether notification is necessary    
+  - allow users to remove/add consent for cookies
+  - set timing and position of information display
+  - properly react to user consent grants and removal requests
+
+With subscription to XcooBee you can also:    
+
+  - document your cookie consent interactions
+  - remote manage user consent
+  - document proper response time to user requests
+  - set additional style and logo elements
+  - allows users to use crowd cookie intelligence 
 
 
 ## Easy Cookie Classification
@@ -41,7 +79,9 @@ Our cafe application demonstrates the use of XCK in a single page application. Y
 
 ### Sample Request/Response app based on NodeJs & Express
 
-Our pizza application demonstrates the use of the XCK in a request/response based application. You can unzip and deploy it directly on your system. You will need nodejs installed on your system. Review the `README.md` file for instructions/explanations.
+Our pizza application demonstrates the use of the XCK in a request/response based application. You can unzip and deploy it directly on your system. You will need nodejs installed on your system for some. Review the `README.md` file for instructions/explanations in each of the example application Single Page (SPA), Express, and ReactJS:
+
+[Cookie Kit Example Application ](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web/examples)
 
 
 ## How does this Work
@@ -50,7 +90,11 @@ Our pizza application demonstrates the use of the XCK in a request/response base
 
 ![the cookie](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/cookie.png)
 
-The XCK displays a floating cookie icon on the screen in a corner of your choice. By clicking on the cookie icon, users open a popup consent dialog that allows them to interact with your site.
+The XCK displays a floating cookie icon on the screen in a corner of your choice. This is the starting point for user interaction. By clicking on the cookie icon, users open a popup consent dialog that allows them to interact with your site.
+
+If the XCK determines that a user consent is needed it will go to the next step and open the XCK Pop-up dialog:
+
+#### The Pop up Dialog
 
 ![showing XCK cookie popup](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/cookie_popup.png)
 
@@ -67,7 +111,7 @@ If the cookie consent is already obtained, the XCK will not display another popu
 
 ### Example walk through
 
-Let's assume an example of a JSP driven shopping site that uses four cookies:
+Let's assume an example of a JSP driven shopping site that uses four cookies. Here is sample process to implement proper cookie consent management using the XCK:
 
 `a` You determine that you use the following four cookies on your site.
 
@@ -88,23 +132,28 @@ Statistics: local webserver cookie & google analytics cookie
 
 `d` User makes selection and clicks OK.
 
-You set the needed cookies using a JavaScript handler process that gets invoked by the XCK.
+`e` The XCK invokes your site's JavaScript handler process that sets or removes the cookies.
 
 ### Cookie Pulses
 
-The cookie kit uses a short cut evaluation method to check whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon that is placed into a designated corner, pulses in different colors to indicate a shortcut selection has occurred.
+The cookie kit uses a short cut evaluation method to check whether it has already obtained consent for cookies from the user. This streamlines the setting of cookies. When this is successful, the cookie icon that is placed into a designated corner, is replaced by pulses. There are different color pulses to indicate a shortcut selection has occurred.
 
+#### Green: user explicit approval
 ![green cookie pulse](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/green.png)
 
 The green pulse indicates that the user has visited this site before and the site's cookie consent settings are known and can be reapplied.
-
+#### Blue: preferences based approval
 ![blue cookie pulse](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/blue.png)
 
 The blue pulse indicates that though the user has not visited this site before, the user has set consent preferences for new sites which can be applied. This is only possible when user and website are XcooBee network members.
 
+#### Yellow: crowd intelligence based approval
+
 ![yellow cookie pulse](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/yellow.png)
 
 The yellow pulse indicates that the user has elected to participate in the XcooBee Crowd AI program for cookies. The XcooBee network will use a crowd based analysis and set the cookies based on feedback from website visitors. This is only possible when user and website are XcooBee network members.
+
+#### Red: using website preferences
 
 ![red cookie pulse](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/red.png)
 

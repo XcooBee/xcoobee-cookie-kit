@@ -1,8 +1,15 @@
 # React Cookie Kit 
 
+## Download and use
+
+Published as Open Source under Apache-2.0 License
+https://www.npmjs.com/package/react-cookie-kit
+
+
 ## What is React Cookie Kit
 
-The React Cookie Kit is special purpose build of the XcooBee Cookie Kit (XCK) Cookie Consent Management library for use in ReactJS environments. 
+The React Cookie Kit is special purpose build of the [XcooBee Cookie Kit (XCK)](https://www.npmjs.com/package/xcoobee-cookie-kit-web) Cookie Consent Management library for use in ReactJS environments. 
+The React Cookie Kit is not just an information overlay. It is an active cookie and consent manager for your site. Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the react cookie kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
 
 ## The XcooBee Cookie Kit
 
