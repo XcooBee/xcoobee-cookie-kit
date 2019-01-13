@@ -1,10 +1,20 @@
 # XcooBee Cookie Kit
 
-## What is the XCK
+## Download and Use
+
+Published as Open Source under Apache-2.0 License
+
+https://www.npmjs.com/package/xcoobee-cookie-kit-web
+
+
+## What is the Difference
 
 The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. 
 
 Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
+
+
+## What is the XCK
 
 The objective of the XcooBee Cookie Kit (XCK) is to enable websites to manage their Cookie consent more effectively and with less annoyance to their users. The XCK can work in concert with the XcooBee network to improve overall management for users and businesses but that is not required. When the XCK works independently of XcooBee some management functionality will not be available.
 
