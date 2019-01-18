@@ -78,6 +78,6 @@ For further information on the type of available options and their use please co
 
 A ReactJS example app is available in zip format for you to use in the example directory of this package or online:
 
-- [Cookie Kit React Example App on Github](https://github.com/XcooBee/xcoobee-cookie-kit/tree/monorepo/packages/xcoobee-cookie-kit-example-react)
+- [Cookie Kit React Example App on Github](https://github.com/XcooBee/example-reactjs-xck-app)
 
 

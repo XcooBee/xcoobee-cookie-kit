@@ -105,7 +105,7 @@ When using the XCK you:
 - a) first determine which cookies you are currently using on your site
 - b) then select which XcooBee cookie type (classification) that best fits each cookie
 - c) display to your site visitors the XCK consent dialog popup to ask for permission
-- d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler or target url pattern
+- d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler inside client JavaScript or target url pattern via server syntax (PHP, JSP, .net etc.) or both.
 
 If the cookie consent is already obtained, the XCK will not display another popup. You can query the status via JavaScript to set the cookies again, or track this on the backend side if you're using Request/Response type application.
 
@@ -235,6 +235,8 @@ In both cases, the XCK will invoke your handler function after the user has comp
 
 XCK will call your JavaScript handler with a JavaScript object. The user preferences are enumerated in the argument.
 
+You can find [an example of an SPA](https://github.com/XcooBee/example-spa-xck-app) on github.
+
 Here is and example object.
 
 ```json
@@ -294,7 +296,7 @@ function cookieHandler(consentSettings) {
 
 See a more [fully developed example](#b-write-a-js-handler) later in this document.
 
-### How to use Cookie Kit with Request/Response systems like PHP, JSP, .net, CFML etc.
+### How to use Cookie Kit with Request/Response systems like PHP, Node, JSP, .net, CFML etc.
 
 The XCK can communicate users' grant and removal of consent for cookies to your site via webhook post (HTTP POST) as well. You will need a web accessible endpoint as defined by `targetUrl` that can process these messages and set/unset the cookies by cookie type.
 
@@ -341,6 +343,8 @@ Your `handler-page` will probably employ this kind of logic
     - if we have user-cookie-decision -> load cookies for each allowed type
 - if called from XCK
   - save user-cookie-decision
+
+  You can also review our [example application Express/NodeJs](https://github.com/XcooBee/example-express-xck-app) on Github.
 
 
 ### Example use with PHP page combined with Cookie Kit
@@ -611,6 +615,14 @@ Defaults to zero.
 expirationTime: 0
 ```
 
+### hideBrandTag `boolean`
+
+This will remove the powered by XcooBee brand tag. Though we would appreciate if our work is correctly represented we understand that there is a need for controlling this. If you are a commercial entity we encourage you to subscribe to XcooBee so we can continue supporting open source projects like this in the future. Default: false
+
+```js
+hideOnComplete: true
+```
+
 ### hideOnComplete `boolean`
 
 The XCK can be completely hidden once the user has made the cookie type selection or the selection can be automatically determined. To enable the immediate removal of the cookie icon set this to true. Default: false
@@ -726,9 +738,9 @@ If you wish to use your own CSS, the XcooBee code generator will set this based 
 
 **IMPORTANT**
 
-Your campaign name in the XcooBee campaign console needs to match your domain name (first part of the URL) for which you are using the cookie kit. If this is not the case, you will have errors returned from the XcooBee network.
+Your campaign name in the XcooBee campaign console needs to match your domain name (first part of the URL, e.g. `https://mysite.com`) for which you are using the cookie kit. If this is not the case, you will have errors returned from the XcooBee network.
 
-For example if your site runs on this url "http://www.mysite.com/product/hello" the domain is `www.mysite.com`. This has to be your campaign name in XcooBee.
+For example if your site runs on this url "http://www.mysite.com/product/hello" the domain is `http://www.mysite.com`. This has to be your campaign name in XcooBee.
 
 
 ## Program Hooks

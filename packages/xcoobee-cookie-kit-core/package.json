@@ -1,6 +1,6 @@
 {
   "name": "xcoobee-cookie-kit-core",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Cookie Consent Management for Websites",
   "keywords": [
     "consent",
@@ -16,7 +16,8 @@
     "Vladimir Maklyakov"
   ],
   "files": [
-    "dist/"
+    "dist/",
+    "src/"
   ],
   "main": "dist/index.js",
   "scripts": {
