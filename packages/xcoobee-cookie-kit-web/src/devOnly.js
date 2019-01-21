@@ -96,4 +96,4 @@ XcooBee.kit.setParam("textMessage", {
 // };
 // XcooBee.kit.initialize(config);
 
-XcooBee.kit.render();
+XcooBee.kit.initialize();
