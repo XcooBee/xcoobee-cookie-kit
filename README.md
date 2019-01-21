@@ -21,10 +21,9 @@ The packages are also published individually to npm.
 Please run the following commands from the root project folder
 
 ```
-npm install --no-package-lock
+yarn --no-lockfile
 
-npx lerna bootstrap
-
+npx lerna bootstrap -- --no-lockfile
 ```
 
 
