@@ -111,7 +111,7 @@ class CookitKitInitializer {
         />,
         placeHolderDom,
       );
-      dom.appendChild(placeHolderDom);
+      (dom || document.body).appendChild(placeHolderDom);
     };
 
     if (document.readyState === "loading") {
