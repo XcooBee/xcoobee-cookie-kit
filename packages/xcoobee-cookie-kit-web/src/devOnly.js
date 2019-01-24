@@ -4,6 +4,8 @@ import "./index";
 window.theCookieHandler = (cookieConsents) => {
   console.log("window.theCookieHandler:");
   console.dir(cookieConsents);
+  console.log("XcooBee.kit.getCookieTypes:")
+  console.log(XcooBee.kit.getCookieTypes());
 };
 
 XcooBee.kit.setParam("campaignReference", "abcdefgh1234567890");
