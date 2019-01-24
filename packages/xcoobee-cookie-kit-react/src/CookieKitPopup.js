@@ -8,6 +8,7 @@ import {
   links,
 } from "xcoobee-cookie-kit-core/src/configs";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
+import { getLocale, saveLocale } from "xcoobee-cookie-kit-core/src/LocaleManager";
 
 import closeIcon from "./assets/close-icon.svg";
 import xbLogo from "./assets/xcoobee-logo.svg";
@@ -63,7 +64,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
     this.state = {
       consentSettings,
-      selectedLocale: "EN",
+      selectedLocale: getLocale() || "EN",
       isShown: false,
     };
 
@@ -83,12 +84,13 @@ export default class CookieKitPopup extends React.PureComponent {
     if (token) {
       onLogin(token);
     }
-  }
+  };
 
   handleLocaleChange = (locale) => {
     // console.log('CookieKitPopup#handleLocaleChange');
     this.setState({ selectedLocale: locale, isShown: false });
-  }
+    saveLocale(locale);
+  };
 
   handleCookieCheck = (e, type) => {
     // console.log('CookieKitPopup#handleCookieCheck');
@@ -100,7 +102,7 @@ export default class CookieKitPopup extends React.PureComponent {
     checked[type] = e.target.checked;
 
     this.setState({ consentSettings: checked });
-  }
+  };
 
   handleCheckAll = () => {
     // console.log('CookieKitPopup#handleCheckAll');
@@ -121,7 +123,7 @@ export default class CookieKitPopup extends React.PureComponent {
       });
       this.setState({ consentSettings: allChecked });
     }
-  }
+  };
 
   handleSubmit = () => {
     // console.log('CookieKitPopup#handleSubmit');
@@ -129,7 +131,7 @@ export default class CookieKitPopup extends React.PureComponent {
     const { consentSettings } = this.state;
 
     onSubmit(consentSettings);
-  }
+  };
 
   renderTextMessage(textMessage) {
     // console.log('CookieKitPopup#renderTextMessage');
