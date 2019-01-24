@@ -1,3 +1,10 @@
+/**
+ * Sets cookies
+ *
+ * @param {String} name the name of cookie
+ * @param {String} value the value of cookie
+ * @param {Number} days optional: the number of days to persist cookie, if not provided will become session cookie
+ */
 function xckSetCookie(name, value, days) {
   let expires = "";
 
@@ -10,10 +17,20 @@ function xckSetCookie(name, value, days) {
   document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+/**
+ * Deletes cookie with given name
+ *
+ * @param {String} name the name of cookie
+ */
 function xckEraseCookie(name) {
   document.cookie = name + '=; Max-Age=-99999999;';
 }
 
+/**
+ * Retrieves array of cookie names
+ *
+ * @returns {Array} array of cookie names
+ */
 function xckGetCookieNames() {
   let ca = document.cookie.split(';');
   let ra = [];
@@ -26,6 +43,13 @@ function xckGetCookieNames() {
   return ra;
 }
 
+/**
+ * Compares two arrays, return array of elements contained in newArray not part of oldArray
+ *
+ * @param {Array} oldArray the initial array to compare against
+ * @param {Array} newArray the second array. Only elements from this array will be returned
+ * @returns {Array} array of elements only contained in newArray
+ */
 function xckReturnNewElements(oldArray, newArray) {
   let ra = [];
 
@@ -39,9 +63,15 @@ function xckReturnNewElements(oldArray, newArray) {
   return ra;
 }
 
+/**
+ * Updates our local store with cookies that have been set for a given category so far
+ *
+ * @param {Array} aInitialCookies - The array of cookies that were set before script was run
+ * @param {String} category - cookie category related to this load
+ */
 function xckSaveCookieState(aInitialCookies,category) {
   let aNewCookies = xckGetCookieNames();
-  let aAddedCookies = xckReturnNewElements(aInitialCookies,aNewCookies);
+  let aAddedCookies = xckReturnNewElements(aInitialCookies, aNewCookies);
 
   // Check what cookies are set now and save this to our local store
   if (typeof category !== "undefined") {
@@ -60,6 +90,12 @@ function xckSaveCookieState(aInitialCookies,category) {
   }
 }
 
+/**
+ * Loads Javascript. Can load from remote file or code.
+ *
+ * @param {Object} loadScripts - The HTMLCollection of script tags to be loaded
+ * @param {String} category - cookie category related to this load
+ */
 function xckLoadJs(loadScripts, category) {
   let aInitialCookies = xckGetCookieNames();
 
@@ -99,7 +135,12 @@ function xckLoadJs(loadScripts, category) {
   }
 }
 
-// Clear all cookies crated by scripts that have no longer consent from user
+/**
+ * Removes cookies for categories without consent.
+ * Clears all cookies crated by scripts that have no longer consent from user.
+ *
+ * @param {Object} cookieTypes - The object collection of cookie categories consented by user
+ */
 function xckClearCookies(cookieTypes) {
   const entries = Object.entries(cookieTypes);
 
@@ -125,7 +166,14 @@ function xckClearCookies(cookieTypes) {
   }
 }
 
-// Call handler for scripts encoded in HTML as xbee-script
+/**
+ * Scans document for HTML defined xbee-script tags and converts them into
+ * scripts that will be loaded once user grants consent. Will also look for
+ * unset scripts when user removes consent.
+ *
+ * @param {Object} cookieTypes object with true/false for each user cookie type.
+ * Example Object { application: false, usage: true, statistics: false, advertising: false }
+ */
 function xckHandleXbeeScriptTags(cookieTypes) {
   let xbeCookieScripts = document.getElementsByTagName("xbee-script");
   let i = 0;
@@ -172,7 +220,13 @@ function xckHandleXbeeScriptTags(cookieTypes) {
   }
 }
 
-// Call handler for cookies encoded in HTML as "xbee-cookie"
+/**
+ * Scans document for HTML defined xbee-cookie tags and sets or removes cookies
+ * once user grants consent.
+ *
+ * @param {Object} cookieTypes object with true/false for each user cookie category.
+ * Example Object { application: false, usage: true, statistics: false, advertising: false }
+ */
 function xckHandleXbeeCookieTags(cookieTypes) {
   let xbeCookieTags = document.getElementsByTagName("xbee-cookie");
   let i = 0;
