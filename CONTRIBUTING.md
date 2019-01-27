@@ -9,7 +9,7 @@ packages. Lerna is used with this monorepo.
 After cloning the repo, run the following.
 
 ```sh
-npm install --no-package-lock
+yarn --no-lockfile
 ```
 
 This will only install the dependencies needed to manage/maintain this monorepo.
@@ -18,7 +18,7 @@ For example, it will locally install Lerna.
 Then run the following to install all the dependencies of the packages.
 
 ```sh
-npx lerna bootstrap --hoist
+npx lerna bootstrap -- --no-lockfile
 ```
 
 Note: This command takes several minutes to run. It may appear to hang during
@@ -34,10 +34,10 @@ See https://github.com/lerna/lerna for more info.
 To install the dependencies of this project's packages, use
 
 ```sh
-npx lerna bootstrap --hoist
+npx lerna bootstrap -- --no-lockfile
 ```
 
-In addition to running `npm install`, Lerna also links together each package.
+In addition to running `yarn`, Lerna also links together each package.
 
 **Adding New Dependencies**
 

@@ -5,6 +5,7 @@ import {
   configFields,
   defaultConfig,
   requiredFields,
+  cookieDefns,
 } from "xcoobee-cookie-kit-core/src/configs";
 import CookieKitContainer from "react-cookie-kit/src";
 
@@ -93,6 +94,30 @@ class CookitKitInitializer {
       consentSettings = this._compRef.current.getCookieTypes();
     }
     return consentSettings || {};
+  }
+
+  setManagedCookie(category, name, value, days) {
+    if (!category || !name || !value) {
+      throw Error("Please provide all required parameters: category, name, value.");
+    }
+
+    if (!cookieDefns.map(cookie => cookie.type).includes(category)) {
+      throw Error("Category should be one of the following: application, usage, statistics, advertising.");
+    }
+
+    let managedCookie = document.createElement("xbee-cookie");
+
+    // Set elements
+    managedCookie.setAttribute("category", category);
+    managedCookie.setAttribute("name", name);
+    managedCookie.innerHTML = value;
+
+    if (typeof days !== "undefined") {
+      managedCookie.setAttribute("days", days);
+    }
+
+    // Add this as html to our DOM
+    document.body.appendChild(managedCookie);
   }
 
   _render(dom = document.body) {

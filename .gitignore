@@ -2,6 +2,7 @@ dist/
 node_modules/
 
 package-lock.json
+yarn.lock
 
 lerna-debug.log*
 npm-debug.log*

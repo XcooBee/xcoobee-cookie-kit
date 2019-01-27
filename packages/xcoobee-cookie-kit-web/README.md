@@ -431,7 +431,7 @@ You need to define your handler in JS. We are including a few helper functions t
 ```js
   /**
    * parse html encoded script directives
-   * @param {array} loadScripts - The array of scripts to be loaded
+   * @param {string} htmlData - string with script tags to be loaded
    * @return {object} the fully parsed html elements
    */
   function xckParseHtml(htmlData) {
