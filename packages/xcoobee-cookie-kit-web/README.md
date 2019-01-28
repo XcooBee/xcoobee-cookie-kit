@@ -14,6 +14,49 @@ The XCK is an active cookie and consent management framework for your site. This
 Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
 
 
+## Super Quick Start Example
+
+1. Load the library from the CDN using script tag:
+
+```html
+<script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
+```
+
+2. Set your managed cookies with `<xbee-cookie>` tag in your HTML DOM like so:
+
+```html
+<xbee-cookie category="application" name="usersess">abhchkshsdh</xbee-cookie>
+<xbee-cookie category="usage" name="theme">dark-blue</xbee-cookie>
+
+```
+
+3. Initialize the Cookie kit to manage things at the end of your page rendering:
+
+```html
+<script>
+  function blankCh(){};
+
+  XcooBee.kit.initialize({
+    checkByDefaultTypes: ["application","usage"],
+    cookieHandler: "blankCh",
+    position: "right_bottom",
+    privacyUrl: "#privacyUrl",
+    requestDataTypes: ["application", "usage", "statistics"],
+    termsUrl: "#termsUrl",
+    textMessage: "Welcome to our site. We manage cookies responsibly and listen to our users. You can check and uncheck which types are OK."    
+  });
+</script>
+
+```
+See [Parameter Reference for all the things you can do](#full-parameter-reference).
+
+Done !!
+
+This was a super simple example, the XCK will take on GDPR and e-directive related tasks from here. Of course,there are many more and in-depths examples later.
+
+
+
+
 ## What is the XCK
 
 The objective of the XcooBee Cookie Kit (XCK) is to enable websites to manage their Cookie consent more effectively and with less annoyance to their users. The XCK can work in concert with the XcooBee network to improve overall management for users and businesses but that is not required. When the XCK works independently of XcooBee some management functionality will not be available.
@@ -71,17 +114,26 @@ For more information please visit [XcooBee Cookie Classification](https://www.xc
 
 ## Example Applications
 
-We have included two example applications that make use of the XCK so you can see it in action yourself.
+We have included three example applications that make use of the XCK so you can see it in action yourself.
 
 ### Single Page Application
 
 Our cafe application demonstrates the use of XCK in a single page application. You can unzip and deploy on a webserver like IIS or Apache. The files are located in `examples/cafe-spa.zip`. Review the `index.html` file for instructions/explanations.
 
+[Cookie Kit Simple HTML App](https://github.com/XcooBee/example-spa-xck-app)
+
 ### Sample Request/Response app based on NodeJs & Express
 
 Our pizza application demonstrates the use of the XCK in a request/response based application. You can unzip and deploy it directly on your system. You will need nodejs installed on your system for some. Review the `README.md` file for instructions/explanations in each of the example application Single Page (SPA), Express, and ReactJS:
 
-[Cookie Kit Example Application ](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web/examples)
+[Cookie Kit Example Application ](https://github.com/XcooBee/example-express-xck-app)
+
+
+### Sample ReactJS based application
+
+A clone of our cafe app to demonstrate the use of the XCK with React. We are using the special React Build of the XCK for this and you should review the [react-cookie-kit](https://www.npmjs.com/package/react-cookie-kit) on npm js.
+
+[Cookie Kit Example React Application](https://github.com/XcooBee/example-reactjs-xck-app)
 
 
 ## How does this Work
@@ -570,6 +622,106 @@ You can use one of the XcooBee SDKs for simplifying this interaction:
 The use of the XcooBee network is not a required interaction. Users will transparently update their cookie preferences with your site every time they visit.
 
 
+## Managed Cookies and Scripts
+
+Most cookie notices do not implement life cycle management, and if you, as the programmer, do not implement the correct behavior for user interaction events you will still fail your GDPR audit and your company may become liable for compliance failures. The XCK offers you a very simple alternative that keeps you easily compliant.
+
+Using managed cookies and scripts is the easiest way to declare and manage cookies with the XCK. This approach allows the XCK to manage the life-cycle of your cookies from creation to destruction. It requires only minimal application changes. As long as your application can write an HTML tag you can create managed cookies and scripts.
+
+The features are implemented through two additional HTML tag extensions you can use:
+
+- `<xbee-cookie> </xbee-cookie>`
+- `<xbee-script> </xbee-script>`
+
+You need both an opening and a closing tag.
+You should declare all your tags before calling the XCK `initialize()` function.
+
+### xbee-cookie tag
+
+The `<xbee-cookie>` tag allows you to declare a singular managed cookie.
+
+It is a declaration for cookies that you can add anywhere in the HTML DOM where you wish to set cookies.
+The XCK will manage life cycle including removal automatically.
+If possible tags should be written in one line:
+
+  `<xbee-cookie category="application" name="supercookie">supercookievalue</xbee-cookie>`
+
+The value of the cookie is between opening and closing tags (innerHTML).
+
+Attributes:
+
+```
+  name      => the name of the cookie you wish to set
+  category  => one of the cookie categories: application, usage, statistics, advertising
+  days      => optional: the number of days to set the cookie, if not provided will expire with session
+```
+
+Examples:
+
+
+```html
+<xbee-cookie category="usage" name="mycookie">this is a value of the cookie</xbee-cookie>
+<xbee-cookie category="advertising" name="mybuypcookie">great cookie</xbee-cookie>
+```
+
+### xbee-script tag
+
+If you are setting cookies via remote scripts or have to load 3rd party scripts that set some cookies the easiest way to manage them is to use the `<xbee-script>` tag.
+
+The xbee-script tag works like the HTML script tag but has two additional attributes. This allows you to easily convert existing `<script>` tags into `<xbee-script>` tags.
+
+The tag content is Javascript that will be run later after we obtained consent from users. You can also specify remote scripts via `src` attribute as usual. You will need to add a closing tag as a single line autoclose `</>` is not allowed:
+
+`<xbee-script src="https://wrongtypeofusage/need_a_close_tag"/>`
+
+instead use this
+
+`<xbee-script src="https://betterexample.com/with_close_tag"> </xbee-script>`
+
+Additional Attributes:
+```
+  action => one of "set" or "unset", you can provide clean up scripts with "unset" attribute 
+  category => one of the cookie categories: application, usage, statistics, advertising
+```
+
+Example:
+
+```html
+  <!-- Google Analytics example with cookie kit -->
+  <xbee-script category="statistics" action="set">
+      
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      
+      ga('create', 'UA-XXXXX-Y', 'auto');
+      ga('send', 'pageview');
+      
+  </xbee-script>
+  <!-- End Google Analytics -->
+
+```
+
+Since scripts that are loaded from different domains can create cookies that are not directly accessible by XDK due to same origin policy in browsers, the XDK allows you to create cleanup scripts that can be run for each domain. 
+
+In this case the `action` attribute of `unset` can be used to designate scripts that clean up cookies when users remove consent.
+
+Example:
+
+```html
+  <!-- Example removal script call -->
+  <xbee-script category="statistics" action="unset" src="https://facebook/remove.js">        
+  </xbee-script>
+
+```
+
+
+Remember:
+
+YOU WILL NEED AN OPEN `<xbee-script>` AND CLOSE `</xbee-script>` TAG EVEN WHEN YOU ONLY USE SRC ATTRIBUTE.
+
+
 ## Full Parameter Reference
 
 The XCK is initialized with a set of parameters that determine the behavior of the XCK on your site. This can include rendering location, timeouts, event handlers, css etc.
@@ -747,7 +899,28 @@ For example if your site runs on this url "http://www.mysite.com/product/hello" 
 
 You can use public methods of the XCK to set and retrieve parameter information. These are found under the `XcooBee.kit` object.
 
-### setParam([parameter], [value])
+
+### setManagedCookie([category:string], [cookieName:string], [cookieValue:string], [days:integer]) 
+
+Create fully GDPR compliant cookies using the `setManagedCookie()` method. You are offloading all interaction and life-cylce management of the cookie to the XCK. The XCK will ensure that proper consent is obtained for the cookie from the user before setting it and also remove the cookies when user removes consent.
+This is the JavaScript equivalent to using the `<xbee-cookie>` tag in your HTML. You will be automatically compliant with all GDPR interactions when using managed cookies.
+
+options:
+
+```
+  category    => required: one of: application, usage, statistics, advertising
+  cookieName  => required: name of your cookie
+  cookieValue => require: the value of your cookie
+  days        => optional: days to perist, default is 0 = session
+```
+
+example:
+```js
+XcooBee.kit.setManagedCookie("usage", "myUserColor", "green");
+```
+
+
+### setParam([parameter:string], [value:object])
 
 Use the `setParam()` method to set any valid parameter for the XCK. For example to set the `targetUrl` parameter to a different value. Where `parameter [string]` is any of the valid parameters, and `value [any]` is data for the parameter.
 
@@ -776,7 +949,7 @@ Alternately, you can initialize with correct function reference.
 
 This can be useful when you wish to turn off certain function during runtime, e.g. the `hideOnComplete` param can be used to hide the XCK after user has confirmed cookie selection.
 
-### getParam([parameter]) `object`
+### getParam([parameter:string]) `object`
 
 Retrieves the value of actively used parameter from the XCK.
 
