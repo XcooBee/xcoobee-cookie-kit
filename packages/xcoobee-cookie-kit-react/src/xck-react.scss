@@ -765,3 +765,11 @@ $duration: .2s;
     }
   }
 }
+
+// Hide cookie managing content
+xbee-script {
+  display: none;
+}
+xbee-cookie {
+  display: none;
+}

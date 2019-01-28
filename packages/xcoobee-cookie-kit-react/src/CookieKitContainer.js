@@ -21,6 +21,7 @@ import {
   clearLocale,
   clearCountryCode,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
+import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 
 import { xckDomain } from "./configs";
@@ -30,6 +31,12 @@ import CookieKit from "./CookieKit";
 // const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;
 const OPEN = consentStatuses.open;
+
+function callCookieManagingFunctions(consentSettings) {
+  CookieManager.xckClearCookies(consentSettings);
+  CookieManager.xckHandleXbeeScriptTags(consentSettings);
+  CookieManager.xckHandleXbeeCookieTags(consentSettings);
+}
 
 function callCookieHandler(cookieHandler, consentSettings) {
   if (typeof cookieHandler === "string") {
@@ -247,8 +254,7 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus,
       cookieConsents,
       initializing: false,
-    });
-    this.callCallbacks(cookieConsents);
+    }, () => this.callCallbacks(cookieConsents));
   }
 
   handleAuthentication = (accessToken) => {
@@ -297,6 +303,8 @@ export default class CookieKitContainer extends React.PureComponent {
     cookieConsents.forEach((cookieConsent) => {
       consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
+
+    callCookieManagingFunctions(consentSettings);
 
     if (cookieHandler) {
       callCookieHandler(cookieHandler, consentSettings);
