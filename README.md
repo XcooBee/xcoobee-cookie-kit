@@ -31,7 +31,7 @@ npx lerna bootstrap -- --no-lockfile
 
 Please see our contribution document to make contributions to this project.
 
-[Contribute](#CONTRIBUTING.md)
+[Contribute](https://github.com/XcooBee/xcoobee-cookie-kit/blob/master/CONTRIBUTING.md)
 
 ## Individual Repos
 
