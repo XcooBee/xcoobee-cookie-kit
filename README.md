@@ -21,10 +21,9 @@ The packages are also published individually to npm.
 Please run the following commands from the root project folder
 
 ```
-npm install --no-package-lock
+yarn --no-lockfile
 
-npx lerna bootstrap
-
+npx lerna bootstrap -- --no-lockfile
 ```
 
 
@@ -32,7 +31,7 @@ npx lerna bootstrap
 
 Please see our contribution document to make contributions to this project.
 
-[Contribute](#CONTRIBUTING.md)
+[Contribute](https://github.com/XcooBee/xcoobee-cookie-kit/blob/master/CONTRIBUTING.md)
 
 ## Individual Repos
 
