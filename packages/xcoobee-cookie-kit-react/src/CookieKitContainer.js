@@ -6,7 +6,6 @@ import {
   getAccessToken,
   saveAccessToken,
 } from "xcoobee-cookie-kit-core/src/AccessTokenManager";
-import { clearLocale, clearCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import {
   consentStatuses,
   cookieTypes,
@@ -16,7 +15,12 @@ import {
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
 import CookieConsentsManager from "xcoobee-cookie-kit-core/src/CookieConsentsManager";
-import { getCountryCode, saveCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
+import {
+  getCountryCode,
+  saveCountryCode,
+  clearLocale,
+  clearCountryCode,
+} from "xcoobee-cookie-kit-core/src/LocaleManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 
 import { xckDomain } from "./configs";
@@ -171,7 +175,7 @@ export default class CookieKitContainer extends React.PureComponent {
     } else {
       CookieConsentsManager.fetchCountryCode()
         .catch((error) => {
-          // console.log("CookieKitContainer#constructor#fetchCountryCode#catch");
+          // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
           console.error(error);
           return null;
         })
