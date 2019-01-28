@@ -259,7 +259,7 @@ export default class CookieKitContainer extends React.PureComponent {
     if (isConnected) {
       this.resolveConnectedCookieConsents().catch(handleErrors);
     }
-  }
+  };
 
   handleConsentStatusChange = (nextConsentStatus) => {
     // console.log("CookieKitContainer#handleConsentStatusChange");
