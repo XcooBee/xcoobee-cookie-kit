@@ -5,6 +5,7 @@ import {
   configFields,
   defaultConfig,
   requiredFields,
+  positions,
 } from "xcoobee-cookie-kit-core/src/configs";
 import CookieKitContainer from "react-cookie-kit/src";
 
@@ -57,6 +58,8 @@ class CookitKitInitializer {
       ...this._config,
       ...cfg,
     };
+
+    config.position = positions.includes(config.position) ? config.position : positions[0];
 
     this._config = config;
     this._render(this._config.renderTo);

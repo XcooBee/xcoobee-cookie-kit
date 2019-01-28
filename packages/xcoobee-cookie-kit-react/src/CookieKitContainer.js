@@ -103,7 +103,7 @@ export default class CookieKitContainer extends React.PureComponent {
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool,
     hideOnComplete: PropTypes.bool,
-    position: PropTypes.string,
+    position: PropTypes.oneOf(positions),
     privacyUrl: PropTypes.string.isRequired,
     requestDataTypes: PropTypes.arrayOf(
       PropTypes.oneOf(cookieTypes).isRequired,
@@ -378,6 +378,7 @@ export default class CookieKitContainer extends React.PureComponent {
       expirationTime,
       hideBrandTag,
       hideOnComplete,
+      position,
       privacyUrl,
       requestDataTypes,
       termsUrl,
@@ -385,7 +386,6 @@ export default class CookieKitContainer extends React.PureComponent {
       textMessage,
     } = this.props;
     const { accessToken, consentsSource, cookieConsents, countryCode, initializing } = this.state;
-    const position = positions.includes(this.props.position) ? this.props.position : positions[0];
 
     const renderRefreshButton = testMode
       && (accessToken || cookieConsentsCache.get());
