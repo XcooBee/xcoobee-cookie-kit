@@ -54,8 +54,9 @@ Done !!
 
 This was a super simple example, the XCK will take on GDPR and e-directive related tasks from here. Of course,there are many more and in-depths examples later.
 
+## Video
 
-
+[Cookie Kit Tutorial](https://www.youtube.com/watch?v=X2DNrckHLBI)
 
 ## What is the XCK
 
