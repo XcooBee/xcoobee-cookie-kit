@@ -52,6 +52,8 @@ const locales = ["EN", "DE", "FR", "ES"];
 
 const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";
+const localeKey = "xcoobeeLocale";
+const countryCodeKey = "xcoobeeCountryCode";
 
 const links = {
   poweredBy: "https://www.xcoobee.com",
@@ -121,11 +123,13 @@ export {
   consentStatuses,
   cookieDefns,
   cookieTypes,
+  countryCodeKey,
   cssHref,
   defaultConfig,
   euCountries,
   expirationTime,
   links,
+  localeKey,
   locales,
   positions,
   requiredFields,
