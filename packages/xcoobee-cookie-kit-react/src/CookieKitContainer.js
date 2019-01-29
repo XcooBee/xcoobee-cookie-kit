@@ -15,6 +15,12 @@ import {
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
 import CookieConsentsManager from "xcoobee-cookie-kit-core/src/CookieConsentsManager";
+import {
+  getCountryCode,
+  saveCountryCode,
+  clearLocale,
+  clearCountryCode,
+} from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 
@@ -83,6 +89,8 @@ function handleErrors(error) {
 
 function refresh() {
   clearAccessToken();
+  clearLocale();
+  clearCountryCode();
   cookieConsentsCache.clear();
   window.location.reload();
 }
@@ -154,39 +162,9 @@ export default class CookieKitContainer extends React.PureComponent {
       consentsSource: "unknown",
       consentStatus: OPEN,
       cookieConsents: null,
-      countryCode: null,
+      countryCode: getCountryCode(),
       initializing: true,
     };
-
-    CookieConsentsManager.fetchCountryCode()
-      .catch((error) => {
-        // console.log("CookieKitContainer#constructor#fetchCountryCode#catch");
-        console.error(error);
-        return null;
-      })
-      .then((countryCode) => {
-        // console.log("CookieKitContainer#constructor#fetchCountryCode#then");
-        this.setState({ countryCode });
-
-        const cachedCookieConsents = cookieConsentsCache.get();
-        if (cachedCookieConsents) {
-          // console.log("Using cached cookie consents!");
-          this.setCookieConsents("cached", cachedCookieConsents);
-          return;
-        }
-
-        const { campaignReference } = this.props;
-
-        const isConnected = !!campaignReference;
-        const { accessToken } = this.state;
-
-        if (isConnected && accessToken) {
-          this.resolveConnectedCookieConsents().catch(handleErrors);
-        } else {
-          this.fallBackToHostDefaults();
-        }
-      })
-      .catch(handleErrors);
 
     if (props.cssAutoLoad) {
       const linkDom = document.createElement("link");
@@ -198,11 +176,24 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  // componentDidMount() {
-  //   // console.log("CookieKitContainer#componentDidMount");
-  //   // console.dir(this.props);
-  //   // console.dir(this.state);
-  // }
+  componentDidMount() {
+    if (this.state.countryCode) {
+      this.getCookieConsents();
+    } else {
+      CookieConsentsManager.fetchCountryCode()
+        .catch((error) => {
+          // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
+          console.error(error);
+          return null;
+        })
+        .then((countryCode) => {
+          saveCountryCode(countryCode);
+          this.setState({ countryCode });
+          this.getCookieConsents();
+        })
+        .catch(handleErrors);
+    }
+  }
 
   // componentDidUpdate(prevProps, prevState) {
   //   console.log("CookieKitContainer#componentDidUpdate");
@@ -215,6 +206,26 @@ export default class CookieKitContainer extends React.PureComponent {
   //     console.dir(this.state);
   //   }
   // }
+
+  getCookieConsents() {
+    const cachedCookieConsents = cookieConsentsCache.get();
+    if (cachedCookieConsents) {
+      // console.log("Using cached cookie consents!");
+      this.setCookieConsents("cached", cachedCookieConsents);
+      return;
+    }
+
+    const { campaignReference } = this.props;
+
+    const isConnected = !!campaignReference;
+    const { accessToken } = this.state;
+
+    if (isConnected && accessToken) {
+      this.resolveConnectedCookieConsents().catch(handleErrors);
+    } else {
+      this.fallBackToHostDefaults();
+    }
+  }
 
   getConsentStatus() {
     const { consentStatus } = this.state;
