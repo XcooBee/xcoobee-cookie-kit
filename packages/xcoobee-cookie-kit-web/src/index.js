@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import {
   consentStatuses,
   configFields,
-  defaultConfig,
-  requiredFields,
   cookieDefns,
+  defaultConfig,
+  positions,
+  requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
 import CookieKitContainer from "react-cookie-kit/src";
 
@@ -58,6 +59,8 @@ class CookitKitInitializer {
       ...this._config,
       ...cfg,
     };
+
+    config.position = positions.includes(config.position) ? config.position : positions[0];
 
     this._config = config;
     this._render(this._config.renderTo);
@@ -136,7 +139,7 @@ class CookitKitInitializer {
         />,
         placeHolderDom,
       );
-      dom.appendChild(placeHolderDom);
+      (dom || document.body).appendChild(placeHolderDom);
     };
 
     if (document.readyState === "loading") {
