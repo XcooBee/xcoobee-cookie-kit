@@ -60,8 +60,6 @@ class CookitKitInitializer {
       ...cfg,
     };
 
-    config.position = positions.includes(config.position) ? config.position : positions[0];
-
     this._config = config;
     this._render(this._config.renderTo);
   }
