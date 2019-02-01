@@ -18,8 +18,6 @@ import CookieConsentsManager from "xcoobee-cookie-kit-core/src/CookieConsentsMan
 import {
   getCountryCode,
   saveCountryCode,
-  clearLocale,
-  clearCountryCode,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
@@ -85,21 +83,6 @@ function handleErrors(error) {
       throw Error(error.message);
     }
   }
-}
-
-function refresh() {
-  clearAccessToken();
-  clearLocale();
-  clearCountryCode();
-  cookieConsentsCache.clear();
-  window.location.reload();
-}
-
-function RefreshButton() {
-  const className = "xb-cookie-kit__button xb-cookie-kit__refresh-button";
-  return (
-    <button type="button" className={className} onClick={refresh}>Refresh</button>
-  );
 }
 
 export default class CookieKitContainer extends React.PureComponent {
@@ -397,7 +380,6 @@ export default class CookieKitContainer extends React.PureComponent {
       expirationTime,
       hideBrandTag,
       hideOnComplete,
-      position,
       privacyUrl,
       requestDataTypes,
       termsUrl,
@@ -406,8 +388,7 @@ export default class CookieKitContainer extends React.PureComponent {
     } = this.props;
     const { accessToken, consentsSource, cookieConsents, countryCode, initializing } = this.state;
 
-    const renderRefreshButton = testMode
-      && (accessToken || cookieConsentsCache.get());
+    const position = positions.includes(this.props.position) ? this.props.position : positions[0];
 
     // console.log("initializing:", initializing);
 
@@ -432,9 +413,9 @@ export default class CookieKitContainer extends React.PureComponent {
               privacyUrl={privacyUrl}
               requestDataTypes={requestDataTypes}
               termsUrl={termsUrl}
+              testMode={testMode}
               textMessage={textMessage}
             />
-            {renderRefreshButton && (<RefreshButton />)}
           </React.Fragment>
         )}
       </React.Fragment>

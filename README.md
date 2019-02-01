@@ -42,4 +42,9 @@ All repos are published individually in npm. You can review each package's sourc
 - [React Cookie Kit](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-react)
 
 
+## Video
+
+[Cookie Kit Tutorial](https://www.youtube.com/watch?v=X2DNrckHLBI)
+
+
 

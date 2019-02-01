@@ -23,7 +23,7 @@ function xckSetCookie(name, value, days) {
  * @param {String} name the name of cookie
  */
 function xckEraseCookie(name) {
-  document.cookie = name + '=; Max-Age=-99999999;';
+  document.cookie = name + "=; Max-Age=-99999999; path=/";
 }
 
 /**
@@ -32,8 +32,8 @@ function xckEraseCookie(name) {
  * @returns {Array} array of cookie names
  */
 function xckGetCookieNames() {
-  let ca = document.cookie.split(';');
-  let ra = [];
+  const ca = document.cookie.split(";");
+  const ra = [];
 
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i].split("=")[0].trim();
@@ -251,7 +251,7 @@ function xckHandleXbeeCookieTags(cookieTypes) {
         // Set or erase this cookie based on whether category is allowed
         if (cookieTypes[cookieCategory]) {
           // Set cookie
-          xckSetCookie(cookieName,cookieValue,cookieDays);
+          xckSetCookie(cookieName, cookieValue, cookieDays);
         } else {
           // Erase cookie
           xckEraseCookie(cookieName);
@@ -271,4 +271,4 @@ export default {
   xckClearCookies,
   xckHandleXbeeScriptTags,
   xckHandleXbeeCookieTags,
-}
+};

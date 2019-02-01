@@ -9,11 +9,34 @@ import {
   positions,
 } from "xcoobee-cookie-kit-core/src/configs";
 
+import { clearAccessToken } from "xcoobee-cookie-kit-core/src/AccessTokenManager";
+import {
+  clearLocale,
+  clearCountryCode,
+} from "xcoobee-cookie-kit-core/src/LocaleManager";
+
+import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
+
 import CookieConsentShape from "./lib/CookieConsentShape";
 
 import CookieKitPopup from "./CookieKitPopup";
 
 const BLOCK = "xb-cookie-kit";
+
+function reset() {
+  clearAccessToken();
+  clearLocale();
+  clearCountryCode();
+  cookieConsentsCache.clear();
+  window.location.reload();
+}
+
+function ResetButton() {
+  const className = "xb-cookie-kit__button xb-cookie-kit__reset-button";
+  return (
+    <button type="button" className={className} onClick={reset}>Reset</button>
+  );
+}
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
@@ -225,6 +248,7 @@ export default class CookieKit extends React.PureComponent {
       privacyUrl,
       requestDataTypes,
       termsUrl,
+      testMode,
       textMessage,
     } = this.props;
     const { hasClosed, isOpen, isShown, pulsing } = this.state;
@@ -233,6 +257,9 @@ export default class CookieKit extends React.PureComponent {
 
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
+
+    const renderResetButton = testMode
+      && (accessToken || cookieConsentsCache.get());
 
     // console.log("animation:", animation);
     // console.log("consentsSource:", consentsSource);
@@ -290,6 +317,7 @@ export default class CookieKit extends React.PureComponent {
             />
           </button>
         )}
+        {renderResetButton && (<ResetButton />)}
       </div>
     );
   }

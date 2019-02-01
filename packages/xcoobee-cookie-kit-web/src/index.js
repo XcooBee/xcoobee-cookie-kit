@@ -21,10 +21,6 @@ function checkRequiredFields(config) {
     }
   });
 
-  if (!config.cookieHandler && !config.targetUrl) {
-    errors.push("One of `cookieHandler` or `targetUrl` fields is required as initialization parameter.");
-  }
-
   if (errors.length > 0) {
     errors.forEach(errorMessage => console.error(errorMessage));
     return false;
@@ -59,8 +55,6 @@ class CookitKitInitializer {
       ...this._config,
       ...cfg,
     };
-
-    config.position = positions.includes(config.position) ? config.position : positions[0];
 
     this._config = config;
     this._render(this._config.renderTo);

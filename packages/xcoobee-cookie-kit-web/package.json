@@ -1,6 +1,6 @@
 {
   "name": "xcoobee-cookie-kit-web",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Cookie Consent Management for Websites",
   "keywords": [
     "consent",
@@ -27,14 +27,13 @@
     "dev": "npm run clean && env-cmd development webpack-dev-server --hot --progress",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "lint": "eslint src",
-    "solanobuild": "echo 'what should this be?'",
+    "lint": "eslint src",    
     "test": "node scripts/test-not-implemented.js"
   },
   "dependencies": {
     "core-js": "^2.6.1",
-    "xcoobee-cookie-kit-core": "^1.0.8",
-    "react-cookie-kit": "^1.0.8"
+    "xcoobee-cookie-kit-core": "^1.0.9",
+    "react-cookie-kit": "^1.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
