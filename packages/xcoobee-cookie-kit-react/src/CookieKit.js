@@ -150,7 +150,7 @@ export default class CookieKit extends React.PureComponent {
     }, 1);
   }
 
-  handlePopupSubmit = (nextConsentSettings) => {
+  handlePopupSubmit = (nextConsentSettings, fingerprintConsent) => {
     // console.log("CookieKit#handlePopupSubmit");
     // console.dir(nextConsentSettings);
     const {
@@ -158,7 +158,7 @@ export default class CookieKit extends React.PureComponent {
       onCookieConsentsChange,
     } = this.props;
 
-    onCookieConsentsChange(nextConsentSettings);
+    onCookieConsentsChange(nextConsentSettings, fingerprintConsent);
 
     this.clearTimers();
     this.setState({ isOpen: false });

@@ -278,7 +278,7 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setState({ consentStatus: nextConsentStatus });
   };
 
-  handleCookieConsentsChange = (consentSettings) => {
+  handleCookieConsentsChange = (consentSettings, fingerprintConsent) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
     // console.log("consentSettings:", consentSettings);
 
@@ -289,7 +289,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const { campaignReference } = this.props;
     const { accessToken } = this.state;
-    CookieConsentsManager.saveRemotely(accessToken, cookieConsents, campaignReference)
+    CookieConsentsManager.saveRemotely(accessToken, cookieConsents, campaignReference, fingerprintConsent)
       .catch(handleErrors);
 
     this.setCookieConsents("usersSaved", cookieConsents);

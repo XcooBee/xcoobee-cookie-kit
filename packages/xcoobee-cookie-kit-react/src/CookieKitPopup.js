@@ -64,8 +64,9 @@ export default class CookieKitPopup extends React.PureComponent {
 
     this.state = {
       consentSettings,
-      selectedLocale: getLocale() || "EN",
+      fingerprint: false,
       isShown: false,
+      selectedLocale: getLocale() || "EN",
     };
 
     window.addEventListener("message", this.onMessage);
@@ -125,12 +126,17 @@ export default class CookieKitPopup extends React.PureComponent {
     }
   };
 
+  handleFingerprintCheck = (e) => {
+    // console.log('CookieKitPopup#handleFingerprintCheck');
+    this.setState({ fingerprint: e.target.checked });
+  };
+
   handleSubmit = () => {
     // console.log('CookieKitPopup#handleSubmit');
     const { onSubmit } = this.props;
-    const { consentSettings } = this.state;
+    const { consentSettings, fingerprint } = this.state;
 
-    onSubmit(consentSettings);
+    onSubmit(consentSettings, fingerprint);
   };
 
   renderTextMessage(textMessage) {
@@ -165,7 +171,7 @@ export default class CookieKitPopup extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { consentSettings, isShown, selectedLocale } = this.state;
+    const { consentSettings, fingerprint, isShown, selectedLocale } = this.state;
 
     // console.log("countryCode:", countryCode);
 
@@ -282,6 +288,21 @@ export default class CookieKitPopup extends React.PureComponent {
             ? renderText("CookieKit.UncheckButton", selectedLocale)
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
+        <div className={`${BLOCK}__fingerprint`}>
+          <div className={`${BLOCK}__fingerprint-checkbox`}>
+            <input
+              id="xbCheckbox_fingerprint"
+              type="checkbox"
+              checked={fingerprint}
+              onChange={e => this.handleFingerprintCheck(e)}
+            />
+            <label
+              htmlFor="xbCheckbox_fingerprint"
+              className={`${BLOCK}__checkbox`}
+            />
+          </div>
+          <div className={`${BLOCK}__fingerprint-label`}>Allow use of Fingerprinting</div>
+        </div>
         <div className={`${BLOCK}__actions`}>
           { !hideBrandTag && (
             <div className={`${BLOCK}__privacy-partner-container`}>

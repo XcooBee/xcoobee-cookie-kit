@@ -1,4 +1,4 @@
-import { cookieDefns as allAvailCookieDefns } from "./configs";
+import { cookieDefns as allAvailCookieDefns, fingerprintConsentKey } from "./configs";
 
 import graphQLRequest from "./graphql";
 
@@ -92,12 +92,14 @@ function fetchUserSettings(accessToken) {
         userSettings = {
           acceptCookies: [],
           acceptCrowdAI: false,
+          fingerprint: false,
           userCursor: user.cursor,
           xcoobeeId: user.xcoobee_id,
         };
         if (user.settings.consent) {
           userSettings.acceptCookies = user.settings.consent.accept_cookies || [];
           userSettings.acceptCrowdAI = user.settings.consent.use_crowd_ai;
+          userSettings.fingerprint = user.settings.consent.accept_cookies.includes(fingerprintConsentKey);
         }
       }
 
@@ -148,7 +150,7 @@ function fetchCrowdAiCookieConsents(accessToken, campaignName) {
   return crowdAiCookieConsents;
 }
 
-function saveRemotely(accessToken, cookieConsents, campaignReference) {
+function saveRemotely(accessToken, cookieConsents, campaignReference, fingerprintConsent) {
   // console.log("CookieConsentsManager#saveRemotely saving...");
   let promise;
   if (campaignReference && accessToken) {
@@ -158,6 +160,7 @@ function saveRemotely(accessToken, cookieConsents, campaignReference) {
       }
     }`;
     const domain = window.location.origin;
+
     promise = graphQLRequest(addConsentQuery, {
       campaign_reference: campaignReference,
       domain,
@@ -170,6 +173,11 @@ function saveRemotely(accessToken, cookieConsents, campaignReference) {
         const consentCursor = res.add_consents[0].consent_cursor;
         const dataTypes = cookieConsents.filter(item => item.checked)
           .map(item => allAvailCookieDefns.find(defn => defn.type === item.type).dbKey);
+
+        if (fingerprintConsent) {
+          dataTypes.push(fingerprintConsentKey);
+        }
+
         const consentConfig = {
           consents: {
             consent_cursor: consentCursor,
