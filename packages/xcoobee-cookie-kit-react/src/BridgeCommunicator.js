@@ -1,73 +1,104 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-export default class CookieKit extends React.PureComponent {
-    constructor(props) {
-        super(props);
+import { xbOrigin } from "./configs";
 
-        // register with XcooBee domain in iframe
-        window.addEventListener("message", this.XcooBeeHandleLoginStatusCheckResponse, false);
-    }
+export default class BridgeCommunicator extends React.PureComponent {
+  static propTypes = {
+    campaignReference: PropTypes.string,
+    onLoginStatusChange: PropTypes.func.isRequired,
+    onCookieOptionsLoad: PropTypes.func.isRequired,
+    handleBridgeError: PropTypes.func.isRequired,
+  };
 
+  static defaultProps = {
+    campaignReference: null,
+  };
 
-    // this function is called when we have a response from XcooBee Domain
-    XcooBeeHandleLoginStatusCheckResponse = (event) => {
-        const validOrigin = "https://testapp.xcoobee.net";  //TODO replace with https://app.xcoobee.net or https://testapp.xcoobee.net
+  constructor(props) {
+    super(props);
 
-        if (event.origin !== validOrigin) {
-            return;
-        } else {
-            console.warn("We got this:", event.data);
+    // Register with XcooBee domain in iframe
+    window.addEventListener("message", this.XcooBeeHandleResponse, false);
+  }
+
+  // This function is called when we have a response from XcooBee Domain
+  XcooBeeHandleResponse = (event) => {
+    const { onLoginStatusChange, onCookieOptionsLoad, handleBridgeError } = this.props;
+
+    if (event.origin === xbOrigin) {
+      const data = JSON.parse(event.data);
+      const action = Object.keys(data)[0];
+
+      if (action === "loginstatus") {
+        onLoginStatusChange(data[action]);
+
+        if (data[action]) {
+          this.fetchCookieOptions();
         }
-    };
+      } else if (action === "cookieoptions") {
+        onCookieOptionsLoad(data[action]);
 
-    // make a call to iframe
-    checkLoginStatus = () => {
-        // we need to set the message correctly. A JSON with defined action needed from status:
-        let myMsgObj = {
-            action:"loginstatus",
-            campaign: "g48.2fc78bg9e7",
-            domain:"http://mytestsite.com:3000"
-        };
-
-        this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj),"https://testapp.xcoobee.net");//TODO change it
-
-        myMsgObj = {
-            action:"cookieoptions",
-            action_params: {
-                type: "all"
-            },
-            campaign: "g48.2fc78bg9e7",
-            domain: "http://mytestsite.com:3000"};
-
-        this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj),"https://testapp.xcoobee.net");//TODO change it
-
-        myMsgObj = {
-            action:"savecookieconsent",
-            action_params: {
-                categories: {
-                    application: true,
-                    statistics: true,
-                }
-            },
-            campaign: "g48.2fc78bg9e7",
-            domain: "http://mytestsite.com:3000"};
-
-        this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj),"https://testapp.xcoobee.net");//TODO change it
-
-    };
-
-    render() {
-        return (
-            <iframe
-                ref={frameRef => {
-                    this.frameRef = frameRef;
-                }}
-                src="https://testapp.xcoobee.net/scripts/cookie-bridge/index.html"
-                onLoad={this.checkLoginStatus}
-                height="0"
-                width="0"
-                frameBorder="0"
-            />
-        );
+      } else if (action === "savecookieconsent") {
+        // console.log("Cookie consents have been successfully saved.");
+      } else {
+        handleBridgeError(data[action]);
+      }
     }
+  };
+
+  // Make a call to iframe
+  checkLoginStatus = () => {
+    const { campaignReference } = this.props;
+    const myMsgObj = {
+      action: "loginstatus",
+      campaign: campaignReference,
+      domain: window.location.origin,
+    };
+
+    this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
+  };
+
+  fetchCookieOptions() {
+    const { campaignReference } = this.props;
+    const myMsgObj = {
+      action: "cookieoptions",
+      action_params: {
+        type: "all"
+      },
+      campaign: campaignReference,
+      domain: window.location.origin,
+    };
+
+    this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
+  }
+
+  saveCookieConsents(cookieConsents) {
+    const { campaignReference } = this.props;
+    const myMsgObj = {
+      action: "savecookieconsent",
+      action_params: {
+        categories: cookieConsents,
+      },
+      campaign: campaignReference,
+      domain: window.location.origin,
+    };
+
+    this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
+  }
+
+  render() {
+    return (
+      <iframe
+        ref={frameRef => {
+          this.frameRef = frameRef;
+        }}
+        src="https://testapp.xcoobee.net/scripts/cookie-bridge/index.html"
+        onLoad={this.checkLoginStatus}
+        height="0"
+        width="0"
+        frameBorder="0"
+      />
+    );
+  }
 }

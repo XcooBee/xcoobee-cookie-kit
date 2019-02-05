@@ -17,8 +17,6 @@ const BLOCK = "xb-cookie-kit";
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
-    accessToken: PropTypes.string,
-    campaignReference: PropTypes.string,
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
@@ -26,7 +24,7 @@ export default class CookieKit extends React.PureComponent {
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
-    onAuthentication: PropTypes.func.isRequired,
+    loginStatus: PropTypes.bool,
     onConsentStatusChange: PropTypes.func.isRequired,
     onCookieConsentsChange: PropTypes.func.isRequired,
     position: PropTypes.oneOf(positions).isRequired,
@@ -47,11 +45,10 @@ export default class CookieKit extends React.PureComponent {
   };
 
   static defaultProps = {
-    accessToken: null,
-    campaignReference: null,
     companyLogo: null,
     countryCode: null,
     expirationTime: 0,
+    loginStatus: false,
   };
 
   constructor(props) {
@@ -108,7 +105,7 @@ export default class CookieKit extends React.PureComponent {
     this.stopPulsing();
 
     this.setState({ isOpen: true });
-  }
+  };
 
   handlePopupClose = () => {
     // console.log("CookieKit#handlePopupClose");
@@ -128,14 +125,10 @@ export default class CookieKit extends React.PureComponent {
       this.startPulsing();
       this.startDismissTimer();
     }, 1);
-  }
+  };
 
-  handlePopupLogin = (accessToken) => {
+  handlePopupLogin = () => {
     // console.log("CookieKit#handlePopupLogin");
-    const { onAuthentication } = this.props;
-
-    onAuthentication(accessToken);
-
     this.clearTimers();
 
     this.setState({ isOpen: false });
@@ -148,7 +141,7 @@ export default class CookieKit extends React.PureComponent {
       this.startPulsing();
       this.startDismissTimer();
     }, 1);
-  }
+  };
 
   handlePopupSubmit = (nextConsentSettings) => {
     // console.log("CookieKit#handlePopupSubmit");
@@ -175,7 +168,7 @@ export default class CookieKit extends React.PureComponent {
         this.startDismissTimer();
       }, 1);
     }
-  }
+  };
 
   clearTimers() {
     // console.log("CookieKit#clearTimers");
@@ -214,13 +207,12 @@ export default class CookieKit extends React.PureComponent {
   render() {
     // console.log("CookieKit#render");
     const {
-      accessToken,
-      campaignReference,
       companyLogo,
       consentsSource,
       cookieConsents,
       countryCode,
       hideBrandTag,
+      loginStatus,
       position,
       privacyUrl,
       requestDataTypes,
@@ -234,10 +226,7 @@ export default class CookieKit extends React.PureComponent {
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
-    // console.log("animation:", animation);
-    // console.log("consentsSource:", consentsSource);
-    // console.log("hasClosed:", hasClosed);
-    // console.log("pulsing:", pulsing);
+    const campaignReference = XcooBee.kit.getParam("campaignReference");
 
     return (
       <div
@@ -256,11 +245,11 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
-            accessToken={accessToken}
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}
             hideBrandTag={hideBrandTag}
+            loginStatus={loginStatus}
             isConnected={!!campaignReference}
             onClose={this.handlePopupClose}
             onLogin={this.handlePopupLogin}

@@ -4,11 +4,11 @@ import "./index";
 window.theCookieHandler = (cookieConsents) => {
   console.log("window.theCookieHandler:");
   console.dir(cookieConsents);
-  console.log("XcooBee.kit.getCookieTypes:")
+  console.log("XcooBee.kit.getCookieTypes:");
   console.log(XcooBee.kit.getCookieTypes());
 };
 
-XcooBee.kit.setParam("campaignReference", "abcdefgh1234567890");
+XcooBee.kit.setParam("campaignReference", "37b.ag1g6caae7");
 
 XcooBee.kit.setParam("checkByDefaultTypes", [
   // "advertising",
