@@ -86,6 +86,12 @@ function handleErrors(error) {
   }
 }
 
+function handleBridgeError(message) {
+  console.error(`Something went wrong because of error: ${message}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
+
+  XcooBee.kit.setParam("campaignReference", null);
+}
+
 function refresh() {
   clearLocale();
   clearCountryCode();
@@ -276,9 +282,10 @@ export default class CookieKitContainer extends React.PureComponent {
 
     this.setCookieConsents("usersSaved", cookieConsents);
 
+    const campaignReference = XcooBee.kit.getParam("campaignReference");
     let cookieConsentsObj = {};
 
-    if (this.state.loginStatus) {
+    if (this.state.loginStatus && !!campaignReference) {
       cookieTypes.forEach(type => {
         cookieConsentsObj[type] = !!consentSettings[type];
       });
@@ -371,13 +378,6 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  handleBridgeError(message) {
-    console.error(`Something went wrong due to ${message}. We are switching you to "offline" mode.`);
-
-    this.setState({ loginStatus: false });
-    XcooBee.kit.setParam("campaignReference", null);
-  }
-
   render() {
     // console.log("CookieKitContainer#render");
     const {
@@ -430,7 +430,7 @@ export default class CookieKitContainer extends React.PureComponent {
           campaignReference={campaignReference}
           onCookieOptionsLoad={cookieOptions => this.resolveConnectedCookieConsents(cookieOptions)}
           onLoginStatusChange={loginStatus => this.onLoginStatusChange(loginStatus)}
-          handleBridgeError={message => this.handleBridgeError(message)}
+          handleBridgeError={message => handleBridgeError(message)}
         />
       </React.Fragment>
     );
