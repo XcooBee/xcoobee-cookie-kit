@@ -2,11 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 import {
-  clearAccessToken,
-  getAccessToken,
-  saveAccessToken,
-} from "xcoobee-cookie-kit-core/src/AccessTokenManager";
-import {
+  cookieOptionsKeys,
   consentStatuses,
   cookieTypes,
   cssHref,
@@ -14,10 +10,10 @@ import {
   positions,
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
-import CookieConsentsManager from "xcoobee-cookie-kit-core/src/CookieConsentsManager";
 import {
   getCountryCode,
   saveCountryCode,
+  fetchCountryCode,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
@@ -30,6 +26,10 @@ import BridgeCommunicator from "./BridgeCommunicator";
 // const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;
 const OPEN = consentStatuses.open;
+
+const SAVED_PREFERENCES = cookieOptionsKeys.savedPreferences;
+const USER_SETTINGS = cookieOptionsKeys.userSettings;
+const CROWD_AI = cookieOptionsKeys.crowdAi;
 
 function callCookieManagingFunctions(consentSettings) {
   CookieManager.xckClearCookies(consentSettings);
@@ -70,7 +70,6 @@ function handleErrors(error) {
   if (Array.isArray(error)) {
     error.forEach((e) => {
       if (e instanceof NotAuthorizedError) {
-        clearAccessToken();
         console.error(error.message);
       } else {
         throw Error(e.message);
@@ -78,7 +77,6 @@ function handleErrors(error) {
     });
   } else if (error) {
     if (error instanceof NotAuthorizedError) {
-      clearAccessToken();
       console.error(error.message);
     } else {
       throw Error(error.message);
@@ -142,12 +140,14 @@ export default class CookieKitContainer extends React.PureComponent {
     super(props);
 
     this.state = {
-      accessToken: getAccessToken(),
       consentsSource: "unknown",
       consentStatus: OPEN,
       cookieConsents: null,
       countryCode: getCountryCode(),
       initializing: true,
+      isConsentCached: false,
+      isLoginStatusChecked: false,
+      loginStatus: false,
     };
 
     if (props.cssAutoLoad) {
@@ -160,11 +160,11 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  componentDidMount() {
+  getCountryCode() {
     if (this.state.countryCode) {
       this.getCookieConsents();
     } else {
-      CookieConsentsManager.fetchCountryCode()
+      fetchCountryCode()
         .catch((error) => {
           // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
           console.error(error);
@@ -179,40 +179,41 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log("CookieKitContainer#componentDidUpdate");
-  //   if (this.props !== prevProps) {
-  //     console.log("props changed:");
-  //     console.dir(this.props);
-  //   }
-  //   if (this.state !== prevState) {
-  //     console.log("state changed:");
-  //     console.dir(this.state);
-  //   }
-  // }
-
   getCookieConsents() {
+    // console.log("CookieKitContainer#getCookieConsents");
     const cachedCookieConsents = cookieConsentsCache.get();
+
     if (cachedCookieConsents) {
       // console.log("Using cached cookie consents!");
       this.setCookieConsents("cached", cachedCookieConsents);
+      this.setState({ isConsentCached: true });
+
       return;
     }
 
     const { campaignReference } = this.props;
+    const { loginStatus } = this.state;
 
     const isConnected = !!campaignReference;
-    const { accessToken } = this.state;
 
-    if (isConnected && accessToken) {
-      this.resolveConnectedCookieConsents().catch(handleErrors);
-    } else {
+    if (!isConnected || !loginStatus) {
       this.fallBackToHostDefaults();
+    }
+  }
+
+  onLoginStatusChange(loginStatus) {
+    // console.log("CookieKitContainer#onLoginStatusChange");
+    this.setState({ loginStatus });
+
+    if (!this.state.isLoginStatusChecked) {
+      this.getCountryCode();
+      this.setState({ isLoginStatusChecked: true });
     }
   }
 
   getConsentStatus() {
     const { consentStatus } = this.state;
+
     return consentStatus;
   }
 
@@ -220,6 +221,7 @@ export default class CookieKitContainer extends React.PureComponent {
     const { consentStatus, cookieConsents } = this.state;
 
     const consentSettings = {};
+
     if (consentStatus === COMPLETE) {
       cookieConsents.forEach((consent) => {
         consentSettings[consent.type] = consent.checked;
@@ -232,7 +234,9 @@ export default class CookieKitContainer extends React.PureComponent {
   setCookieConsents(consentsSource, cookieConsents) {
     // console.log("CookieKitContainer#setCookieConsents");
     cookieConsentsCache.put(cookieConsents);
+
     const consentStatus = COMPLETE;
+
     this.setState({
       consentsSource,
       consentStatus,
@@ -240,21 +244,6 @@ export default class CookieKitContainer extends React.PureComponent {
       initializing: false,
     }, () => this.callCallbacks(cookieConsents));
   }
-
-  handleAuthentication = (accessToken) => {
-    // console.log("CookieKitContainer#handleAuthentication");
-    // console.log("accessToken:", accessToken);
-    saveAccessToken(accessToken);
-    this.setState({ accessToken });
-
-    const { campaignReference } = this.props;
-
-    const isConnected = !!campaignReference;
-
-    if (isConnected) {
-      this.resolveConnectedCookieConsents().catch(handleErrors);
-    }
-  };
 
   handleConsentStatusChange = (nextConsentStatus) => {
     // console.log("CookieKitContainer#handleConsentStatusChange");
@@ -264,19 +253,22 @@ export default class CookieKitContainer extends React.PureComponent {
 
   handleCookieConsentsChange = (consentSettings) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
-    // console.log("consentSettings:", consentSettings);
-
     const cookieConsents = cookieTypes.map(type => ({
       type,
       checked: !!consentSettings[type],
     }));
 
-    const { campaignReference } = this.props;
-    const { accessToken } = this.state;
-    CookieConsentsManager.saveRemotely(accessToken, cookieConsents, campaignReference)
-      .catch(handleErrors);
-
     this.setCookieConsents("usersSaved", cookieConsents);
+
+    let cookieConsentsObj = {};
+
+    if (this.state.loginStatus) {
+      cookieTypes.forEach(type => {
+        cookieConsentsObj[type] = !!consentSettings[type];
+      });
+
+      this.bridgeRef.saveCookieConsents(cookieConsentsObj);
+    }
   };
 
   callCallbacks(cookieConsents) {
@@ -301,11 +293,16 @@ export default class CookieKitContainer extends React.PureComponent {
 
   // Convenience method
   fallBackToHostDefaults() {
+    // console.log("CookieKitContainer#fallBackToHostDefaults");
     const {
       checkByDefaultTypes,
       displayOnlyForEU,
     } = this.props;
-    const { countryCode } = this.state;
+    const { countryCode, isConsentCached } = this.state;
+
+    if (isConsentCached) {
+      return;
+    }
 
     const hostsDefaultCookieConsents = cookieTypes.map(type => ({
       type,
@@ -323,54 +320,46 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  resolveConnectedCookieConsents() {
+  resolveConnectedCookieConsents(cookieOptions) {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
-    const {
-      fetchCrowdAiCookieConsents,
-      fetchUsersDefaultCookieConsents,
-      fetchUserSettings,
-      fetchUsersSiteCookieConsents,
-    } = CookieConsentsManager;
-    const { accessToken } = this.state;
-    return fetchUserSettings(accessToken)
-      .then((userSettings) => {
-        if (userSettings) {
-          // Check to see if user already has consent settings for the current site
-          const { origin } = window.location;
-          const { userCursor, xcoobeeId } = userSettings;
-          fetchUsersSiteCookieConsents(accessToken, origin, xcoobeeId, userCursor)
-            .then((usersSavedCookieConsents) => {
-              if (usersSavedCookieConsents) {
-                this.setCookieConsents("usersSaved", usersSavedCookieConsents);
-                return;
-              }
+    const { isConsentCached } = this.state;
 
-              let promise;
-              if (userSettings.acceptCrowdAI) {
-                const campaignName = window.location.host;
-                promise = fetchCrowdAiCookieConsents(accessToken, campaignName);
-              } else {
-                promise = Promise.resolve();
-              }
-              promise.then((crowdAiCookieConsents) => {
-                if (crowdAiCookieConsents) {
-                  this.setCookieConsents("crowdAi", crowdAiCookieConsents);
-                  return;
-                }
+    if (isConsentCached) {
+      return;
+    }
 
-                const usersDefaultCookieConsents = fetchUsersDefaultCookieConsents(userSettings);
-                if (usersDefaultCookieConsents) {
-                  this.setCookieConsents("usersDefaults", usersDefaultCookieConsents);
-                  return;
-                }
+    let consentsSource = "unknown";
+    let cookieConsents = null;
 
-                this.fallBackToHostDefaults();
-              });
-            });
-        } else {
-          this.fallBackToHostDefaults();
-        }
-      });
+    if (cookieOptions[USER_SETTINGS]) {
+      consentsSource = "usersDefaults";
+      cookieConsents = cookieOptions[USER_SETTINGS];
+    }
+
+    if (cookieOptions[CROWD_AI]) {
+      consentsSource = "crowdAi";
+      cookieConsents = cookieOptions[CROWD_AI];
+    }
+
+    if (cookieOptions[SAVED_PREFERENCES]) {
+      consentsSource = "usersSaved";
+      cookieConsents = cookieOptions[SAVED_PREFERENCES];
+    }
+
+    if (consentsSource !== "unknown" && cookieConsents) {
+      const cookieConsentsArray = Object.keys(cookieConsents).map(key => ({ type: key, checked: cookieConsents[key] }));
+
+      this.setCookieConsents(consentsSource, cookieConsentsArray);
+    } else {
+      this.fallBackToHostDefaults();
+    }
+  }
+
+  handleBridgeError(message) {
+    console.error(`Something went wrong due to ${message}. We are switching you to "offline" mode.`);
+
+    this.setState({ loginStatus: false });
+    XcooBee.kit.setParam("campaignReference", null);
   }
 
   render() {
@@ -387,7 +376,7 @@ export default class CookieKitContainer extends React.PureComponent {
       testMode,
       textMessage,
     } = this.props;
-    const { accessToken, consentsSource, cookieConsents, countryCode, initializing } = this.state;
+    const { consentsSource, cookieConsents, countryCode, initializing, loginStatus } = this.state;
 
     const position = positions.includes(this.props.position) ? this.props.position : positions[0];
 
@@ -398,8 +387,6 @@ export default class CookieKitContainer extends React.PureComponent {
         {!initializing && (
           <React.Fragment>
             <CookieKit
-              accessToken={accessToken}
-              campaignReference={campaignReference}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
               cookieConsents={cookieConsents}
@@ -407,7 +394,7 @@ export default class CookieKitContainer extends React.PureComponent {
               expirationTime={expirationTime}
               hideBrandTag={hideBrandTag}
               hideOnComplete={hideOnComplete}
-              onAuthentication={this.handleAuthentication}
+              loginStatus={loginStatus}
               onConsentStatusChange={this.handleConsentStatusChange}
               onCookieConsentsChange={this.handleCookieConsentsChange}
               position={position}
@@ -419,7 +406,15 @@ export default class CookieKitContainer extends React.PureComponent {
             />
           </React.Fragment>
         )}
-        <BridgeCommunicator/>
+        <BridgeCommunicator
+          ref={bridgeRef => {
+            this.bridgeRef = bridgeRef;
+          }}
+          campaignReference={campaignReference}
+          onCookieOptionsLoad={cookieOptions => this.resolveConnectedCookieConsents(cookieOptions)}
+          onLoginStatusChange={loginStatus => this.onLoginStatusChange(loginStatus)}
+          handleBridgeError={message => this.handleBridgeError(message)}
+        />
       </React.Fragment>
     );
   }
