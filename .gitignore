@@ -10,3 +10,5 @@ yarn-debug.log*
 
 #VS Code
 .vscode/
+
+.idea
