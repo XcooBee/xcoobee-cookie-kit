@@ -25,6 +25,7 @@ import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
 import { xckDomain } from "./configs";
 
 import CookieKit from "./CookieKit";
+import BridgeCommunicator from "./BridgeCommunicator";
 
 // const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;
@@ -418,6 +419,7 @@ export default class CookieKitContainer extends React.PureComponent {
             />
           </React.Fragment>
         )}
+        <BridgeCommunicator/>
       </React.Fragment>
     );
   }
