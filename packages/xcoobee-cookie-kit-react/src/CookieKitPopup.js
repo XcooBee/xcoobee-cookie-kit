@@ -56,9 +56,10 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#constructor');
     super(props);
 
-    const { cookieConsents } = this.props;
+    const { cookieConsents, requestDataTypes } = this.props;
     const consentSettings = {};
-    cookieConsents.forEach((cookieConsent) => {
+
+    cookieConsents.filter(cookieConsent => requestDataTypes.includes(cookieConsent.type)).forEach((cookieConsent) => {
       consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
 

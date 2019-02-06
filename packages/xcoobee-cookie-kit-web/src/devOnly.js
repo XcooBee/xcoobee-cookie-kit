@@ -55,7 +55,7 @@ XcooBee.kit.setParam("testMode", true);
 
 XcooBee.kit.setParam("textMessage", {
   "de-de": "Die Beschreibung.",
-  "en-us": "The description.",
+  "en-us": "The description. This site uses cookies. Use this panel to adjust your preferences.",
   "es-419": "La descripción.",
   "fr-fr": "La description.",
 });
