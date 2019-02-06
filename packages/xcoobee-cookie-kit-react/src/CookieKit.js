@@ -9,7 +9,6 @@ import {
   positions,
 } from "xcoobee-cookie-kit-core/src/configs";
 
-import { clearAccessToken } from "xcoobee-cookie-kit-core/src/AccessTokenManager";
 import {
   clearLocale,
   clearCountryCode,
@@ -24,7 +23,6 @@ import CookieKitPopup from "./CookieKitPopup";
 const BLOCK = "xb-cookie-kit";
 
 function reset() {
-  clearAccessToken();
   clearLocale();
   clearCountryCode();
   cookieConsentsCache.clear();
@@ -250,8 +248,7 @@ export default class CookieKit extends React.PureComponent {
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
-    const renderResetButton = testMode
-      && (accessToken || cookieConsentsCache.get());
+    const renderResetButton = testMode && cookieConsentsCache.get();
 
     const campaignReference = XcooBee.kit.getParam("campaignReference");
 
