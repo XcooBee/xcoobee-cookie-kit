@@ -32,7 +32,8 @@
     "classnames": "^2.2.6",
     "prop-types": "^15.6.0",
     "react-country-flag": "^1.0.1",
-    "xcoobee-cookie-kit-core": "^1.0.9"
+    "xcoobee-cookie-kit-core": "^1.0.9",
+    "xcoobee-enums": "git+ssh://git@github.com/XcooBee/xcoobee-enums.git"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

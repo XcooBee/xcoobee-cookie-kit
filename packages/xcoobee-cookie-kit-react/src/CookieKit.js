@@ -45,7 +45,6 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    countryCode: PropTypes.string,
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
@@ -73,7 +72,6 @@ export default class CookieKit extends React.PureComponent {
     accessToken: null,
     campaignReference: null,
     companyLogo: null,
-    countryCode: null,
     expirationTime: 0,
   };
 
@@ -131,7 +129,7 @@ export default class CookieKit extends React.PureComponent {
     this.stopPulsing();
 
     this.setState({ isOpen: true });
-  }
+  };
 
   handlePopupClose = () => {
     // console.log("CookieKit#handlePopupClose");
@@ -151,7 +149,7 @@ export default class CookieKit extends React.PureComponent {
       this.startPulsing();
       this.startDismissTimer();
     }, 1);
-  }
+  };
 
   handlePopupLogin = (accessToken) => {
     // console.log("CookieKit#handlePopupLogin");
@@ -171,7 +169,7 @@ export default class CookieKit extends React.PureComponent {
       this.startPulsing();
       this.startDismissTimer();
     }, 1);
-  }
+  };
 
   handlePopupSubmit = (nextConsentSettings) => {
     // console.log("CookieKit#handlePopupSubmit");
@@ -198,7 +196,7 @@ export default class CookieKit extends React.PureComponent {
         this.startDismissTimer();
       }, 1);
     }
-  }
+  };
 
   clearTimers() {
     // console.log("CookieKit#clearTimers");
@@ -242,7 +240,6 @@ export default class CookieKit extends React.PureComponent {
       companyLogo,
       consentsSource,
       cookieConsents,
-      countryCode,
       hideBrandTag,
       position,
       privacyUrl,
@@ -286,7 +283,6 @@ export default class CookieKit extends React.PureComponent {
             accessToken={accessToken}
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
-            countryCode={countryCode}
             hideBrandTag={hideBrandTag}
             isConnected={!!campaignReference}
             onClose={this.handlePopupClose}
