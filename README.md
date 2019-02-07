@@ -44,7 +44,7 @@ All repos are published individually in npm. You can review each package's sourc
 
 ## Video
 
-[Cookie Kit Tutorial](https://www.youtube.com/watch?v=X2DNrckHLBI)
+[Cookie Kit Tutorial](https://youtu.be/gKYNoARNXRo)
 
 
 

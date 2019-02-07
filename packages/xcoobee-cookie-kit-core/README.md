@@ -16,7 +16,7 @@ The XCK is responsive and will adjust easily to different screens including mobi
 
 ## Video
 
-[Cookie Kit Tutorial](https://www.youtube.com/watch?v=X2DNrckHLBI)
+[Cookie Kit Tutorial](https://youtu.be/gKYNoARNXRo)
 
 ## What is the difference
 
