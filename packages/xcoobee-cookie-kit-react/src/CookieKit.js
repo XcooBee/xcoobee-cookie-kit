@@ -54,6 +54,7 @@ export default class CookieKit extends React.PureComponent {
       PropTypes.oneOf(cookieTypes).isRequired,
     ).isRequired,
     termsUrl: PropTypes.string.isRequired,
+    testMode: PropTypes.bool,
     textMessage: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({
@@ -70,6 +71,7 @@ export default class CookieKit extends React.PureComponent {
     countryCode: null,
     expirationTime: 0,
     loginStatus: false,
+    testMode: false,
   };
 
   constructor(props) {

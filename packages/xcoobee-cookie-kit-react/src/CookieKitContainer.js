@@ -85,6 +85,7 @@ function handleErrors(error) {
 }
 
 function handleBridgeError(message) {
+  // eslint-disable-next-line max-len
   console.error(`Something went wrong because of error: ${message}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
 
   XcooBee.kit.setParam("campaignReference", null);
@@ -166,22 +167,15 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  getCountryCode() {
-    if (this.state.countryCode) {
-      this.getCookieConsents();
-    } else {
-      fetchCountryCode()
-        .catch((error) => {
-          // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
-          console.error(error);
-          return null;
-        })
-        .then((countryCode) => {
-          saveCountryCode(countryCode);
-          this.setState({ countryCode });
-          this.getCookieConsents();
-        })
-        .catch(handleErrors);
+  onLoginStatusChange(loginStatus) {
+    // console.log("CookieKitContainer#onLoginStatusChange");
+    const { isLoginStatusChecked } = this.state;
+
+    this.setState({ loginStatus });
+
+    if (!isLoginStatusChecked) {
+      this.getCountryCode();
+      this.setState({ isLoginStatusChecked: true });
     }
   }
 
@@ -207,13 +201,24 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  onLoginStatusChange(loginStatus) {
-    // console.log("CookieKitContainer#onLoginStatusChange");
-    this.setState({ loginStatus });
+  getCountryCode() {
+    const { countryCode } = this.state;
 
-    if (!this.state.isLoginStatusChecked) {
-      this.getCountryCode();
-      this.setState({ isLoginStatusChecked: true });
+    if (countryCode) {
+      this.getCookieConsents();
+    } else {
+      fetchCountryCode()
+        .catch((error) => {
+          // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
+          console.error(error);
+          return null;
+        })
+        .then((cCode) => {
+          saveCountryCode(cCode);
+          this.setState({ countryCode: cCode });
+          this.getCookieConsents();
+        })
+        .catch(handleErrors);
     }
   }
 
@@ -259,6 +264,8 @@ export default class CookieKitContainer extends React.PureComponent {
 
   handleCookieConsentsChange = (consentSettings) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
+    const { loginStatus } = this.state;
+
     const cookieConsents = cookieTypes.map(type => ({
       type,
       checked: !!consentSettings[type],
@@ -267,10 +274,10 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setCookieConsents("usersSaved", cookieConsents);
 
     const campaignReference = XcooBee.kit.getParam("campaignReference");
-    let cookieConsentsObj = {};
+    const cookieConsentsObj = {};
 
-    if (this.state.loginStatus && !!campaignReference) {
-      cookieTypes.forEach(type => {
+    if (loginStatus && !!campaignReference) {
+      cookieTypes.forEach((type) => {
         cookieConsentsObj[type] = !!consentSettings[type];
       });
 
@@ -329,7 +336,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
   resolveConnectedCookieConsents(cookieOptions) {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
-    const { isConsentCached } = this.state;
+    const { isConsentCached, loginStatus } = this.state;
 
     if (isConsentCached) {
       return;
@@ -355,8 +362,13 @@ export default class CookieKitContainer extends React.PureComponent {
 
     if (consentsSource !== "unknown" && cookieConsents) {
       const cookieConsentsArray = Object.keys(cookieConsents).map(key => ({ type: key, checked: cookieConsents[key] }));
+      const campaignReference = XcooBee.kit.getParam("campaignReference");
 
       this.setCookieConsents(consentsSource, cookieConsentsArray);
+
+      if (loginStatus && !!campaignReference) {
+        this.bridgeRef.saveCookieConsents(cookieConsents);
+      }
     } else {
       this.fallBackToHostDefaults();
     }
@@ -370,6 +382,7 @@ export default class CookieKitContainer extends React.PureComponent {
       expirationTime,
       hideBrandTag,
       hideOnComplete,
+      position,
       privacyUrl,
       requestDataTypes,
       termsUrl,
@@ -378,7 +391,7 @@ export default class CookieKitContainer extends React.PureComponent {
     } = this.props;
     const { consentsSource, cookieConsents, countryCode, initializing, loginStatus } = this.state;
 
-    const position = positions.includes(this.props.position) ? this.props.position : positions[0];
+    const redefinedPosition = positions.includes(position) ? position : positions[0];
 
     // console.log("initializing:", initializing);
 
@@ -397,7 +410,7 @@ export default class CookieKitContainer extends React.PureComponent {
               loginStatus={loginStatus}
               onConsentStatusChange={this.handleConsentStatusChange}
               onCookieConsentsChange={this.handleCookieConsentsChange}
-              position={position}
+              position={redefinedPosition}
               privacyUrl={privacyUrl}
               requestDataTypes={requestDataTypes}
               termsUrl={termsUrl}
@@ -407,12 +420,12 @@ export default class CookieKitContainer extends React.PureComponent {
           </React.Fragment>
         )}
         <BridgeCommunicator
-          ref={bridgeRef => {
+          ref={(bridgeRef) => {
             this.bridgeRef = bridgeRef;
           }}
           campaignReference={campaignReference}
           onCookieOptionsLoad={cookieOptions => this.resolveConnectedCookieConsents(cookieOptions)}
-          onLoginStatusChange={loginStatus => this.onLoginStatusChange(loginStatus)}
+          onLoginStatusChange={status => this.onLoginStatusChange(status)}
           handleBridgeError={message => handleBridgeError(message)}
         />
       </React.Fragment>

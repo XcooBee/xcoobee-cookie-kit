@@ -19,6 +19,8 @@ import { xbOrigin } from "./configs";
 
 const BLOCK = "xb-cookie-kit-popup";
 
+const OPTION = "loginstatus";
+
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
     companyLogo: PropTypes.string,
@@ -83,7 +85,7 @@ export default class CookieKitPopup extends React.PureComponent {
     }
     const { onLogin } = this.props;
 
-    const loginStatus = JSON.parse(event.data)["loginstatus"];
+    const loginStatus = JSON.parse(event.data)[OPTION];
 
     if (loginStatus) {
       onLogin();
@@ -181,6 +183,8 @@ export default class CookieKitPopup extends React.PureComponent {
     const cookieDefns = allAvailCookieDefns.filter(
       defn => requestDataTypes.includes(defn.type),
     );
+
+    const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
     return (
       <div className={BLOCK}>
@@ -332,7 +336,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 className={`xb-cookie-kit__button ${BLOCK}__link`}
                 type="button"
-                onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`)}
+                onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures)}
               >
                 {renderText("CookieKit.LoginLink", selectedLocale)}
               </button>

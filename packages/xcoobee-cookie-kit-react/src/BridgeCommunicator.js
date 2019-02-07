@@ -38,7 +38,6 @@ export default class BridgeCommunicator extends React.PureComponent {
         }
       } else if (action === "cookieoptions") {
         onCookieOptionsLoad(data[action]);
-
       } else if (action === "savecookieconsent") {
         // console.log("Cookie consents have been successfully saved.");
       } else {
@@ -64,7 +63,7 @@ export default class BridgeCommunicator extends React.PureComponent {
     const myMsgObj = {
       action: "cookieoptions",
       action_params: {
-        type: "all"
+        type: "all",
       },
       campaign: campaignReference,
       domain: window.location.origin,
@@ -90,7 +89,8 @@ export default class BridgeCommunicator extends React.PureComponent {
   render() {
     return (
       <iframe
-        ref={frameRef => {
+        title="cookieBridge"
+        ref={(frameRef) => {
           this.frameRef = frameRef;
         }}
         src="https://testapp.xcoobee.net/scripts/cookie-bridge/index.html"
