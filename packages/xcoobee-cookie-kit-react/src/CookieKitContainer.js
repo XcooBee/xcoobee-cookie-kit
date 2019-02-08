@@ -426,7 +426,7 @@ export default class CookieKitContainer extends React.PureComponent {
           campaignReference={campaignReference}
           onCookieOptionsLoad={cookieOptions => this.resolveConnectedCookieConsents(cookieOptions)}
           onLoginStatusChange={status => this.onLoginStatusChange(status)}
-          handleBridgeError={message => handleBridgeError(message)}
+          handleBridgeError={handleBridgeError}
         />
       </React.Fragment>
     );
