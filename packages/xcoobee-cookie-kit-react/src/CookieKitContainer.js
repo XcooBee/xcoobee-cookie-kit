@@ -167,7 +167,7 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  onLoginStatusChange(loginStatus) {
+  onLoginStatusChange = (loginStatus) => {
     // console.log("CookieKitContainer#onLoginStatusChange");
     const { isLoginStatusChecked } = this.state;
 
@@ -176,18 +176,9 @@ export default class CookieKitContainer extends React.PureComponent {
     if (!isLoginStatusChecked) {
       this.setState({ isLoginStatusChecked: true });
       this.getCountryCode()
-        .catch((error) => {
-          console.error(error);
-          return null;
-        })
-        .then((cCode) => {
-          saveCountryCode(cCode);
-          this.setState({ countryCode: cCode });
-          this.getCookieConsents();
-        })
-        .catch(handleErrors);
+        .then(() => this.getCookieConsents());
     }
-  }
+  };
 
   getCookieConsents() {
     // console.log("CookieKitContainer#getCookieConsents");
@@ -217,7 +208,16 @@ export default class CookieKitContainer extends React.PureComponent {
     if (countryCode) {
       return Promise.resolve(countryCode);
     }
-    return fetchCountryCode();
+    return fetchCountryCode()
+      .catch((error) => {
+        console.error(error);
+        return null;
+      })
+      .then((cCode) => {
+        saveCountryCode(cCode);
+        this.setState({ countryCode: cCode });
+      })
+      .catch(handleErrors);
   }
 
   getConsentStatus() {
@@ -332,7 +332,7 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
-  resolveConnectedCookieConsents(cookieOptions) {
+  resolveConnectedCookieConsents = (cookieOptions) => {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
     const { isConsentCached, loginStatus } = this.state;
 
@@ -370,7 +370,7 @@ export default class CookieKitContainer extends React.PureComponent {
     } else {
       this.fallBackToHostDefaults();
     }
-  }
+  };
 
   render() {
     // console.log("CookieKitContainer#render");
@@ -422,8 +422,8 @@ export default class CookieKitContainer extends React.PureComponent {
             this.bridgeRef = bridgeRef;
           }}
           campaignReference={campaignReference}
-          onCookieOptionsLoad={cookieOptions => this.resolveConnectedCookieConsents(cookieOptions)}
-          onLoginStatusChange={status => this.onLoginStatusChange(status)}
+          onCookieOptionsLoad={this.resolveConnectedCookieConsents}
+          onLoginStatusChange={this.onLoginStatusChange}
           handleBridgeError={handleBridgeError}
         />
       </React.Fragment>

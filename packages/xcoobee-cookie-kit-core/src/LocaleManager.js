@@ -34,5 +34,8 @@ export function fetchCountryCode() {
       // console.log("LocaleManager#fetchCountryCode fetched.");
       const countryCode = res ? res.countryCode : "US";
       return countryCode;
+    })
+    .catch((error) => {
+      console.error(error);
     });
 }
