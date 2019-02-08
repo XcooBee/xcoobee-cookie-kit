@@ -209,7 +209,7 @@ export default class CookieKitContainer extends React.PureComponent {
     } else {
       fetchCountryCode()
         .catch((error) => {
-          // console.log("CookieKitContainer#componentDidMount#fetchCountryCode#catch");
+          // console.log("CookieKitContainer#getCountryCode#fetchCountryCode#catch");
           console.error(error);
           return null;
         })
