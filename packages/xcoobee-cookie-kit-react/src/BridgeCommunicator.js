@@ -93,7 +93,7 @@ export default class BridgeCommunicator extends React.PureComponent {
         ref={(frameRef) => {
           this.frameRef = frameRef;
         }}
-        src="https://testapp.xcoobee.net/scripts/cookie-bridge/index.html"
+        src={`${xbOrigin}/scripts/cookie-bridge/index.html`}
         onLoad={this.checkLoginStatus}
         height="0"
         width="0"

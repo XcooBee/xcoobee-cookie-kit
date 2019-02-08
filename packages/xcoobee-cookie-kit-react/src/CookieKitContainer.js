@@ -174,8 +174,18 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setState({ loginStatus });
 
     if (!isLoginStatusChecked) {
-      this.getCountryCode();
       this.setState({ isLoginStatusChecked: true });
+      this.getCountryCode()
+        .catch((error) => {
+          console.error(error);
+          return null;
+        })
+        .then((cCode) => {
+          saveCountryCode(cCode);
+          this.setState({ countryCode: cCode });
+          this.getCookieConsents();
+        })
+        .catch(handleErrors);
     }
   }
 
@@ -205,21 +215,9 @@ export default class CookieKitContainer extends React.PureComponent {
     const { countryCode } = this.state;
 
     if (countryCode) {
-      this.getCookieConsents();
-    } else {
-      fetchCountryCode()
-        .catch((error) => {
-          // console.log("CookieKitContainer#getCountryCode#fetchCountryCode#catch");
-          console.error(error);
-          return null;
-        })
-        .then((cCode) => {
-          saveCountryCode(cCode);
-          this.setState({ countryCode: cCode });
-          this.getCookieConsents();
-        })
-        .catch(handleErrors);
+      return Promise.resolve(countryCode);
     }
+    return fetchCountryCode();
   }
 
   getConsentStatus() {
