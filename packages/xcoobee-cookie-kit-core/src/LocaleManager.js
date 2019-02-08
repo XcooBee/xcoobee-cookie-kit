@@ -27,7 +27,7 @@ export function saveCountryCode(countryCode) {
 }
 
 export function fetchCountryCode() {
-  // console.log("CookieConsentsManager#fetchCountryCode fetching...");
+  // console.log("LocaleManager#fetchCountryCode fetching...");
   return fetch("http://ip-api.com/json")
     .then(res => res.json())
     .then((res) => {
