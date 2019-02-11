@@ -176,7 +176,8 @@ export default class CookieKitContainer extends React.PureComponent {
     if (!isLoginStatusChecked) {
       this.setState({ isLoginStatusChecked: true });
       this.getCountryCode()
-        .then(() => this.getCookieConsents());
+        .then(() => this.getCookieConsents())
+        .catch(handleErrors);
     }
   };
 
@@ -210,14 +211,19 @@ export default class CookieKitContainer extends React.PureComponent {
     }
     return fetchCountryCode()
       .catch((error) => {
+        const defaultCountryCode = "EU";
+
         console.error(error);
-        return null;
+        this.setState({ countryCode: defaultCountryCode });
+
+        return defaultCountryCode;
       })
       .then((cCode) => {
         saveCountryCode(cCode);
         this.setState({ countryCode: cCode });
-      })
-      .catch(handleErrors);
+
+        return cCode;
+      });
   }
 
   getConsentStatus() {
@@ -282,26 +288,6 @@ export default class CookieKitContainer extends React.PureComponent {
       this.bridgeRef.saveCookieConsents(cookieConsentsObj);
     }
   };
-
-  callCallbacks(cookieConsents) {
-    // console.log("CookieKitContainer#callCallbacks");
-    const { cookieHandler, targetUrl } = this.props;
-
-    const consentSettings = {};
-    cookieConsents.forEach((cookieConsent) => {
-      consentSettings[cookieConsent.type] = cookieConsent.checked;
-    });
-
-    callCookieManagingFunctions(consentSettings);
-
-    if (cookieHandler) {
-      callCookieHandler(cookieHandler, consentSettings);
-    }
-
-    if (targetUrl) {
-      callTargetUrl(targetUrl, consentSettings);
-    }
-  }
 
   // Convenience method
   fallBackToHostDefaults() {
@@ -371,6 +357,26 @@ export default class CookieKitContainer extends React.PureComponent {
       this.fallBackToHostDefaults();
     }
   };
+
+  callCallbacks(cookieConsents) {
+    // console.log("CookieKitContainer#callCallbacks");
+    const { cookieHandler, targetUrl } = this.props;
+
+    const consentSettings = {};
+    cookieConsents.forEach((cookieConsent) => {
+      consentSettings[cookieConsent.type] = cookieConsent.checked;
+    });
+
+    callCookieManagingFunctions(consentSettings);
+
+    if (cookieHandler) {
+      callCookieHandler(cookieHandler, consentSettings);
+    }
+
+    if (targetUrl) {
+      callTargetUrl(targetUrl, consentSettings);
+    }
+  }
 
   render() {
     // console.log("CookieKitContainer#render");

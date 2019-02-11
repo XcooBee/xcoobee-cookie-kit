@@ -32,10 +32,7 @@ export function fetchCountryCode() {
     .then(res => res.json())
     .then((res) => {
       // console.log("LocaleManager#fetchCountryCode fetched.");
-      const countryCode = res ? res.countryCode : "US";
+      const countryCode = res ? res.countryCode : "EU";
       return countryCode;
-    })
-    .catch((error) => {
-      console.error(error);
     });
 }
