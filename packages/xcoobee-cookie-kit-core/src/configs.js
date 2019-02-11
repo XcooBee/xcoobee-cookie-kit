@@ -93,6 +93,12 @@ const consentStatuses = {
   closed: "closed",
 };
 
+const cookieOptionsKeys = {
+  savedPreferences: "set",
+  userSettings: "user",
+  crowdAi: "ci",
+};
+
 const configFields = [
   "campaignReference",
   "checkByDefaultTypes",
@@ -122,6 +128,7 @@ export {
   consentsSources,
   consentStatuses,
   cookieDefns,
+  cookieOptionsKeys,
   cookieTypes,
   countryCodeKey,
   cssHref,
