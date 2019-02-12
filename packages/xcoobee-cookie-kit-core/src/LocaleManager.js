@@ -26,6 +26,17 @@ export function saveCountryCode(countryCode) {
   localStorage.setItem(countryCodeKey, countryCode);
 }
 
+export function fetchCountryCode() {
+  // console.log("LocaleManager#fetchCountryCode fetching...");
+  return fetch("http://ip-api.com/json")
+    .then(res => res.json())
+    .then((res) => {
+      // console.log("LocaleManager#fetchCountryCode fetched.");
+      const countryCode = res ? res.countryCode : "EU";
+      return countryCode;
+    });
+}
+
 export function fetchCountryCodeForSubscribers(campaignReference) {
   // console.log("LocaleManager#fetchCountryCodeForSubscribers fetching...");
   const options = { method: "GET" };

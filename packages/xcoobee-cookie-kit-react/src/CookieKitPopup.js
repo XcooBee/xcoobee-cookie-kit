@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
 import React from "react";
+import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
 import Enums from "xcoobee-enums";
 
@@ -21,11 +21,12 @@ import { xbOrigin } from "./configs";
 
 const BLOCK = "xb-cookie-kit-popup";
 
+const OPTION = "loginstatus";
+
 const COUNTRY_DATA = Enums.getEnum("country-data");
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
-    accessToken: PropTypes.string,
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -33,6 +34,7 @@ export default class CookieKitPopup extends React.PureComponent {
     onClose: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    loginStatus: PropTypes.bool,
     privacyUrl: PropTypes.string.isRequired,
     requestDataTypes: PropTypes.arrayOf(
       PropTypes.oneOf(cookieTypes).isRequired,
@@ -50,7 +52,6 @@ export default class CookieKitPopup extends React.PureComponent {
   };
 
   static defaultProps = {
-    accessToken: null,
     companyLogo: null,
     countryCode: null,
     loginStatus: false,
@@ -60,9 +61,10 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#constructor');
     super(props);
 
-    const { cookieConsents } = this.props;
+    const { cookieConsents, requestDataTypes } = this.props;
     const consentSettings = {};
-    cookieConsents.forEach((cookieConsent) => {
+
+    cookieConsents.filter(cookieConsent => requestDataTypes.includes(cookieConsent.type)).forEach((cookieConsent) => {
       consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
 
@@ -83,12 +85,15 @@ export default class CookieKitPopup extends React.PureComponent {
   }
 
   onMessage = (event) => {
-    // console.log('CookieKitPopup#onMessage');
+    if (!event.data || typeof event.data !== "string") {
+      return;
+    }
     const { onLogin } = this.props;
-    const { token } = event.data;
 
-    if (token) {
-      onLogin(token);
+    const loginStatus = JSON.parse(event.data)[OPTION];
+
+    if (loginStatus) {
+      onLogin();
     }
   };
 
@@ -182,9 +187,9 @@ export default class CookieKitPopup extends React.PureComponent {
   render() {
     // console.log('CookieKitPopup#render');
     const {
-      accessToken,
       companyLogo,
       hideBrandTag,
+      loginStatus,
       isConnected,
       onClose,
       privacyUrl,
@@ -196,7 +201,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
     // console.log("countryCode:", countryCode);
 
-    const appearsToBeLoggedIn = !!accessToken;
+    const appearsToBeLoggedIn = loginStatus;
     const targetUrl = encodeURIComponent(window.location.origin);
 
     const isAllChecked = Object.values(consentSettings).every(checked => checked);
@@ -206,6 +211,8 @@ export default class CookieKitPopup extends React.PureComponent {
     );
 
     const countries = COUNTRY_DATA.map(country => country["alpha-2"]);
+
+    const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
     return (
       <div
@@ -383,7 +390,7 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 className={`xb-cookie-kit__button ${BLOCK}__link`}
                 type="button"
-                onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`)}
+                onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures)}
               >
                 {renderText("CookieKit.LoginLink", selectedLocale)}
               </button>
