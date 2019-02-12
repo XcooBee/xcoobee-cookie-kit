@@ -53,7 +53,6 @@ export default class CookieKitPopup extends React.PureComponent {
 
   static defaultProps = {
     companyLogo: null,
-    countryCode: null,
     loginStatus: false,
   };
 
@@ -111,7 +110,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleCountrySelectToggle = (e) => {
     // console.log('CookieKitPopup#handleCountrySelectToggle');
-    const { isCountrySelectShown} = this.state;
+    const { isCountrySelectShown } = this.state;
 
     e.stopPropagation();
     this.setState({ isCountrySelectShown: !isCountrySelectShown, isLocaleSelectShown: false });
@@ -119,7 +118,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleLocaleSelectToggle = (e) => {
     // console.log('CookieKitPopup#hhandleLocaleSelectToggle');
-    const { isLocaleSelectShown} = this.state;
+    const { isLocaleSelectShown } = this.state;
 
     e.stopPropagation();
     this.setState({ isLocaleSelectShown: !isLocaleSelectShown, isCountrySelectShown: false });
@@ -286,15 +285,15 @@ export default class CookieKitPopup extends React.PureComponent {
             )}
             { isCountrySelectShown && (
               <div className={`${BLOCK}__country-picker-select`}>
-                { countries.map(countryCode => (
+                { countries.map(cCode => (
                   <button
                     type="button"
-                    key={`country-flag-${countryCode}`}
+                    key={`country-flag-${cCode}`}
                     className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
-                    onClick={() => this.handleCountryChange(countryCode)}
+                    onClick={() => this.handleCountryChange(cCode)}
                   >
                     <div className={`${BLOCK}__flag`}>
-                      <ReactCountryFlag code={countryCode} svg />
+                      <ReactCountryFlag code={cCode} svg />
                     </div>
                   </button>
                 ))}
