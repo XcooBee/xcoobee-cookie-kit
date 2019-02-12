@@ -26,6 +26,7 @@ export default class CookieKitPopup extends React.PureComponent {
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
+    fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
     isConnected: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -51,6 +52,7 @@ export default class CookieKitPopup extends React.PureComponent {
   static defaultProps = {
     companyLogo: null,
     countryCode: null,
+    fingerprintConsent: false,
     loginStatus: false,
   };
 
@@ -58,7 +60,7 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#constructor');
     super(props);
 
-    const { cookieConsents, requestDataTypes } = this.props;
+    const { cookieConsents, requestDataTypes, fingerprintConsent } = this.props;
     const consentSettings = {};
 
     cookieConsents.filter(cookieConsent => requestDataTypes.includes(cookieConsent.type)).forEach((cookieConsent) => {
@@ -67,7 +69,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
     this.state = {
       consentSettings,
-      fingerprint: false,
+      fingerprintConsent,
       isShown: false,
       selectedLocale: getLocale() || "EN",
     };
@@ -134,15 +136,15 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleFingerprintCheck = (e) => {
     // console.log('CookieKitPopup#handleFingerprintCheck');
-    this.setState({ fingerprint: e.target.checked });
+    this.setState({ fingerprintConsent: e.target.checked });
   };
 
   handleSubmit = () => {
     // console.log('CookieKitPopup#handleSubmit');
     const { onSubmit } = this.props;
-    const { consentSettings, fingerprint } = this.state;
+    const { consentSettings, fingerprintConsent } = this.state;
 
-    onSubmit(consentSettings, fingerprint);
+    onSubmit(consentSettings, fingerprintConsent);
   };
 
   renderTextMessage(textMessage) {
@@ -177,7 +179,7 @@ export default class CookieKitPopup extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { consentSettings, fingerprint, isShown, selectedLocale } = this.state;
+    const { consentSettings, fingerprintConsent, isShown, selectedLocale } = this.state;
 
     // console.log("countryCode:", countryCode);
 
@@ -301,7 +303,7 @@ export default class CookieKitPopup extends React.PureComponent {
             <input
               id="xbCheckbox_fingerprint"
               type="checkbox"
-              checked={fingerprint}
+              checked={fingerprintConsent}
               onChange={e => this.handleFingerprintCheck(e)}
             />
             <label

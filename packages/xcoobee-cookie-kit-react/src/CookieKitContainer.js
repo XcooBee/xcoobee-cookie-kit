@@ -274,6 +274,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: !!consentSettings[type],
     }));
+    cookieConsents.push({ type: "fingerPrint", checked: fingerprintConsent });
 
     this.setCookieConsents("usersSaved", cookieConsents);
 
@@ -284,39 +285,11 @@ export default class CookieKitContainer extends React.PureComponent {
       cookieTypes.forEach((type) => {
         cookieConsentsObj[type] = !!consentSettings[type];
       });
+      cookieConsentsObj.fingerPrint = fingerprintConsent;
 
       this.bridgeRef.saveCookieConsents(cookieConsentsObj);
     }
   };
-
-  // Convenience method
-  fallBackToHostDefaults() {
-    // console.log("CookieKitContainer#fallBackToHostDefaults");
-    const {
-      checkByDefaultTypes,
-      displayOnlyForEU,
-    } = this.props;
-    const { countryCode, isConsentCached } = this.state;
-
-    if (isConsentCached) {
-      return;
-    }
-
-    const hostsDefaultCookieConsents = cookieTypes.map(type => ({
-      type,
-      checked: checkByDefaultTypes.includes(type),
-    }));
-    // If we were unable to resolve the user's country code, then assume it is in
-    // the EU.
-    const cCode = countryCode || euCountries[0];
-    if (displayOnlyForEU && !euCountries.includes(cCode)) {
-      this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
-    } else {
-      const consentsSource = "unknown";
-      const cookieConsents = hostsDefaultCookieConsents;
-      this.setState({ consentsSource, cookieConsents, initializing: false });
-    }
-  }
 
   resolveConnectedCookieConsents = (cookieOptions) => {
     // console.log("CookieKitContainer#resolveConnectedCookieConsents");
@@ -358,6 +331,36 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   };
 
+  // Convenience method
+  fallBackToHostDefaults() {
+    // console.log("CookieKitContainer#fallBackToHostDefaults");
+    const {
+      checkByDefaultTypes,
+      displayOnlyForEU,
+    } = this.props;
+    const { countryCode, isConsentCached } = this.state;
+
+    if (isConsentCached) {
+      return;
+    }
+
+    const hostsDefaultCookieConsents = cookieTypes.map(type => ({
+      type,
+      checked: checkByDefaultTypes.includes(type),
+    }));
+    hostsDefaultCookieConsents.push({ type: "fingerPrint", checked: false });
+    // If we were unable to resolve the user's country code, then assume it is in
+    // the EU.
+    const cCode = countryCode || euCountries[0];
+    if (displayOnlyForEU && !euCountries.includes(cCode)) {
+      this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
+    } else {
+      const consentsSource = "unknown";
+      const cookieConsents = hostsDefaultCookieConsents;
+      this.setState({ consentsSource, cookieConsents, initializing: false });
+    }
+  }
+
   callCallbacks(cookieConsents) {
     // console.log("CookieKitContainer#callCallbacks");
     const { cookieHandler, targetUrl } = this.props;
@@ -397,6 +400,11 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const redefinedPosition = positions.includes(position) ? position : positions[0];
 
+    const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerPrint") : null;
+    const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerPrint") : null;
+
+    const fingerprintConsent = fingerprint ? fingerprint.checked : false;
+
     // console.log("initializing:", initializing);
 
     return (
@@ -406,9 +414,10 @@ export default class CookieKitContainer extends React.PureComponent {
             <CookieKit
               companyLogo={companyLogo}
               consentsSource={consentsSource}
-              cookieConsents={cookieConsents}
+              cookieConsents={cookies}
               countryCode={countryCode}
               expirationTime={expirationTime}
+              fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}
               hideOnComplete={hideOnComplete}
               loginStatus={loginStatus}

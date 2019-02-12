@@ -43,6 +43,7 @@ export default class CookieKit extends React.PureComponent {
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     countryCode: PropTypes.string,
     expirationTime: PropTypes.number,
+    fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
     loginStatus: PropTypes.bool,
@@ -70,6 +71,7 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: null,
     countryCode: null,
     expirationTime: 0,
+    fingerprintConsent: false,
     loginStatus: false,
     testMode: false,
   };
@@ -234,6 +236,7 @@ export default class CookieKit extends React.PureComponent {
       consentsSource,
       cookieConsents,
       countryCode,
+      fingerprintConsent,
       hideBrandTag,
       loginStatus,
       position,
@@ -274,6 +277,7 @@ export default class CookieKit extends React.PureComponent {
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}
+            fingerprintConsent={fingerprintConsent}
             hideBrandTag={hideBrandTag}
             loginStatus={loginStatus}
             isConnected={!!campaignReference}
