@@ -18,6 +18,7 @@ import CookieConsentsManager from "xcoobee-cookie-kit-core/src/CookieConsentsMan
 import {
   getCountryCode,
   saveCountryCode,
+  fetchCountryCodeForSubscribers,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
@@ -162,6 +163,10 @@ export default class CookieKitContainer extends React.PureComponent {
   }
 
   componentDidMount() {
+    const { campaignReference } = this.props;
+
+    fetchCountryCodeForSubscribers(campaignReference);
+
     if (this.state.countryCode) {
       this.getCookieConsents();
     } else {
