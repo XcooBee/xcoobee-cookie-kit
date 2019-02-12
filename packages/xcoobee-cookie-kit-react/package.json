@@ -1,6 +1,6 @@
 {
   "name": "react-cookie-kit",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Cookie Consent Management for Websites using ReactJS.",
   "keywords": [
     "consent",
@@ -17,7 +17,8 @@
     "Vladimir Maklyakov"
   ],
   "files": [
-    "dist/"
+    "dist/",
+    "src/"
   ],
   "main": "dist/index.js",
   "scripts": {

@@ -5,7 +5,6 @@ import {
   configFields,
   cookieDefns,
   defaultConfig,
-  positions,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
 import CookieKitContainer from "react-cookie-kit/src";
@@ -20,10 +19,6 @@ function checkRequiredFields(config) {
       errors.push(`${field} field is required as initialization parameter.`);
     }
   });
-
-  if (!config.cookieHandler && !config.targetUrl) {
-    errors.push("One of `cookieHandler` or `targetUrl` fields is required as initialization parameter.");
-  }
 
   if (errors.length > 0) {
     errors.forEach(errorMessage => console.error(errorMessage));
@@ -106,7 +101,7 @@ class CookitKitInitializer {
       throw Error("Category should be one of the following: application, usage, statistics, advertising.");
     }
 
-    let managedCookie = document.createElement("xbee-cookie");
+    const managedCookie = document.createElement("xbee-cookie");
 
     // Set elements
     managedCookie.setAttribute("category", category);

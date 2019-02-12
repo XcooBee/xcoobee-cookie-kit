@@ -13,7 +13,7 @@ The React Cookie Kit is not just an information overlay. It is an active cookie 
 
 ## Video
 
-[Cookie Kit Tutorial](https://www.youtube.com/watch?v=X2DNrckHLBI)
+[Cookie Kit Tutorial](https://youtu.be/gKYNoARNXRo)
 
 ## The XcooBee Cookie Kit
 
