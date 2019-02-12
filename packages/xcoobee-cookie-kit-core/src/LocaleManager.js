@@ -39,9 +39,7 @@ export function fetchCountryCode() {
 
 export function fetchCountryCodeForSubscribers(campaignReference) {
   // console.log("LocaleManager#fetchCountryCodeForSubscribers fetching...");
-  const options = { method: "GET" };
-
-  return fetch(`${xbApiUrl}/geoip?reference=${campaignReference}`, options)
+  return fetch(`${xbApiUrl}/geoip?reference=${campaignReference}`, { mode: "cors" })
     .then(res => res.json())
     .then((res) => {
       // console.log("LocaleManager#fetchCountryCodeForSubscribers fetched.");
