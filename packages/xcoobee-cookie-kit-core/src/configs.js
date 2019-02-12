@@ -101,6 +101,7 @@ const cookieOptionsKeys = {
 };
 
 const configFields = [
+  "displayFingerprint",
   "campaignReference",
   "checkByDefaultTypes",
   "companyLogo",

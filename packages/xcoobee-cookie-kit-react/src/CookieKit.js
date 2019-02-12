@@ -38,6 +38,7 @@ function ResetButton() {
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
+    displayFingerprint: PropTypes.bool,
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
@@ -68,6 +69,7 @@ export default class CookieKit extends React.PureComponent {
   };
 
   static defaultProps = {
+    displayFingerprint: false,
     companyLogo: null,
     countryCode: null,
     expirationTime: 0,
@@ -232,6 +234,7 @@ export default class CookieKit extends React.PureComponent {
   render() {
     // console.log("CookieKit#render");
     const {
+      displayFingerprint,
       companyLogo,
       consentsSource,
       cookieConsents,
@@ -274,6 +277,7 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
+            displayFingerprint={displayFingerprint}
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
             countryCode={countryCode}

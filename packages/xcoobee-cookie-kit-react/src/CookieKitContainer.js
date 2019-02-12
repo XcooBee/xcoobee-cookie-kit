@@ -93,6 +93,7 @@ function handleBridgeError(message) {
 
 export default class CookieKitContainer extends React.PureComponent {
   static propTypes = {
+    displayFingerprint: PropTypes.bool,
     campaignReference: PropTypes.string,
     checkByDefaultTypes: PropTypes.arrayOf(
       PropTypes.oneOf(cookieTypes).isRequired,
@@ -127,6 +128,7 @@ export default class CookieKitContainer extends React.PureComponent {
   };
 
   static defaultProps = {
+    displayFingerprint: false,
     campaignReference: null,
     checkByDefaultTypes: [],
     companyLogo: null,
@@ -384,6 +386,7 @@ export default class CookieKitContainer extends React.PureComponent {
   render() {
     // console.log("CookieKitContainer#render");
     const {
+      displayFingerprint,
       campaignReference,
       companyLogo,
       expirationTime,
@@ -412,6 +415,7 @@ export default class CookieKitContainer extends React.PureComponent {
         {!initializing && (
           <React.Fragment>
             <CookieKit
+              displayFingerprint={displayFingerprint}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
               cookieConsents={cookies}
