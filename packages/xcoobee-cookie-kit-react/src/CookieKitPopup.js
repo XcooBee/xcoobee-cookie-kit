@@ -110,18 +110,16 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleCountrySelectToggle = (e) => {
     // console.log('CookieKitPopup#handleCountrySelectToggle');
-    const { isCountrySelectShown } = this.state;
 
     e.stopPropagation();
-    this.setState({ isCountrySelectShown: !isCountrySelectShown, isLocaleSelectShown: false });
+    this.setState(state => ({ isCountrySelectShown: !state.isCountrySelectShown, isLocaleSelectShown: false }));
   };
 
   handleLocaleSelectToggle = (e) => {
-    // console.log('CookieKitPopup#hhandleLocaleSelectToggle');
-    const { isLocaleSelectShown } = this.state;
+    // console.log('CookieKitPopup#handleLocaleSelectToggle');
 
     e.stopPropagation();
-    this.setState({ isLocaleSelectShown: !isLocaleSelectShown, isCountrySelectShown: false });
+    this.setState(state => ({ isLocaleSelectShown: !state.isLocaleSelectShown, isCountrySelectShown: false }));
   };
 
   handleCookieCheck = (e, type) => {
@@ -253,20 +251,22 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 type="button"
                 className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
-                onClick={e => this.handleLocaleSelectToggle(e)}
+                onClick={this.handleLocaleSelectToggle}
               >
                 { selectedLocale }
               </button>
               { countryCode && (
-                <button
-                  type="button"
-                  className={`xb-cookie-kit__button ${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}
-                  onClick={e => this.handleCountrySelectToggle(e)}
-                >
-                  <div className={`${BLOCK}__flag`}>
-                    <ReactCountryFlag code={countryCode} svg />
-                  </div>
-                </button>
+                <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
+                  <button
+                    type="button"
+                    className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                    onClick={this.handleCountrySelectToggle}
+                  >
+                    <div className={`${BLOCK}__flag`}>
+                      <ReactCountryFlag code={countryCode} svg />
+                    </div>
+                  </button>
+                </div>
               )}
             </div>
             { isLocaleSelectShown && (
@@ -318,7 +318,7 @@ export default class CookieKitPopup extends React.PureComponent {
                   />
                 </div>
                 <div
-                  title="More info"
+                  title={renderText("CookieKit.MoreInfo", selectedLocale)}
                   className={`${BLOCK}__cookie-title`}
                 >
                   <a

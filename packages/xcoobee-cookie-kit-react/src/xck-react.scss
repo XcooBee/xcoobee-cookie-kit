@@ -373,6 +373,11 @@ $duration: .2s;
           cursor: pointer;
         }
 
+        .xb-cookie-kit-popup__country-picker-button {
+          width: 100%;
+          height: 100%;
+        }
+
         > .xb-cookie-kit-popup__custom-select {
           position: absolute;
           top: 12px;
