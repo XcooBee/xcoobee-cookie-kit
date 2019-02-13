@@ -1,4 +1,4 @@
-import { localeKey, countryCodeKey } from "./configs";
+import { localeKey, countryCodeKey, xbApiUrl } from "./configs";
 
 export function clearLocale() {
   localStorage.removeItem(localeKey);
@@ -33,6 +33,17 @@ export function fetchCountryCode() {
     .then((res) => {
       // console.log("LocaleManager#fetchCountryCode fetched.");
       const countryCode = res ? res.countryCode : "EU";
+      return countryCode;
+    });
+}
+
+export function fetchCountryCodeForSubscribers(campaignReference) {
+  // console.log("LocaleManager#fetchCountryCodeForSubscribers fetching...");
+  return fetch(`${xbApiUrl}/geoip?reference=${campaignReference}`)
+    .then(res => res.json())
+    .then((res) => {
+      // console.log("LocaleManager#fetchCountryCodeForSubscribers fetched.");
+      const countryCode = res ? res.country : "EU";
       return countryCode;
     });
 }

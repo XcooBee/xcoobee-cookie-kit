@@ -105,6 +105,7 @@ const configFields = [
   "companyLogo",
   "cookieHandler",
   "cssAutoLoad",
+  "detectCountry",
   "displayOnlyForEU",
   "expirationTime",
   "hideBrandTag",

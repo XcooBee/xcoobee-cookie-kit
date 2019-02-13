@@ -338,6 +338,7 @@ $duration: .2s;
         > .xb-cookie-kit-popup__locale {
           background: $primary-color;
           padding: 4px;
+          border-radius: 0 0 0 10px;
 
           > .xb-cookie-kit-popup__language-picker {
             cursor: pointer;
@@ -366,6 +367,15 @@ $duration: .2s;
           img {
             border-radius: 5px;
           }
+        }
+
+        .xb-cookie-kit-popup__country-picker {
+          cursor: pointer;
+        }
+
+        .xb-cookie-kit-popup__country-picker-button {
+          width: 100%;
+          height: 100%;
         }
 
         > .xb-cookie-kit-popup__custom-select {
@@ -403,6 +413,45 @@ $duration: .2s;
             }
           }
         }
+
+        > .xb-cookie-kit-popup__country-picker-select {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          left: 12px;
+          top: 95px;
+          background: $secondary-color;
+          border-radius: 10px;
+          border: 1px solid $primary-color;
+          width: 35px;
+          height: 175px;
+          overflow: scroll;
+          z-index: 10;
+
+          &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+          }
+
+          > .xb-cookie-kit-popup__country-picker-button {
+            cursor: pointer;
+            background: $secondary-color;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 40px;
+            border-bottom: 1px solid $primary-color;
+
+            &:last-child {
+              border-bottom: 0;
+            }
+
+            &:hover {
+              background: $primary-color;
+            }
+          }
+        }
       }
     }
 
@@ -422,7 +471,6 @@ $duration: .2s;
 
           .xb-cookie-kit-popup__cookie-title-link {
             color: inherit;
-            text-decoration: none;
             cursor: pointer;
           }
         }
@@ -491,7 +539,7 @@ $duration: .2s;
 
       .xb-cookie-kit-popup__link {
         color: $primary-color;
-        text-decoration: none;
+        text-decoration: underline;
         cursor: pointer;
         flex: 1;
         text-align: center;
@@ -543,13 +591,13 @@ $duration: .2s;
           }
 
           > .xb-cookie-kit-popup__custom-select {
-            top: 5px;
-            left: -120px;
+            top: 6px;
+            left: -108px;
             border-radius: 5px;
 
             > .xb-cookie-kit-popup__language-picker-button {
               padding: 5px;
-              font-size: 14px;
+              font-size: 12px;
 
               &:first-child {
                 border-radius: 5px 0 0 5px;
@@ -558,6 +606,18 @@ $duration: .2s;
               &:last-child {
                 border-radius: 0 5px 5px 0;
               }
+            }
+          }
+
+          .xb-cookie-kit-popup__country-picker-select {
+            left: 4px;
+            top: 72px;
+            width: 30px;
+            height: 135px;
+
+            > .xb-cookie-kit-popup__country-picker-button {
+              min-height: 30px;
+              padding: 4px;
             }
           }
         }
