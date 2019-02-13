@@ -318,8 +318,8 @@ export default class CookieKitPopup extends React.PureComponent {
                   />
                 </div>
                 <div
-                  title={renderText("CookieKit.MoreInfo", selectedLocale)}
                   className={`${BLOCK}__cookie-title`}
+                  title={renderText("CookieKit.MoreInfo", selectedLocale)}
                 >
                   <a
                     className={`${BLOCK}__cookie-title-link`}
