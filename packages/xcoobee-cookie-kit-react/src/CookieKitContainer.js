@@ -14,6 +14,7 @@ import {
   getCountryCode,
   saveCountryCode,
   fetchCountryCode,
+  fetchCountryCodeForSubscribers,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
@@ -104,6 +105,7 @@ export default class CookieKitContainer extends React.PureComponent {
       PropTypes.string,
     ]),
     cssAutoLoad: PropTypes.bool,
+    detectCountry: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool,
@@ -134,6 +136,7 @@ export default class CookieKitContainer extends React.PureComponent {
     companyLogo: null,
     cookieHandler: () => {},
     cssAutoLoad: true,
+    detectCountry: false,
     displayOnlyForEU: false,
     expirationTime: 0,
     hideBrandTag: false,
@@ -206,12 +209,21 @@ export default class CookieKitContainer extends React.PureComponent {
   }
 
   getCountryCode() {
+    const { campaignReference, detectCountry } = this.props;
     const { countryCode } = this.state;
+
+    let promise = null;
 
     if (countryCode) {
       return Promise.resolve(countryCode);
     }
-    return fetchCountryCode()
+    if (!!campaignReference && detectCountry) {
+      promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
+    } else {
+      promise = Promise.resolve(fetchCountryCode());
+    }
+
+    return promise
       .catch((error) => {
         const defaultCountryCode = "EU";
 
@@ -386,9 +398,9 @@ export default class CookieKitContainer extends React.PureComponent {
   render() {
     // console.log("CookieKitContainer#render");
     const {
-      displayFingerprint,
       campaignReference,
       companyLogo,
+      displayFingerprint,
       expirationTime,
       hideBrandTag,
       hideOnComplete,

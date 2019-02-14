@@ -42,7 +42,6 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    countryCode: PropTypes.string,
     expirationTime: PropTypes.number,
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -71,7 +70,6 @@ export default class CookieKit extends React.PureComponent {
   static defaultProps = {
     displayFingerprint: false,
     companyLogo: null,
-    countryCode: null,
     expirationTime: 0,
     fingerprintConsent: false,
     loginStatus: false,
@@ -234,11 +232,10 @@ export default class CookieKit extends React.PureComponent {
   render() {
     // console.log("CookieKit#render");
     const {
-      displayFingerprint,
       companyLogo,
       consentsSource,
       cookieConsents,
-      countryCode,
+      displayFingerprint,
       fingerprintConsent,
       hideBrandTag,
       loginStatus,
@@ -277,10 +274,9 @@ export default class CookieKit extends React.PureComponent {
       >
         {renderPopup && (
           <CookieKitPopup
-            displayFingerprint={displayFingerprint}
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
-            countryCode={countryCode}
+            displayFingerprint={displayFingerprint}
             fingerprintConsent={fingerprintConsent}
             hideBrandTag={hideBrandTag}
             loginStatus={loginStatus}
