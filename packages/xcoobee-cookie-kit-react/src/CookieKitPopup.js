@@ -362,7 +362,7 @@ export default class CookieKitPopup extends React.PureComponent {
                 id="xbCheckbox_fingerprint"
                 type="checkbox"
                 checked={fingerprintConsent}
-                onChange={e => this.handleFingerprintCheck(e)}
+                onChange={this.handleFingerprintCheck}
               />
               <label
                 htmlFor="xbCheckbox_fingerprint"
