@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
-import Enums from "xcoobee-enums";
+// import Enums from "xcoobee-enums";
 
 import {
   cookieDefns as allAvailCookieDefns,
@@ -10,6 +10,8 @@ import {
   links,
 } from "xcoobee-cookie-kit-core/src/configs";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
+import countryData from "xcoobee-cookie-kit-core/src/countryData";
+
 import { getLocale, saveLocale, getCountryCode, saveCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
 
 import closeIcon from "./assets/close-icon.svg";
@@ -22,8 +24,6 @@ import { xbOrigin } from "./configs";
 const BLOCK = "xb-cookie-kit-popup";
 
 const OPTION = "loginstatus";
-
-const COUNTRY_DATA = Enums.getEnum("country-data");
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
@@ -77,7 +77,6 @@ export default class CookieKitPopup extends React.PureComponent {
       fingerprintConsent,
       isCountrySelectShown: false,
       isLocaleSelectShown: false,
-      isShown: false,
       selectedLocale: getLocale() || "EN",
     };
 
@@ -219,7 +218,7 @@ export default class CookieKitPopup extends React.PureComponent {
       defn => requestDataTypes.includes(defn.type),
     );
 
-    const countries = COUNTRY_DATA.map(country => country["alpha-2"]);
+    const countries = countryData.map(country => country["alpha-2"]);
 
     const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
