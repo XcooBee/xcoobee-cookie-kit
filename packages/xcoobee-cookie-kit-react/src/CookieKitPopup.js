@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
-import Enums from "xcoobee-enums";
+import COUNTRY_DATA from "xcoobee-enums/src/lists/country-data";
 
 import {
   cookieDefns as allAvailCookieDefns,
@@ -22,8 +22,6 @@ import { xbOrigin } from "./configs";
 const BLOCK = "xb-cookie-kit-popup";
 
 const OPTION = "loginstatus";
-
-const COUNTRY_DATA = Enums.getEnum("country-data");
 
 export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
