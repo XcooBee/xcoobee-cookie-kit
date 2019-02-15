@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
-// import Enums from "xcoobee-enums";
 
 import {
   cookieDefns as allAvailCookieDefns,
@@ -9,8 +8,8 @@ import {
   locales,
   links,
 } from "xcoobee-cookie-kit-core/src/configs";
-import renderText from "xcoobee-cookie-kit-core/src/renderText";
 import countryData from "xcoobee-cookie-kit-core/src/countryData";
+import renderText from "xcoobee-cookie-kit-core/src/renderText";
 
 import { getLocale, saveLocale, getCountryCode, saveCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
 
@@ -64,7 +63,7 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#constructor');
     super(props);
 
-    const { cookieConsents, requestDataTypes, fingerprintConsent } = this.props;
+    const { cookieConsents, fingerprintConsent, requestDataTypes } = this.props;
     const consentSettings = {};
 
     cookieConsents.filter(cookieConsent => requestDataTypes.includes(cookieConsent.type)).forEach((cookieConsent) => {
@@ -205,7 +204,14 @@ export default class CookieKitPopup extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { consentSettings, countryCode, fingerprintConsent, isCountrySelectShown, isLocaleSelectShown, selectedLocale } = this.state;
+    const {
+      consentSettings,
+      countryCode,
+      fingerprintConsent,
+      isCountrySelectShown,
+      isLocaleSelectShown,
+      selectedLocale,
+    } = this.state;
 
     // console.log("countryCode:", countryCode);
 
@@ -217,8 +223,6 @@ export default class CookieKitPopup extends React.PureComponent {
     const cookieDefns = allAvailCookieDefns.filter(
       defn => requestDataTypes.includes(defn.type),
     );
-
-    const countries = countryData.map(country => country["alpha-2"]);
 
     const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
@@ -296,7 +300,7 @@ export default class CookieKitPopup extends React.PureComponent {
             )}
             { isCountrySelectShown && (
               <div className={`${BLOCK}__country-picker-select`}>
-                { countries.map(cCode => (
+                { countryData.map(cCode => (
                   <button
                     type="button"
                     key={`country-flag-${cCode}`}
@@ -368,7 +372,9 @@ export default class CookieKitPopup extends React.PureComponent {
                 className={`${BLOCK}__checkbox`}
               />
             </div>
-            <div className={`${BLOCK}__fingerprint-label`}>Allow use of Fingerprinting</div>
+            <div className={`${BLOCK}__fingerprint-label`}>
+              {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+            </div>
           </div>
         )}
         <div className={`${BLOCK}__actions`}>

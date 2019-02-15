@@ -14,7 +14,7 @@ const cookieConsentsCache = {
   put(cookieConsents) {
     // console.log("cookieConsentsCache#put");
     // TODO: Save as a LUT (aka consentSettings) instead of an array.
-    const fingerprint = cookieConsents.find(consent => consent.type === "fingerPrint");
+    const fingerprint = cookieConsents.find(consent => consent.type === "fingerprint");
     const xcoobeeCookies = {
       timestamp: Date.now(),
       cookies: [],
@@ -39,7 +39,7 @@ const cookieConsentsCache = {
     if (localStorage[xcoobeeCookiesKey]) {
       try {
         const xcoobeeCookies = JSON.parse(localStorage[xcoobeeCookiesKey]);
-        const { cookies: consents, timestamp, fingerprintConsent } = xcoobeeCookies;
+        const { cookies: consents, fingerprintConsent, timestamp } = xcoobeeCookies;
 
         // If the cached cookie consents have not expired, then extract it.
         if ((Date.now() - timestamp) < expirationTime) {
@@ -47,7 +47,7 @@ const cookieConsentsCache = {
             type: cookieDefn.type,
             checked: consents[cookieDefn.id],
           }));
-          cookieConsents.push({ type: "fingerPrint", checked: !!fingerprintConsent });
+          cookieConsents.push({ type: "fingerprint", checked: !!fingerprintConsent });
         }
       } catch (err) {
         cookieConsents = null;

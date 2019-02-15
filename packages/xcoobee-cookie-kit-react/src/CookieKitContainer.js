@@ -94,7 +94,6 @@ function handleBridgeError(message) {
 
 export default class CookieKitContainer extends React.PureComponent {
   static propTypes = {
-    displayFingerprint: PropTypes.bool,
     campaignReference: PropTypes.string,
     checkByDefaultTypes: PropTypes.arrayOf(
       PropTypes.oneOf(cookieTypes).isRequired,
@@ -106,6 +105,7 @@ export default class CookieKitContainer extends React.PureComponent {
     ]),
     cssAutoLoad: PropTypes.bool,
     detectCountry: PropTypes.bool,
+    displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool,
@@ -288,7 +288,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: !!consentSettings[type],
     }));
-    cookieConsents.push({ type: "fingerPrint", checked: fingerprintConsent });
+    cookieConsents.push({ type: "fingerprint", checked: fingerprintConsent });
 
     this.setCookieConsents("usersSaved", cookieConsents);
 
@@ -299,7 +299,7 @@ export default class CookieKitContainer extends React.PureComponent {
       cookieTypes.forEach((type) => {
         cookieConsentsObj[type] = !!consentSettings[type];
       });
-      cookieConsentsObj.fingerPrint = fingerprintConsent;
+      cookieConsentsObj.fingerprint = fingerprintConsent;
 
       this.bridgeRef.saveCookieConsents(cookieConsentsObj);
     }
@@ -362,7 +362,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: checkByDefaultTypes.includes(type),
     }));
-    hostsDefaultCookieConsents.push({ type: "fingerPrint", checked: false });
+    hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });
     // If we were unable to resolve the user's country code, then assume it is in
     // the EU.
     const cCode = countryCode || euCountries[0];
@@ -415,8 +415,8 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const redefinedPosition = positions.includes(position) ? position : positions[0];
 
-    const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerPrint") : null;
-    const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerPrint") : null;
+    const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerprint") : null;
+    const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerprint") : null;
 
     const fingerprintConsent = fingerprint ? fingerprint.checked : false;
 
