@@ -130,13 +130,13 @@ export default class CookieKitContainer extends React.PureComponent {
   };
 
   static defaultProps = {
-    displayFingerprint: false,
     campaignReference: null,
     checkByDefaultTypes: [],
     companyLogo: null,
     cookieHandler: () => {},
     cssAutoLoad: true,
     detectCountry: false,
+    displayFingerprint: false,
     displayOnlyForEU: false,
     expirationTime: 0,
     hideBrandTag: false,
