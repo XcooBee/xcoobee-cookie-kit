@@ -1,14 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ReactCountryFlag from "react-country-flag";
+
 import {
   cookieDefns as allAvailCookieDefns,
   cookieTypes,
   locales,
   links,
 } from "xcoobee-cookie-kit-core/src/configs";
+import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
-import { getLocale, saveLocale } from "xcoobee-cookie-kit-core/src/LocaleManager";
+
+import { getLocale, saveLocale, getCountryCode, saveCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
 
 import closeIcon from "./assets/close-icon.svg";
 import xbLogo from "./assets/xcoobee-logo.svg";
@@ -25,7 +28,8 @@ export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    countryCode: PropTypes.string,
+    displayFingerprint: PropTypes.bool,
+    fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
     isConnected: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -50,7 +54,8 @@ export default class CookieKitPopup extends React.PureComponent {
 
   static defaultProps = {
     companyLogo: null,
-    countryCode: null,
+    displayFingerprint: false,
+    fingerprintConsent: false,
     loginStatus: false,
   };
 
@@ -58,7 +63,7 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#constructor');
     super(props);
 
-    const { cookieConsents, requestDataTypes } = this.props;
+    const { cookieConsents, fingerprintConsent, requestDataTypes } = this.props;
     const consentSettings = {};
 
     cookieConsents.filter(cookieConsent => requestDataTypes.includes(cookieConsent.type)).forEach((cookieConsent) => {
@@ -67,8 +72,11 @@ export default class CookieKitPopup extends React.PureComponent {
 
     this.state = {
       consentSettings,
+      countryCode: getCountryCode() || "EU",
+      fingerprintConsent,
+      isCountrySelectShown: false,
+      isLocaleSelectShown: false,
       selectedLocale: getLocale() || "EN",
-      isShown: false,
     };
 
     window.addEventListener("message", this.onMessage);
@@ -94,8 +102,28 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleLocaleChange = (locale) => {
     // console.log('CookieKitPopup#handleLocaleChange');
-    this.setState({ selectedLocale: locale, isShown: false });
+    this.setState({ selectedLocale: locale, isLocaleSelectShown: false });
     saveLocale(locale);
+  };
+
+  handleCountryChange = (countryCode) => {
+    // console.log('CookieKitPopup#handleCountryChange');
+    this.setState({ countryCode, isCountrySelectShown: false });
+    saveCountryCode(countryCode);
+  };
+
+  handleCountrySelectToggle = (e) => {
+    // console.log('CookieKitPopup#handleCountrySelectToggle');
+
+    e.stopPropagation();
+    this.setState(state => ({ isCountrySelectShown: !state.isCountrySelectShown, isLocaleSelectShown: false }));
+  };
+
+  handleLocaleSelectToggle = (e) => {
+    // console.log('CookieKitPopup#handleLocaleSelectToggle');
+
+    e.stopPropagation();
+    this.setState(state => ({ isLocaleSelectShown: !state.isLocaleSelectShown, isCountrySelectShown: false }));
   };
 
   handleCookieCheck = (e, type) => {
@@ -131,12 +159,17 @@ export default class CookieKitPopup extends React.PureComponent {
     }
   };
 
+  handleFingerprintCheck = (e) => {
+    // console.log('CookieKitPopup#handleFingerprintCheck');
+    this.setState({ fingerprintConsent: e.target.checked });
+  };
+
   handleSubmit = () => {
     // console.log('CookieKitPopup#handleSubmit');
     const { onSubmit } = this.props;
-    const { consentSettings } = this.state;
+    const { consentSettings, fingerprintConsent } = this.state;
 
-    onSubmit(consentSettings);
+    onSubmit(consentSettings, fingerprintConsent);
   };
 
   renderTextMessage(textMessage) {
@@ -161,7 +194,7 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#render');
     const {
       companyLogo,
-      countryCode,
+      displayFingerprint,
       hideBrandTag,
       loginStatus,
       isConnected,
@@ -171,7 +204,14 @@ export default class CookieKitPopup extends React.PureComponent {
       termsUrl,
       textMessage,
     } = this.props;
-    const { consentSettings, isShown, selectedLocale } = this.state;
+    const {
+      consentSettings,
+      countryCode,
+      fingerprintConsent,
+      isCountrySelectShown,
+      isLocaleSelectShown,
+      selectedLocale,
+    } = this.state;
 
     // console.log("countryCode:", countryCode);
 
@@ -187,7 +227,10 @@ export default class CookieKitPopup extends React.PureComponent {
     const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
     return (
-      <div className={BLOCK}>
+      <div
+        className={BLOCK}
+        onClick={() => this.setState({ isCountrySelectShown: false, isLocaleSelectShown: false })}
+      >
         <div className={`${BLOCK}__header`}>
           <div className={`${BLOCK}__logo`}>
             {
@@ -223,19 +266,25 @@ export default class CookieKitPopup extends React.PureComponent {
               <button
                 type="button"
                 className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
-                onClick={() => this.setState({ isShown: !isShown })}
+                onClick={this.handleLocaleSelectToggle}
               >
                 { selectedLocale }
               </button>
               { countryCode && (
-                <div className={`${BLOCK}__block ${BLOCK}__block--sm`}>
-                  <div className={`${BLOCK}__flag`}>
-                    <ReactCountryFlag code={countryCode} svg />
-                  </div>
+                <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
+                  <button
+                    type="button"
+                    className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                    onClick={this.handleCountrySelectToggle}
+                  >
+                    <div className={`${BLOCK}__flag`}>
+                      <ReactCountryFlag code={countryCode} svg />
+                    </div>
+                  </button>
                 </div>
               )}
             </div>
-            { isShown && (
+            { isLocaleSelectShown && (
               <div className={`${BLOCK}__custom-select`}>
                 { locales.map(locale => (
                   <button
@@ -245,6 +294,22 @@ export default class CookieKitPopup extends React.PureComponent {
                     onClick={() => this.handleLocaleChange(locale)}
                   >
                     {locale}
+                  </button>
+                ))}
+              </div>
+            )}
+            { isCountrySelectShown && (
+              <div className={`${BLOCK}__country-picker-select`}>
+                { countryCodes.map(cCode => (
+                  <button
+                    type="button"
+                    key={`country-flag-${cCode}`}
+                    className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                    onClick={() => this.handleCountryChange(cCode)}
+                  >
+                    <div className={`${BLOCK}__flag`}>
+                      <ReactCountryFlag code={cCode} svg />
+                    </div>
                   </button>
                 ))}
               </div>
@@ -267,7 +332,10 @@ export default class CookieKitPopup extends React.PureComponent {
                     className={`${BLOCK}__checkbox`}
                   />
                 </div>
-                <div className={`${BLOCK}__cookie-title`}>
+                <div
+                  className={`${BLOCK}__cookie-title`}
+                  title={renderText("CookieKit.MoreInfo", selectedLocale)}
+                >
                   <a
                     className={`${BLOCK}__cookie-title-link`}
                     href={cookieDefn.url}
@@ -290,6 +358,25 @@ export default class CookieKitPopup extends React.PureComponent {
             ? renderText("CookieKit.UncheckButton", selectedLocale)
             : renderText("CookieKit.CheckAllButton", selectedLocale)}
         </button>
+        { displayFingerprint && (
+          <div className={`${BLOCK}__fingerprint`}>
+            <div className={`${BLOCK}__fingerprint-checkbox`}>
+              <input
+                id="xbCheckbox_fingerprint"
+                type="checkbox"
+                checked={fingerprintConsent}
+                onChange={this.handleFingerprintCheck}
+              />
+              <label
+                htmlFor="xbCheckbox_fingerprint"
+                className={`${BLOCK}__checkbox`}
+              />
+            </div>
+            <div className={`${BLOCK}__fingerprint-label`}>
+              {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+            </div>
+          </div>
+        )}
         <div className={`${BLOCK}__actions`}>
           { !hideBrandTag && (
             <div className={`${BLOCK}__privacy-partner-container`}>
@@ -344,19 +431,19 @@ export default class CookieKitPopup extends React.PureComponent {
           )}
           <a
             className={`${BLOCK}__link`}
-            href={termsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {renderText("CookieKit.TermsLink", selectedLocale)}
-          </a>
-          <a
-            className={`${BLOCK}__link`}
             href={privacyUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
             {renderText("CookieKit.PolicyLink", selectedLocale)}
+          </a>
+          <a
+            className={`${BLOCK}__link`}
+            href={termsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {renderText("CookieKit.TermsLink", selectedLocale)}
           </a>
         </div>
         { !hideBrandTag && (
