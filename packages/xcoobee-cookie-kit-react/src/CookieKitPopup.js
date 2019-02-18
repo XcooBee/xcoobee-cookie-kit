@@ -8,7 +8,7 @@ import {
   locales,
   links,
 } from "xcoobee-cookie-kit-core/src/configs";
-import countryData from "xcoobee-cookie-kit-core/src/countryData";
+import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
 
 import { getLocale, saveLocale, getCountryCode, saveCountryCode } from "xcoobee-cookie-kit-core/src/LocaleManager";
