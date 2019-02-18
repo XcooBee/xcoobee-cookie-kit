@@ -48,18 +48,18 @@ export default class BridgeCommunicator extends React.PureComponent {
 
   // Make a call to iframe
   checkLoginStatus = () => {
-    const { campaignReference } = this.props;
+    const { campaignReference, onLoginStatusChange } = this.props;
     const myMsgObj = {
       action: "loginstatus",
       campaign: campaignReference,
       domain: window.location.origin,
     };
 
-    if (!campaignReference) {
-      return;
+    if (campaignReference) {
+      this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
+    } else {
+      onLoginStatusChange(false);
     }
-
-    this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
   };
 
   fetchCookieOptions() {
