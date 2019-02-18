@@ -300,7 +300,7 @@ export default class CookieKitPopup extends React.PureComponent {
             )}
             { isCountrySelectShown && (
               <div className={`${BLOCK}__country-picker-select`}>
-                { countryData.map(cCode => (
+                { countryCodes.map(cCode => (
                   <button
                     type="button"
                     key={`country-flag-${cCode}`}
