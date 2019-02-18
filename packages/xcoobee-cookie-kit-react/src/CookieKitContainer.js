@@ -170,6 +170,15 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
+  componentDidMount() {
+    // console.log("CookieKitContainer#componentDidMount");
+    const { campaignReference } = this.props;
+
+    if (!campaignReference) {
+      this.onLoginStatusChange(false);
+    }
+  }
+
   onLoginStatusChange = (loginStatus) => {
     // console.log("CookieKitContainer#onLoginStatusChange");
     const { isLoginStatusChecked } = this.state;

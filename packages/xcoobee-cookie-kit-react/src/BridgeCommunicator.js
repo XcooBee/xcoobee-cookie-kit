@@ -55,6 +55,10 @@ export default class BridgeCommunicator extends React.PureComponent {
       domain: window.location.origin,
     };
 
+    if (!campaignReference) {
+      return;
+    }
+
     this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
   };
 
@@ -69,6 +73,10 @@ export default class BridgeCommunicator extends React.PureComponent {
       domain: window.location.origin,
     };
 
+    if (!campaignReference) {
+      return;
+    }
+
     this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
   }
 
@@ -82,6 +90,10 @@ export default class BridgeCommunicator extends React.PureComponent {
       campaign: campaignReference,
       domain: window.location.origin,
     };
+
+    if (!campaignReference) {
+      return;
+    }
 
     this.frameRef.contentWindow.postMessage(JSON.stringify(myMsgObj), xbOrigin);
   }
