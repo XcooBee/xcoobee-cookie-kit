@@ -38,10 +38,11 @@ function ResetButton() {
 
 export default class CookieKit extends React.PureComponent {
   static propTypes = {
-    displayFingerprint: PropTypes.bool,
+    campaignReference: PropTypes.string,
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
+    displayFingerprint: PropTypes.bool,
     expirationTime: PropTypes.number,
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -68,8 +69,9 @@ export default class CookieKit extends React.PureComponent {
   };
 
   static defaultProps = {
-    displayFingerprint: false,
+    campaignReference: null,
     companyLogo: null,
+    displayFingerprint: false,
     expirationTime: 0,
     fingerprintConsent: false,
     loginStatus: false,
@@ -232,6 +234,7 @@ export default class CookieKit extends React.PureComponent {
   render() {
     // console.log("CookieKit#render");
     const {
+      campaignReference,
       companyLogo,
       consentsSource,
       cookieConsents,
@@ -254,8 +257,6 @@ export default class CookieKit extends React.PureComponent {
     const renderButton = !renderPopup;
 
     const renderResetButton = testMode && cookieConsentsCache.get();
-
-    const campaignReference = XcooBee.kit.getParam("campaignReference");
 
     return (
       <div
