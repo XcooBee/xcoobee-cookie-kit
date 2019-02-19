@@ -42,7 +42,9 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
+    displayFingerprint: PropTypes.bool,
     expirationTime: PropTypes.number,
+    fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
     loginStatus: PropTypes.bool,
@@ -69,7 +71,9 @@ export default class CookieKit extends React.PureComponent {
   static defaultProps = {
     campaignReference: null,
     companyLogo: null,
+    displayFingerprint: false,
     expirationTime: 0,
+    fingerprintConsent: false,
     loginStatus: false,
     testMode: false,
   };
@@ -166,7 +170,7 @@ export default class CookieKit extends React.PureComponent {
     }, 1);
   };
 
-  handlePopupSubmit = (nextConsentSettings) => {
+  handlePopupSubmit = (nextConsentSettings, fingerprintConsent) => {
     // console.log("CookieKit#handlePopupSubmit");
     // console.dir(nextConsentSettings);
     const {
@@ -174,7 +178,7 @@ export default class CookieKit extends React.PureComponent {
       onCookieConsentsChange,
     } = this.props;
 
-    onCookieConsentsChange(nextConsentSettings);
+    onCookieConsentsChange(nextConsentSettings, fingerprintConsent);
 
     this.clearTimers();
     this.setState({ isOpen: false });
@@ -234,6 +238,8 @@ export default class CookieKit extends React.PureComponent {
       companyLogo,
       consentsSource,
       cookieConsents,
+      displayFingerprint,
+      fingerprintConsent,
       hideBrandTag,
       loginStatus,
       position,
@@ -271,6 +277,8 @@ export default class CookieKit extends React.PureComponent {
           <CookieKitPopup
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
+            displayFingerprint={displayFingerprint}
+            fingerprintConsent={fingerprintConsent}
             hideBrandTag={hideBrandTag}
             loginStatus={loginStatus}
             isConnected={!!campaignReference}

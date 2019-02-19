@@ -98,6 +98,7 @@ export default class CookieKitContainer extends React.PureComponent {
     ]),
     cssAutoLoad: PropTypes.bool,
     detectCountry: PropTypes.bool,
+    displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
     hideBrandTag: PropTypes.bool,
@@ -128,6 +129,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cookieHandler: () => {},
     cssAutoLoad: true,
     detectCountry: false,
+    displayFingerprint: false,
     displayOnlyForEU: false,
     expirationTime: 0,
     hideBrandTag: false,
@@ -272,7 +274,7 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setState({ consentStatus: nextConsentStatus });
   };
 
-  handleCookieConsentsChange = (consentSettings) => {
+  handleCookieConsentsChange = (consentSettings, fingerprintConsent) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
     const { campaignReference, loginStatus } = this.state;
 
@@ -280,6 +282,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: !!consentSettings[type],
     }));
+    cookieConsents.push({ type: "fingerprint", checked: fingerprintConsent });
 
     this.setCookieConsents("usersSaved", cookieConsents);
 
@@ -289,6 +292,7 @@ export default class CookieKitContainer extends React.PureComponent {
       cookieTypes.forEach((type) => {
         cookieConsentsObj[type] = !!consentSettings[type];
       });
+      cookieConsentsObj.fingerprint = fingerprintConsent;
 
       this.bridgeRef.saveCookieConsents(cookieConsentsObj);
     }
@@ -357,6 +361,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: checkByDefaultTypes.includes(type),
     }));
+    hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });
     // If we were unable to resolve the user's country code, then assume it is in
     // the EU.
     const cCode = countryCode || euCountries[0];
@@ -393,6 +398,7 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#render");
     const {
       companyLogo,
+      displayFingerprint,
       expirationTime,
       hideBrandTag,
       hideOnComplete,
@@ -407,6 +413,11 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const redefinedPosition = positions.includes(position) ? position : positions[0];
 
+    const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerprint") : null;
+    const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerprint") : null;
+
+    const fingerprintConsent = fingerprint ? fingerprint.checked : false;
+
     // console.log("initializing:", initializing);
 
     return (
@@ -415,11 +426,13 @@ export default class CookieKitContainer extends React.PureComponent {
           <React.Fragment>
             <CookieKit
               campaignReference={campaignReference}
+              displayFingerprint={displayFingerprint}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
-              cookieConsents={cookieConsents}
+              cookieConsents={cookies}
               countryCode={countryCode}
               expirationTime={expirationTime}
+              fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}
               hideOnComplete={hideOnComplete}
               loginStatus={loginStatus}

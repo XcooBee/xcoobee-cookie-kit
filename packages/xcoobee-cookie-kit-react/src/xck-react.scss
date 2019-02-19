@@ -457,7 +457,7 @@ $duration: .2s;
 
     &__cookie-list {
       display: flex;
-      margin-top: 24px;
+      margin-top: 12px;
       justify-content: space-around;
 
       .xb-cookie-kit-popup__cookie {
@@ -482,11 +482,31 @@ $duration: .2s;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      margin-top: 8px;
       color: $primary-color;
 
       &:hover {
         color: $secondary-color;
+      }
+    }
+
+    &__fingerprint {
+      background: #fdb81a;
+      margin: 8px auto;
+      border-radius: 10px;
+      padding: 8px 8px 4px;
+      color: #fff;
+      display: flex;
+
+      > .xb-cookie-kit-popup__fingerprint-label {
+        margin-top: 2px;
+        margin-left: 8px;
+        font-size: 14px;
+      }
+
+      @media (max-width: 500px) {
+        border-radius: 5px;
+        padding: 6px 6px 2px;
+        margin: 4px auto;
       }
     }
 
@@ -629,7 +649,7 @@ $duration: .2s;
 
         .xb-cookie-kit-popup__cookie-title {
           font-size: 14px !important;
-          margin-left: 4px;
+          margin-left: 8px;
         }
       }
 

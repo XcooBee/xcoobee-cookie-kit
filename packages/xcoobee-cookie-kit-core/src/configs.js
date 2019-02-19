@@ -45,6 +45,7 @@ const cookieDefns = [
     url: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/advertising-and-marketing-cookies",
   },
 ];
+const fingerprintConsentKey = "device_identifiers";
 
 const cookieTypes = cookieDefns.map(defn => defn.type);
 
@@ -73,9 +74,8 @@ const animations = {
 const cssHref = "xcoobee-cookie-kit.min.css";
 
 const euCountries = [
-  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
-  "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
-  "GB",
+  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "ES", "FI", "FR", "DE", "GB", "GR", "HU",
+  "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "SE",
 ];
 
 const consentsSources = [
@@ -100,6 +100,7 @@ const cookieOptionsKeys = {
 };
 
 const configFields = [
+  "displayFingerprint",
   "campaignReference",
   "checkByDefaultTypes",
   "companyLogo",
@@ -136,6 +137,7 @@ export {
   defaultConfig,
   euCountries,
   expirationTime,
+  fingerprintConsentKey,
   links,
   localeKey,
   locales,

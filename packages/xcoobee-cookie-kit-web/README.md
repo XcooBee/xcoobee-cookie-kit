@@ -751,6 +751,21 @@ See more information in section [`How to Use the XcooBee Cookie Kit`](#how-to-us
 cookieHandler: handleCookies
 ```
 
+### detectCountry `boolean`
+
+This flag tells the XCK how to determine the country of the user. Currently an IP based country lookup is used. This helps to set the initial language as well as works in concert with other flags such as `displayOnlyForEU`.
+
+If you are using the XCK without a XcooBee subscription the XCK will use the services of the `https://ip-api.com` service. You will need to enable CORS on your website to allow connection to this site.
+
+If you are using the XCK with XcooBee Network subscription, the IP lookup is internal to the network and does not require CORS changes and is part of your subscription service.
+
+Default is `true`. If you turn it off the XCK will set country generically as `EU`.
+
+```js
+detectCountry: true
+```
+
+
 ### displayOnlyForEU `boolean`
 
 This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.

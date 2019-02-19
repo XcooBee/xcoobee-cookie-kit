@@ -9,6 +9,8 @@ window.theCookieHandler = (cookieConsents) => {
 };
 
 XcooBee.kit.setParam("campaignReference", "37b.ag1g6caae7");
+XcooBee.kit.setParam("displayFingerprint", true);
+
 XcooBee.kit.setParam("detectCountry", true);
 
 XcooBee.kit.setParam("checkByDefaultTypes", [
