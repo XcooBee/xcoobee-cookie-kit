@@ -74,9 +74,8 @@ const animations = {
 const cssHref = "xcoobee-cookie-kit.min.css";
 
 const euCountries = [
-  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE",
-  "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE",
-  "GB",
+  "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "ES", "FI", "FR", "DE", "GB", "GR", "HU",
+  "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "SE",
 ];
 
 const consentsSources = [
