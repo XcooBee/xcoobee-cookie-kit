@@ -28,6 +28,7 @@ export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
+    detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -54,6 +55,7 @@ export default class CookieKitPopup extends React.PureComponent {
 
   static defaultProps = {
     companyLogo: null,
+    detectCountry: false,
     displayFingerprint: false,
     fingerprintConsent: false,
     loginStatus: false,
@@ -194,6 +196,7 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#render');
     const {
       companyLogo,
+      detectCountry,
       displayFingerprint,
       hideBrandTag,
       loginStatus,
@@ -270,7 +273,7 @@ export default class CookieKitPopup extends React.PureComponent {
               >
                 { selectedLocale }
               </button>
-              { countryCode && (
+              { detectCountry && (
                 <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
                   <button
                     type="button"

@@ -206,21 +206,25 @@ export default class CookieKitContainer extends React.PureComponent {
     const { campaignReference, detectCountry } = this.props;
     const { countryCode } = this.state;
 
+    const defaultCountryCode = "EU";
+
     let promise = null;
 
     if (countryCode) {
       return Promise.resolve(countryCode);
     }
-    if (!!campaignReference && detectCountry) {
-      promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
+    if (detectCountry) {
+      if (campaignReference) {
+        promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
+      } else {
+        promise = Promise.resolve(fetchCountryCode());
+      }
     } else {
-      promise = Promise.resolve(fetchCountryCode());
+      return Promise.resolve(defaultCountryCode);
     }
 
     return promise
       .catch((error) => {
-        const defaultCountryCode = "EU";
-
         console.error(error);
         this.setState({ countryCode: defaultCountryCode });
 
@@ -398,6 +402,7 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#render");
     const {
       companyLogo,
+      detectCountry,
       displayFingerprint,
       expirationTime,
       hideBrandTag,
@@ -426,6 +431,7 @@ export default class CookieKitContainer extends React.PureComponent {
           <React.Fragment>
             <CookieKit
               campaignReference={campaignReference}
+              detectCountry={detectCountry}
               displayFingerprint={displayFingerprint}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
