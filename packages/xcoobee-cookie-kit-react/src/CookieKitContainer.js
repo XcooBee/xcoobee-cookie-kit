@@ -208,18 +208,19 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const defaultCountryCode = "EU";
 
-    let promise = null;
-
     if (countryCode) {
       return Promise.resolve(countryCode);
     }
+
     if (detectCountry) {
       let promise;
+
       if (campaignReference) {
         promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
       } else {
         promise = Promise.resolve(fetchCountryCode());
       }
+
       return promise
         .catch((error) => {
           console.error(error);
@@ -230,32 +231,12 @@ export default class CookieKitContainer extends React.PureComponent {
         .then((cCode) => {
           saveCountryCode(cCode);
           this.setState({ countryCode: cCode });
+
           return cCode;
         });
     }
+
     return Promise.resolve(defaultCountryCode);
-      if (campaignReference) {
-        promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
-      } else {
-        promise = Promise.resolve(fetchCountryCode());
-      }
-    } else {
-      return Promise.resolve(defaultCountryCode);
-    }
-
-    return promise
-      .catch((error) => {
-        console.error(error);
-        this.setState({ countryCode: defaultCountryCode });
-
-        return defaultCountryCode;
-      })
-      .then((cCode) => {
-        saveCountryCode(cCode);
-        this.setState({ countryCode: cCode });
-
-        return cCode;
-      });
   }
 
   getConsentStatus() {
