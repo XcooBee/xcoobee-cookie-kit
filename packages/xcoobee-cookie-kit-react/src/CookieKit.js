@@ -42,6 +42,7 @@ export default class CookieKit extends React.PureComponent {
     companyLogo: PropTypes.string,
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
+    detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     expirationTime: PropTypes.number,
     fingerprintConsent: PropTypes.bool,
@@ -71,6 +72,7 @@ export default class CookieKit extends React.PureComponent {
   static defaultProps = {
     campaignReference: null,
     companyLogo: null,
+    detectCountry: false,
     displayFingerprint: false,
     expirationTime: 0,
     fingerprintConsent: false,
@@ -205,12 +207,18 @@ export default class CookieKit extends React.PureComponent {
 
   startPulsing() {
     // console.log("CookieKit#startPulsing");
-    const { consentsSource } = this.props;
+    const { consentsSource, hideOnComplete } = this.props;
     const animation = animations[consentsSource];
 
     if (animation && animation !== "default") {
       this.timers.push(setTimeout(() => this.setState({ pulsing: true }), 500));
       this.timers.push(setTimeout(() => this.stopPulsing(), 4500));
+
+      if (hideOnComplete) {
+        this.timers.push(setTimeout(() => {
+          this.setState({ isShown: false });
+        }, 5000));
+      }
     }
   }
 
@@ -238,6 +246,7 @@ export default class CookieKit extends React.PureComponent {
       companyLogo,
       consentsSource,
       cookieConsents,
+      detectCountry,
       displayFingerprint,
       fingerprintConsent,
       hideBrandTag,
@@ -277,6 +286,7 @@ export default class CookieKit extends React.PureComponent {
           <CookieKitPopup
             companyLogo={companyLogo}
             cookieConsents={cookieConsents}
+            detectCountry={detectCountry}
             displayFingerprint={displayFingerprint}
             fingerprintConsent={fingerprintConsent}
             hideBrandTag={hideBrandTag}
