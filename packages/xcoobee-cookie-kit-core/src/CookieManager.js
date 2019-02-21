@@ -9,12 +9,12 @@ function xckSetCookie(name, value, days) {
   let expires = "";
 
   if (days) {
-    let date = new Date();
+    const date = new Date();
 
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    expires = "; expires=" + date.toUTCString();
+    expires = `; expires=${date.toUTCString()}`;
   }
-  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+  document.cookie = `${name}=${value || ""}${expires}; path=/`;
 }
 
 /**
@@ -23,7 +23,7 @@ function xckSetCookie(name, value, days) {
  * @param {String} name the name of cookie
  */
 function xckEraseCookie(name) {
-  document.cookie = name + "=; Max-Age=-99999999; path=/";
+  document.cookie = `${name}=; Max-Age=-99999999; path=/`;
 }
 
 /**
@@ -36,7 +36,7 @@ function xckGetCookieNames() {
   const ra = [];
 
   for (let i = 0; i < ca.length; i++) {
-    let c = ca[i].split("=")[0].trim();
+    const c = ca[i].split("=")[0].trim();
 
     ra.push(c);
   }
@@ -51,12 +51,12 @@ function xckGetCookieNames() {
  * @returns {Array} array of elements only contained in newArray
  */
 function xckReturnNewElements(oldArray, newArray) {
-  let ra = [];
+  const ra = [];
 
   for (let i = 0; i < newArray.length; i++) {
-    let item = newArray[i];
+    const item = newArray[i];
 
-    if (oldArray.indexOf(item)===-1) {
+    if (oldArray.indexOf(item) === -1) {
       ra.push(item);
     }
   }
@@ -69,21 +69,21 @@ function xckReturnNewElements(oldArray, newArray) {
  * @param {Array} aInitialCookies - The array of cookies that were set before script was run
  * @param {String} category - cookie category related to this load
  */
-function xckSaveCookieState(aInitialCookies,category) {
-  let aNewCookies = xckGetCookieNames();
-  let aAddedCookies = xckReturnNewElements(aInitialCookies, aNewCookies);
+function xckSaveCookieState(aInitialCookies, category) {
+  const aNewCookies = xckGetCookieNames();
+  const aAddedCookies = xckReturnNewElements(aInitialCookies, aNewCookies);
 
   // Check what cookies are set now and save this to our local store
   if (typeof category !== "undefined") {
     // Load and save the cookies set for this category
-    let storeName = "xck_cat_" + category;
+    const storeName = `xck_cat_${category}`;
     let currentCategoryCookies = localStorage.getItem(storeName);
 
-    if (aAddedCookies.length > 0 ) {
+    if (aAddedCookies.length > 0) {
       if (currentCategoryCookies === null) {
         currentCategoryCookies = aAddedCookies.join();
       } else {
-        currentCategoryCookies = currentCategoryCookies + "," + aAddedCookies.join();
+        currentCategoryCookies = `${currentCategoryCookies},${aAddedCookies.join()}`;
       }
       localStorage.setItem(storeName, currentCategoryCookies);
     }
@@ -97,12 +97,12 @@ function xckSaveCookieState(aInitialCookies,category) {
  * @param {String} category - cookie category related to this load
  */
 function xckLoadJs(loadScripts, category) {
-  let aInitialCookies = xckGetCookieNames();
+  const aInitialCookies = xckGetCookieNames();
 
   if (loadScripts.length > 0) {
     for (let i = 0; i < loadScripts.length; i++) {
-      let item = loadScripts[i];
-      let script = document.createElement("script");
+      const item = loadScripts[i];
+      const script = document.createElement("script");
 
       if (item.src === "") {
         script.text = item.text;
@@ -145,15 +145,15 @@ function xckClearCookies(cookieTypes) {
   const entries = Object.entries(cookieTypes);
 
   for (let i = 0; i < entries.length; i++) {
-    let category = entries[i];
-    let storeName = "xck_cat_" + category[0];
+    const category = entries[i];
+    const storeName = `xck_cat_${category[0]}`;
 
     // Check whether we need to delete the category
     if (!category[1]) {
-      let currentSetCookies = localStorage.getItem(storeName);
+      const currentSetCookies = localStorage.getItem(storeName);
 
       if (currentSetCookies !== null) {
-        let cookies = currentSetCookies.split(",");
+        const cookies = currentSetCookies.split(",");
 
         // Iterate and delete
         for (let j = 0; j < cookies.length; j++) {
@@ -167,6 +167,24 @@ function xckClearCookies(cookieTypes) {
 }
 
 /**
+ * Parse html encoded script directives
+ *
+ * @param {Array} htmlData - string with script tags to be loaded
+ * @return {Object} the fully parsed html elements in HtmlCollection
+ */
+function xckParseHtml(htmlData) {
+  // Parse encoded via text area
+  const txt = document.createElement("textarea");
+  txt.innerHTML = htmlData;
+
+  // Now add this as html to our shadow doc
+  const el = document.createElement("html");
+  el.innerHTML = txt.innerText;
+
+  return el;
+}
+
+/**
  * Scans document for HTML defined xbee-script tags and converts them into
  * scripts that will be loaded once user grants consent. Will also look for
  * unset scripts when user removes consent.
@@ -175,43 +193,43 @@ function xckClearCookies(cookieTypes) {
  * Example Object { application: false, usage: true, statistics: false, advertising: false }
  */
 function xckHandleXbeeScriptTags(cookieTypes) {
-  let xbeCookieScripts = document.getElementsByTagName("xbee-script");
+  const xbeCookieScripts = document.getElementsByTagName("xbee-script");
   let i = 0;
   let resolvedScripts = "";
 
   if (xbeCookieScripts.length > 0 && (XcooBee.kit.getConsentStatus() === "complete")) {
     for (i = 0; i < xbeCookieScripts.length; i++) {
-      let item = xbeCookieScripts[i];
+      const item = xbeCookieScripts[i];
       let script = item.outerHTML;
 
       resolvedScripts = "";
 
       try {
         // We use this notation to cause error when required attributes are not present
-        let scriptAction = item.attributes["action"].value;
-        let scriptCategory = item.attributes["category"].value;
+        const scriptAction = item.attributes.action.value;
+        const scriptCategory = item.attributes.category.value;
 
         // For setting continue if user has responded, we are allowed the category, and action matches
         if ((scriptAction === "set") && (cookieTypes[scriptCategory])) {
           // Replace xbee-script with script
           script = script.replace(/xbee-script/ig, "script");
-          resolvedScripts = resolvedScripts + script;
+          resolvedScripts += script;
         }
         // For un-setting getCookieTypes() has to be false we use separate condition for easier readability
         if ((scriptAction === "unset") && (!cookieTypes[scriptCategory])) {
           // Replace xbee-script with script
           script = script.replace(/xbee-script/ig, "script");
-          resolvedScripts = resolvedScripts + script;
+          resolvedScripts += script;
         }
         // Parse and load text scripts if we can find them
         if (resolvedScripts !== "") {
-          let runnableScripts = xckParseHtml(resolvedScripts);
+          const runnableScripts = xckParseHtml(resolvedScripts);
           // Load scripts presumably to set cookies
-          xckLoadJs(runnableScripts.getElementsByTagName("script"),scriptCategory);
+          xckLoadJs(runnableScripts.getElementsByTagName("script"), scriptCategory);
         }
       } catch (error) {
         // Error happened
-        console.log("Tag caused error, please make sure you have supplied required attributes:", script.substr(0,40));
+        console.log("Tag caused error, please make sure you have supplied required attributes:", script.substr(0, 40));
         if (XcooBee.kit.getParam("testMode")) {
           console.log(error);
         }
@@ -228,20 +246,20 @@ function xckHandleXbeeScriptTags(cookieTypes) {
  * Example Object { application: false, usage: true, statistics: false, advertising: false }
  */
 function xckHandleXbeeCookieTags(cookieTypes) {
-  let xbeCookieTags = document.getElementsByTagName("xbee-cookie");
+  const xbeCookieTags = document.getElementsByTagName("xbee-cookie");
   let i = 0;
 
   if (xbeCookieTags.length > 0 && (XcooBee.kit.getConsentStatus() === "complete")) {
     for (i = 0; i < xbeCookieTags.length; i++) {
-      let item = xbeCookieTags[i];
+      const item = xbeCookieTags[i];
       let cookieValue = item.innerHTML;
-      let itemOuter = item.outerHTML;
+      const itemOuter = item.outerHTML;
 
       try {
         // We use the array notation since it will throw error  when we have missing required attributes
-        cookieValue = cookieValue.replace(/\r?\n|\r/g,""); // Remove CRLF
-        let cookieName = item.attributes["name"].value;
-        let cookieCategory = item.attributes["category"].value;
+        cookieValue = cookieValue.replace(/\r?\n|\r/g, ""); // Remove CRLF
+        const cookieName = item.attributes.name.value;
+        const cookieCategory = item.attributes.category.value;
         let cookieDays = 0;
 
         // Days is optional so we use this notation to retrieve it
@@ -258,7 +276,7 @@ function xckHandleXbeeCookieTags(cookieTypes) {
         }
       } catch (error) {
         // Error happened
-        console.log("error in cookie definition in tag:", itemOuter.substr(0,30));
+        console.log("error in cookie definition in tag:", itemOuter.substr(0, 30));
         if (XcooBee.kit.getParam("testMode")) {
           console.log(error);
         }

@@ -206,32 +206,37 @@ export default class CookieKitContainer extends React.PureComponent {
     const { campaignReference, detectCountry } = this.props;
     const { countryCode } = this.state;
 
-    let promise = null;
+    const defaultCountryCode = "EU";
 
     if (countryCode) {
       return Promise.resolve(countryCode);
     }
-    if (!!campaignReference && detectCountry) {
-      promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
-    } else {
-      promise = Promise.resolve(fetchCountryCode());
+
+    if (detectCountry) {
+      let promise;
+
+      if (campaignReference) {
+        promise = Promise.resolve(fetchCountryCodeForSubscribers(campaignReference));
+      } else {
+        promise = Promise.resolve(fetchCountryCode());
+      }
+
+      return promise
+        .catch((error) => {
+          console.error(error);
+          this.setState({ countryCode: defaultCountryCode });
+
+          return defaultCountryCode;
+        })
+        .then((cCode) => {
+          saveCountryCode(cCode);
+          this.setState({ countryCode: cCode });
+
+          return cCode;
+        });
     }
 
-    return promise
-      .catch((error) => {
-        const defaultCountryCode = "EU";
-
-        console.error(error);
-        this.setState({ countryCode: defaultCountryCode });
-
-        return defaultCountryCode;
-      })
-      .then((cCode) => {
-        saveCountryCode(cCode);
-        this.setState({ countryCode: cCode });
-
-        return cCode;
-      });
+    return Promise.resolve(defaultCountryCode);
   }
 
   getConsentStatus() {
@@ -398,6 +403,7 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#render");
     const {
       companyLogo,
+      detectCountry,
       displayFingerprint,
       expirationTime,
       hideBrandTag,
@@ -426,6 +432,7 @@ export default class CookieKitContainer extends React.PureComponent {
           <React.Fragment>
             <CookieKit
               campaignReference={campaignReference}
+              detectCountry={detectCountry}
               displayFingerprint={displayFingerprint}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
