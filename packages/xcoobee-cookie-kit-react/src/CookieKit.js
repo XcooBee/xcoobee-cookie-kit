@@ -186,7 +186,7 @@ export default class CookieKit extends React.PureComponent {
     this.setState({ isOpen: false });
 
     if (hideOnComplete) {
-      this.setState({ transparent: true, pulsing: false });
+      this.setState({ pulsing: false, transparent: true });
       this.timers.push(setTimeout(() => {
         this.setState({ isShown: false });
       }, 1000));
