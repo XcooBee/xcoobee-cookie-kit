@@ -214,7 +214,7 @@ export default class CookieKit extends React.PureComponent {
     const animation = animations[consentsSource];
 
     if (animation && animation !== "default") {
-      this.timers.push(setTimeout(() => this.setState({ pulsing: true, animated: true }), 500));
+      this.timers.push(setTimeout(() => this.setState({ animated: true, pulsing: true }), 500));
       this.timers.push(setTimeout(() => this.stopPulsing(), 4500));
       this.timers.push(setTimeout(() => this.setState({ animated: false }), 5000));
 
