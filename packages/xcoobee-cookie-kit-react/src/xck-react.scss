@@ -122,7 +122,7 @@ $duration: .2s;
       }
 
       @keyframes xb-cookie-green {
-        30%, 90% {
+        0%, 90% {
           background-image: url(./assets/cookie-green.svg);
         }
 
@@ -184,8 +184,6 @@ $duration: .2s;
   }
 
   &__pulsing {
-    cursor: default;
-
     &:before {
       content: '';
       position: absolute;
@@ -394,6 +392,7 @@ $duration: .2s;
             font-size: 13px;
             border-top: 1px solid $primary-color;
             border-bottom: 1px solid $primary-color;
+            margin: 0;
 
             &:first-child {
               border-radius: 10px 0 0 10px;
@@ -427,10 +426,13 @@ $duration: .2s;
           height: 175px;
           overflow: scroll;
           z-index: 10;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
 
           &::-webkit-scrollbar {
             width: 0;
             height: 0;
+            opacity: 0;
           }
 
           > .xb-cookie-kit-popup__country-picker-button {

@@ -309,6 +309,7 @@ export default class CookieKitPopup extends React.PureComponent {
                     key={`country-flag-${cCode}`}
                     className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
                     onClick={() => this.handleCountryChange(cCode)}
+                    title={cCode}
                   >
                     <div className={`${BLOCK}__flag`}>
                       <ReactCountryFlag code={cCode} svg />

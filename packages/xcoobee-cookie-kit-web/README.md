@@ -759,7 +759,7 @@ If you are using the XCK without a XcooBee subscription the XCK will use the ser
 
 If you are using the XCK with XcooBee Network subscription, the IP lookup is internal to the network and does not require CORS changes and is part of your subscription service.
 
-Default is `true`. If you turn it off the XCK will set country generically as `EU`.
+Default is `false`. If `false` the XCK will set country generically as `EU`.
 
 ```js
 detectCountry: true

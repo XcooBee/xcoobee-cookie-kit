@@ -24,7 +24,6 @@ import { xckDomain } from "./configs";
 import CookieKit from "./CookieKit";
 import BridgeCommunicator from "./BridgeCommunicator";
 
-// const CLOSED = consentStatuses.closed;
 const COMPLETE = consentStatuses.complete;
 const OPEN = consentStatuses.open;
 
@@ -321,17 +320,17 @@ export default class CookieKitContainer extends React.PureComponent {
     let consentsSource = "unknown";
     let cookieConsents = null;
 
-    if (cookieOptions[USER_SETTINGS]) {
+    if (cookieOptions[USER_SETTINGS] && Object.values(cookieOptions[USER_SETTINGS]).includes(true)) {
       consentsSource = "usersDefaults";
       cookieConsents = cookieOptions[USER_SETTINGS];
     }
 
-    if (cookieOptions[CROWD_AI]) {
+    if (cookieOptions[CROWD_AI] && Object.values(cookieOptions[CROWD_AI]).includes(true)) {
       consentsSource = "crowdAi";
       cookieConsents = cookieOptions[CROWD_AI];
     }
 
-    if (cookieOptions[SAVED_PREFERENCES]) {
+    if (cookieOptions[SAVED_PREFERENCES] && Object.values(cookieOptions[SAVED_PREFERENCES]).includes(true)) {
       consentsSource = "usersSaved";
       cookieConsents = cookieOptions[SAVED_PREFERENCES];
     }
@@ -415,7 +414,16 @@ export default class CookieKitContainer extends React.PureComponent {
       testMode,
       textMessage,
     } = this.props;
-    const { campaignReference, consentsSource, cookieConsents, countryCode, initializing, loginStatus } = this.state;
+
+    const {
+      campaignReference,
+      consentsSource,
+      consentStatus,
+      cookieConsents,
+      countryCode,
+      initializing,
+      loginStatus,
+    } = this.state;
 
     const redefinedPosition = positions.includes(position) ? position : positions[0];
 
@@ -432,12 +440,13 @@ export default class CookieKitContainer extends React.PureComponent {
           <React.Fragment>
             <CookieKit
               campaignReference={campaignReference}
-              detectCountry={detectCountry}
-              displayFingerprint={displayFingerprint}
               companyLogo={companyLogo}
               consentsSource={consentsSource}
+              consentStatus={consentStatus}
               cookieConsents={cookies}
               countryCode={countryCode}
+              detectCountry={detectCountry}
+              displayFingerprint={displayFingerprint}
               expirationTime={expirationTime}
               fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}
