@@ -66,24 +66,6 @@ function callTargetUrl(targetUrl, consentSettings) {
   });
 }
 
-function handleErrors(error) {
-  if (Array.isArray(error)) {
-    error.forEach((e) => {
-      if (e instanceof NotAuthorizedError) {
-        console.error(error.message);
-      } else {
-        throw Error(e.message);
-      }
-    });
-  } else if (error) {
-    if (error instanceof NotAuthorizedError) {
-      console.error(error.message);
-    } else {
-      throw Error(error.message);
-    }
-  }
-}
-
 export default class CookieKitContainer extends React.PureComponent {
   static propTypes = {
     campaignReference: PropTypes.string,
@@ -174,8 +156,7 @@ export default class CookieKitContainer extends React.PureComponent {
     if (!isLoginStatusChecked) {
       this.setState({ isLoginStatusChecked: true });
       this.getCountryCode()
-        .then(() => this.getCookieConsents())
-        .catch(handleErrors);
+        .then(() => this.getCookieConsents());
     }
   };
 
@@ -302,12 +283,18 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   };
 
-  handleBridgeError = (message) => {
+  handleBridgeError = (errorMessage) => {
     // eslint-disable-next-line max-len
-    console.error(`Something went wrong because of error: ${message}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
+    console.error(`Something went wrong because of error: ${errorMessage}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
 
-    this.setState({ campaignReference: null });
-    this.fallBackToHostDefaults();
+    const error = new NotAuthorizedError();
+
+    if (errorMessage === error.message) {
+      this.setState({ loginStatus: false });
+      this.fallBackToHostDefaults();
+    } else {
+      this.setState({ campaignReference: null });
+    }
   };
 
   resolveConnectedCookieConsents = (cookieOptions) => {
