@@ -66,6 +66,24 @@ function callTargetUrl(targetUrl, consentSettings) {
   });
 }
 
+function handleErrors(error) {
+  if (Array.isArray(error)) {
+    error.forEach((e) => {
+      if (e instanceof NotAuthorizedError) {
+        console.error(error.message);
+      } else {
+        throw Error(e.message);
+      }
+    });
+  } else if (error) {
+    if (error instanceof NotAuthorizedError) {
+      console.error(error.message);
+    } else {
+      throw Error(error.message);
+    }
+  }
+}
+
 export default class CookieKitContainer extends React.PureComponent {
   static propTypes = {
     campaignReference: PropTypes.string,
@@ -156,7 +174,8 @@ export default class CookieKitContainer extends React.PureComponent {
     if (!isLoginStatusChecked) {
       this.setState({ isLoginStatusChecked: true });
       this.getCountryCode()
-        .then(() => this.getCookieConsents());
+        .then(() => this.getCookieConsents())
+        .catch(handleErrors);
     }
   };
 
