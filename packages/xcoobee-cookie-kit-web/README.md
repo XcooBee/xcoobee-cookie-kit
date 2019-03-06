@@ -788,7 +788,7 @@ expirationTime: 0
 This will remove the powered by XcooBee brand tag. Though we would appreciate if our work is correctly represented we understand that there is a need for controlling this. If you are a commercial entity we encourage you to subscribe to XcooBee so we can continue supporting open source projects like this in the future. Default: false
 
 ```js
-hideOnComplete: true
+hideBrandTag: true
 ```
 
 ### hideOnComplete `boolean`
