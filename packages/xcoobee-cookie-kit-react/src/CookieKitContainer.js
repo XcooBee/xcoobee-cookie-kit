@@ -307,6 +307,7 @@ export default class CookieKitContainer extends React.PureComponent {
     console.error(`Something went wrong because of error: ${message}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
 
     this.setState({ campaignReference: null });
+    this.fallBackToHostDefaults();
   };
 
   resolveConnectedCookieConsents = (cookieOptions) => {
