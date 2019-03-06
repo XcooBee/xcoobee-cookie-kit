@@ -302,11 +302,18 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   };
 
-  handleBridgeError = (message) => {
+  handleBridgeError = (errorMessage) => {
     // eslint-disable-next-line max-len
-    console.error(`Something went wrong because of error: ${message}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
+    console.error(`Something went wrong because of error: ${errorMessage}. We are experiencing issues saving your cookie category selection. Please contact the site administrator.`);
 
-    this.setState({ campaignReference: null });
+    const error = new NotAuthorizedError();
+
+    if (errorMessage === error.message) {
+      this.setState({ loginStatus: false });
+      this.fallBackToHostDefaults();
+    } else {
+      this.setState({ campaignReference: null });
+    }
   };
 
   resolveConnectedCookieConsents = (cookieOptions) => {
