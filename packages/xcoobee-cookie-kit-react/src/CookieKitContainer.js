@@ -188,6 +188,13 @@ export default class CookieKitContainer extends React.PureComponent {
       this.setCookieConsents("cached", cachedCookieConsents);
       this.setState({ isConsentCached: true });
 
+      const cookieConsents = {};
+      cachedCookieConsents.forEach((cookieConsent) => {
+        cookieConsents[cookieConsent.type] = cookieConsent.checked;
+      });
+
+      this.bridgeRef.saveCookieConsents(cookieConsents);
+
       return;
     }
 
