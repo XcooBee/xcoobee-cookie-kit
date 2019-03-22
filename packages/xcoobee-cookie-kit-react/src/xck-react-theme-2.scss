@@ -1,0 +1,604 @@
+// Main colors
+
+$primary-color: #d3d2d2;
+$secondary-color: #505050;
+$hover-color: #808080;
+$blue-cookie: #01a4e9;
+$green-cookie: #7acf77;
+$yellow-cookie: #faf376;
+$red-cookie: #f37026;
+
+// Checkbox constants
+
+$checked-color: $secondary-color;
+$unchecked-color: $secondary-color;
+$checkbox-height: 30px;
+$background-color: $secondary-color;
+$font-color: $secondary-color;
+$duration: .2s;
+
+.xb-cookie-kit {
+  font-family: Arial, Helvetica, sans-serif;
+  position: fixed;
+  z-index: 100000;
+  width: 100%;
+  transition: opacity 1s ease-out;
+
+  &.top {
+    top: 0;
+  }
+
+  &.bottom {
+    bottom: 0;
+  }
+
+  &__button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+
+  &.transparent {
+    opacity: 0;
+  }
+
+  &__cookie-button {
+    width: 4vw;
+    margin: 4px;
+  }
+
+  &__reset-button {
+    background: #fdb81a;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px;
+    border-radius: 4px;
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+
+  &__cookie-icon {
+    background-repeat: no-repeat;
+    background-position: left top;
+    position: relative;
+    width: 4vw;
+    height: 4vw;
+
+    &--default {
+      background-image: url(./assets/cookie.svg);
+    }
+
+    &--blue {
+      animation: xb-cookie-blue 5s;
+      background-image: url(./assets/cookie.svg);
+
+      @keyframes xb-cookie-blue {
+        30%, 90% {
+          background-image: url(./assets/cookie-blue.svg);
+        }
+
+        100% {
+          background-image: url(./assets/cookie.svg);
+
+          &:before {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          }
+        }
+      }
+
+      &:before {
+        background-color: $blue-cookie;
+      }
+    }
+
+    &--green {
+      animation: xb-cookie-green 5s;
+      background-image: url(./assets/cookie.svg);
+
+      &:before {
+        background-color: $green-cookie;
+      }
+
+      @keyframes xb-cookie-green {
+        0%, 90% {
+          background-image: url(./assets/cookie-green.svg);
+        }
+
+        100% {
+          background-image: url(./assets/cookie.svg);
+
+          &:before {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          }
+        }
+      }
+    }
+
+    &--yellow {
+      animation: xb-cookie-yellow 5s;
+      background-image: url(./assets/cookie.svg);
+
+      &:before {
+        background-color: $yellow-cookie;
+      }
+
+      @keyframes xb-cookie-yellow {
+        30%, 90% {
+          background-image: url(./assets/cookie-yellow.svg);
+        }
+
+        100% {
+          background-image: url(./assets/cookie.svg);
+
+          &:before {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          }
+        }
+      }
+    }
+
+    &--red {
+      animation: xb-cookie-red 5s;
+      background-image: url(./assets/cookie.svg);
+
+      &:before {
+        background-color: $red-cookie;
+      }
+
+      @keyframes xb-cookie-red {
+        30%, 90% {
+          background-image: url(./assets/cookie-red.svg);
+        }
+
+        100% {
+          background-image: url(./assets/cookie.svg);
+
+          &:before {
+            animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) 3s;
+          }
+        }
+      }
+    }
+  }
+
+  &__pulsing {
+    &:before {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 6vw;
+      height: 6vw;
+      top: -1vw;
+      left: -1vw;
+      box-sizing: border-box;
+      border-radius: 50%;
+      animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(.33);
+      }
+      80%, 100% {
+        opacity: 0;
+      }
+    }
+  }
+
+  &__reset-button {
+    background: $secondary-color;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px;
+    border-radius: 4px;
+    margin-left: 5px;
+    margin-top: 5px;
+  }
+
+  .xb-cookie-kit-overlay {
+    opacity: 0.9;
+    color: #3a3a3a;
+    background: $primary-color;
+    display: flex;
+    padding: 8px;
+    width: 100%;
+    overflow: auto;
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    &__main {
+      display: flex;
+      margin-top: 12px;
+    }
+
+    &__links-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 280px;
+      flex: 0.3;
+    }
+
+    &__links {
+      display: flex;
+      justify-content: space-around;
+
+      * {
+        margin: 4px;
+        flex: 1;
+      }
+    }
+
+    &__login-container {
+      display: flex;
+      justify-content: space-around;
+
+      * {
+        margin: 4px;
+        flex: 1;
+      }
+    }
+
+    &__powered-by-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__powered-by {
+      font-size: 12px;
+    }
+
+    &__powered-by-link {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    &__login-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__link {
+      color: $secondary-color;
+      text-decoration: underline;
+      cursor: pointer;
+      text-align: center;
+
+      &:hover {
+        color: $hover-color;
+      }
+    }
+
+    &__cookie-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    &__cookie-list {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    &__checkbox-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__cookie-title {
+      font-size: 14px;
+      text-align: center;
+      color: $secondary-color;
+    }
+
+    &__cookie-title-link {
+      color: inherit;
+      cursor: pointer;
+    }
+
+    &__fingerprint {
+      padding: 0 16px;
+    }
+
+    &__fingerprint-checkbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__fingerprint-label {
+      text-align: center;
+    }
+
+    &__check-all {
+      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        color: $hover-color;
+      }
+    }
+
+    &__button-container {
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+      flex: 0.2;
+    }
+
+    &__button {
+      height: 40px;
+      min-width: 100px;
+      background: $secondary-color;
+      color: #fff;
+      font-size: 18px;
+      padding: 0 8px;
+      transition: .1s;
+
+      &:hover {
+        background: $hover-color;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: column;
+      padding: 4px;
+      justify-content: space-between;
+    }
+
+    &__close-button {
+      cursor: pointer;
+    }
+
+    &__close-button-icon {
+      height: 15px;
+      width: 15px;
+    }
+
+    &__language-picker-container {
+      position: relative;
+    }
+
+    &__language-picker {
+      font-weight: bold;
+
+      &:hover {
+        color: $hover-color;
+      }
+    }
+
+    &__custom-select {
+      display: flex;
+      position: absolute;
+      top: -2px;
+      right: 28px;
+      background: #fff;
+      border-radius: 4px;
+    }
+
+    &__language-picker-button {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 2px 4px;
+      border-right: 1px solid #a0a0a0;
+
+      &:last-child {
+        border: none;
+      }
+
+      &:hover {
+        color: $hover-color;
+      }
+    }
+
+    &__country-picker {
+      position: relative;
+    }
+
+    &__country-picker-select {
+      max-width: 120px;
+      display: flex;
+      position: absolute;
+      background: #fff;
+      top: -2px;
+      right: 28px;
+      overflow: scroll;
+      border-radius: 4px;
+      z-index: 10;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        opacity: 0;
+      }
+
+      > * {
+        padding: 2px 4px 4px;
+
+        &:hover {
+          background: $hover-color;
+        }
+      }
+    }
+  }
+  // Checkbox styles
+
+  input[type=checkbox] {
+    display: none;
+  }
+
+  .xb-cookie-kit-overlay__checkbox {
+    height: $checkbox-height;
+    width: $checkbox-height;
+    background-color: transparent;
+    border: $checkbox-height * .1 solid $unchecked-color;
+    position: relative;
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -moz-transition: border-color ease $duration/2;
+    -o-transition: border-color ease $duration/2;
+    -webkit-transition: border-color ease $duration/2;
+    transition: border-color ease $duration/2;
+    cursor: pointer;
+
+    &::before, &::after {
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      position: absolute;
+      height: 0;
+      width: $checkbox-height * .2;
+      background-color: $checked-color;
+      display: inline-block;
+      -moz-transform-origin: left top;
+      -ms-transform-origin: left top;
+      -o-transform-origin: left top;
+      -webkit-transform-origin: left top;
+      transform-origin: left top;
+      border-radius: 5px;
+      content: ' ';
+      -webkit-transition: opacity ease $duration;
+      -moz-transition: opacity ease $duration;
+      transition: opacity ease $duration;
+    }
+
+    &::before {
+      top: $checkbox-height * .72;
+      left: $checkbox-height * .41;
+      -moz-transform: rotate(-135deg);
+      -ms-transform: rotate(-135deg);
+      -o-transform: rotate(-135deg);
+      -webkit-transform: rotate(-135deg);
+      transform: rotate(-135deg);
+    }
+
+    &::after {
+      top: $checkbox-height * .37;
+      left: $checkbox-height * .05;
+      -moz-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      -o-transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
+  }
+
+  input[type=checkbox]:checked + .xb-cookie-kit-overlay__checkbox,
+  .xb-cookie-kit-overlay__checkbox.checked {
+    border-color: $checked-color;
+
+    &::after {
+      height: $checkbox-height * .5;
+      -moz-animation: dothabottomcheck $duration/2 ease 0s forwards;
+      -o-animation: dothabottomcheck $duration/2 ease 0s forwards;
+      -webkit-animation: dothabottomcheck $duration/2 ease 0s forwards;
+      animation: dothabottomcheck $duration/2 ease 0s forwards;
+    }
+
+    &::before {
+      height: $checkbox-height * 1.2;
+      -moz-animation: dothatopcheck $duration ease 0s forwards;
+      -o-animation: dothatopcheck $duration ease 0s forwards;
+      -webkit-animation: dothatopcheck $duration ease 0s forwards;
+      animation: dothatopcheck $duration ease 0s forwards;
+    }
+  }
+
+  // Checkbox animation
+
+  @-moz-keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
+  }
+
+  @-webkit-keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
+  }
+
+  @keyframes dothabottomcheck {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height/2;
+    }
+  }
+
+  @keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
+  }
+
+  @-webkit-keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
+  }
+
+  @-moz-keyframes dothatopcheck {
+    0% {
+      height: 0;
+    }
+    50% {
+      height: 0;
+    }
+    100% {
+      height: $checkbox-height * 1.2;
+    }
+  }
+}
+
+// Hide cookie managing content
+xbee-script {
+  display: none;
+}
+
+xbee-cookie {
+  display: none;
+}

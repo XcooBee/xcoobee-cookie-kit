@@ -7,6 +7,7 @@ import {
   consentStatuses,
   cookieTypes,
   positions,
+  themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 
 import {
@@ -71,6 +72,7 @@ export default class CookieKit extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    theme: PropTypes.oneOf(themes),
   };
 
   static defaultProps = {
@@ -82,6 +84,7 @@ export default class CookieKit extends React.PureComponent {
     fingerprintConsent: false,
     loginStatus: false,
     testMode: false,
+    theme: "popup",
   };
 
   constructor(props) {
@@ -92,7 +95,7 @@ export default class CookieKit extends React.PureComponent {
     this.state = {
       animated: true,
       hasClosed: false,
-      isOpen,
+      isOpen: false,
       isShown: true,
       pulsing: false,
       transparent: false,
@@ -267,6 +270,7 @@ export default class CookieKit extends React.PureComponent {
       termsUrl,
       testMode,
       textMessage,
+      theme,
     } = this.props;
     const { animated, hasClosed, isOpen, isShown, pulsing, transparent } = this.state;
 
@@ -275,7 +279,9 @@ export default class CookieKit extends React.PureComponent {
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
-    const renderResetButton = testMode && cookieConsentsCache.get();
+    const renderResetButton = theme === "popup" && testMode && cookieConsentsCache.get();
+
+    const redefinedPosition = theme === "overlay" ? position.split("_")[1] : position;
 
     return (
       isShown && (
@@ -283,7 +289,7 @@ export default class CookieKit extends React.PureComponent {
           className={
             cx(
               BLOCK,
-              position,
+              redefinedPosition,
               {
                 transparent,
               },
@@ -310,6 +316,7 @@ export default class CookieKit extends React.PureComponent {
               requestDataTypes={requestDataTypes}
               termsUrl={termsUrl}
               textMessage={textMessage}
+              theme={theme}
             />
           )}
           {renderButton && (

@@ -7,6 +7,7 @@ import {
   cookieTypes,
   locales,
   links,
+  themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
 import renderText from "xcoobee-cookie-kit-core/src/renderText";
@@ -19,8 +20,6 @@ import xbLogo from "./assets/xcoobee-logo.svg";
 import CookieConsentShape from "./lib/CookieConsentShape";
 
 import { xbOrigin } from "./configs";
-
-const BLOCK = "xb-cookie-kit-popup";
 
 const OPTION = "loginstatus";
 
@@ -51,6 +50,7 @@ export default class CookieKitPopup extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }).isRequired,
     ]).isRequired,
+    theme: PropTypes.oneOf(themes),
   };
 
   static defaultProps = {
@@ -59,6 +59,7 @@ export default class CookieKitPopup extends React.PureComponent {
     displayFingerprint: false,
     fingerprintConsent: false,
     loginStatus: false,
+    theme: "popup",
   };
 
   constructor(props) {
@@ -206,6 +207,7 @@ export default class CookieKitPopup extends React.PureComponent {
       requestDataTypes,
       termsUrl,
       textMessage,
+      theme,
     } = this.props;
     const {
       consentSettings,
@@ -227,9 +229,10 @@ export default class CookieKitPopup extends React.PureComponent {
       defn => requestDataTypes.includes(defn.type),
     );
 
+    const BLOCK = theme === "popup" ? "xb-cookie-kit-popup" : "xb-cookie-kit-overlay";
     const loginModalFeatures = "left=400, top=100, width=500, height=600";
 
-    return (
+    const themePopup = (
       <div
         className={BLOCK}
         onClick={() => this.setState({ isCountrySelectShown: false, isLocaleSelectShown: false })}
@@ -466,6 +469,223 @@ export default class CookieKitPopup extends React.PureComponent {
           </div>
         )}
       </div>
+    );
+
+    const themeOverlay = (
+      <div
+        className={BLOCK}
+        onClick={() => this.setState({ isCountrySelectShown: false, isLocaleSelectShown: false })}
+      >
+        <div className={`${BLOCK}__content`}>
+          <div className={`${BLOCK}__text`}>
+            { typeof textMessage === "string"
+              ? textMessage : this.renderTextMessage(textMessage) }
+          </div>
+          <div className={`${BLOCK}__main`}>
+            <div className={`${BLOCK}__links-container`}>
+              <div className={`${BLOCK}__links`}>
+                <a
+                  className={`${BLOCK}__link`}
+                  href={privacyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {renderText("CookieKit.PolicyLink", selectedLocale)}
+                </a>
+                <a
+                  className={`${BLOCK}__link`}
+                  href={termsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {renderText("CookieKit.TermsLink", selectedLocale)}
+                </a>
+              </div>
+              <div className={`${BLOCK}__login-container`}>
+                { !hideBrandTag ? (
+                  <div className={`${BLOCK}__powered-by-container`}>
+                    <div className={`${BLOCK}__powered-by`}>
+                      Powered by
+                      <a
+                        className={`${BLOCK}__powered-by-link`}
+                        href={links.poweredBy}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        XcooBee
+                      </a>
+                    </div>
+                  </div>
+                ) : <div />}
+                { isConnected && (appearsToBeLoggedIn
+                  ? (
+                    <a
+                      className={`${BLOCK}__link`}
+                      href={`${xbOrigin}${links.manage}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {renderText("CookieKit.ManageLink", selectedLocale)}
+                    </a>
+                  ) : (
+                    <div className={`${BLOCK}__login-button`}>
+                      <button
+                        className={`xb-cookie-kit__button ${BLOCK}__link`}
+                        type="button"
+                        onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures)}
+                      >
+                        {renderText("CookieKit.LoginLink", selectedLocale)}
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+            <div className={`${BLOCK}__cookie-container`}>
+              <div className={`${BLOCK}__cookie-list`}>
+                { cookieDefns.map(cookieDefn => (
+                  <div key={cookieDefn.type} className={`${BLOCK}__cookie`}>
+                    <div className={`${BLOCK}__checkbox-container`}>
+                      <input
+                        id={`xbCheckbox_${cookieDefn.id}`}
+                        type="checkbox"
+                        checked={consentSettings[cookieDefn.type]}
+                        onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
+                      />
+                      <label
+                        htmlFor={`xbCheckbox_${cookieDefn.id}`}
+                        className={`${BLOCK}__checkbox`}
+                      />
+                    </div>
+                    <div
+                      className={`${BLOCK}__cookie-title`}
+                      title={renderText("CookieKit.MoreInfo", selectedLocale)}
+                    >
+                      <a
+                        className={`${BLOCK}__cookie-title-link`}
+                        href={cookieDefn.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderText(cookieDefn.localeKey, selectedLocale)}
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              { cookieDefns.length > 1 && (
+                <button
+                  type="button"
+                  className={`xb-cookie-kit__button ${BLOCK}__check-all`}
+                  onClick={this.handleCheckAll}
+                >
+                  {isAllChecked
+                    ? renderText("CookieKit.UncheckButton", selectedLocale)
+                    : renderText("CookieKit.CheckAllButton", selectedLocale)}
+                </button>
+              )}
+            </div>
+            { displayFingerprint && (
+              <div className={`${BLOCK}__fingerprint`}>
+                <div className={`${BLOCK}__fingerprint-checkbox`}>
+                  <input
+                    id="xbCheckbox_fingerprint"
+                    type="checkbox"
+                    checked={fingerprintConsent}
+                    onChange={this.handleFingerprintCheck}
+                  />
+                  <label
+                    htmlFor="xbCheckbox_fingerprint"
+                    className={`${BLOCK}__checkbox`}
+                  />
+                </div>
+                <div className={`${BLOCK}__fingerprint-label`}>
+                  {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                </div>
+              </div>
+            )}
+            <div className={`${BLOCK}__button-container`}>
+              <button
+                type="button"
+                className={`xb-cookie-kit__button ${BLOCK}__button`}
+                onClick={this.handleSubmit}
+              >
+                {renderText("CookieKit.OkButton", selectedLocale)}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className={`${BLOCK}__actions`}>
+          <button
+            type="button"
+            className={`xb-cookie-kit__button ${BLOCK}__close-button`}
+            onClick={onClose}
+          >
+            <img
+              className={`${BLOCK}__close-button-icon`}
+              src={closeIcon}
+              alt="close-icon"
+            />
+          </button>
+          <div className={`${BLOCK}__language-picker-container`}>
+            <button
+              type="button"
+              className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
+              onClick={this.handleLocaleSelectToggle}
+            >
+              { selectedLocale }
+            </button>
+            { isLocaleSelectShown && (
+              <div className={`${BLOCK}__custom-select`}>
+                { locales.map(locale => (
+                  <button
+                    key={locale}
+                    className={`xb-cookie-kit__button ${BLOCK}__language-picker-button`}
+                    type="button"
+                    onClick={() => this.handleLocaleChange(locale)}
+                  >
+                    {locale}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          { detectCountry ? (
+            <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
+              <button
+                type="button"
+                className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                onClick={this.handleCountrySelectToggle}
+              >
+                <div className={`${BLOCK}__flag`} title={countryCode}>
+                  <ReactCountryFlag code={countryCode} svg />
+                </div>
+              </button>
+              { isCountrySelectShown && (
+                <div className={`${BLOCK}__country-picker-select`}>
+                  { countryCodes.map(cCode => (
+                    <button
+                      type="button"
+                      key={`country-flag-${cCode}`}
+                      className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                      onClick={() => this.handleCountryChange(cCode)}
+                      title={cCode}
+                    >
+                      <div className={`${BLOCK}__flag`}>
+                        <ReactCountryFlag code={cCode} svg />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : <div />}
+        </div>
+      </div>
+    );
+
+    return (
+      theme === "popup" ? themePopup : themeOverlay
     );
   }
 }

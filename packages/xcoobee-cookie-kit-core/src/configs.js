@@ -13,7 +13,7 @@ const defaultConfig = {
   },
 };
 
-const positions = ["right_bottom", "left_bottom", "right_top", "left_top"];
+const positions = ["right_bottom", "left_bottom", "right_top", "left_top", "bottom", "top"];
 
 const cookieDefns = [
   {
@@ -71,7 +71,10 @@ const animations = {
   unknown: "default",
 };
 
-const cssHref = "xcoobee-cookie-kit.min.css";
+const cssHrefTheme1 = "xcoobee-cookie-kit-theme-1.min.css";
+const cssHrefTheme2 = "xcoobee-cookie-kit-theme-2.min.css";
+
+const themes = ["popup", "overlay"];
 
 const euCountries = [
   "AT", "BE", "BG", "CY", "CZ", "DK", "EE", "ES", "FI", "FR", "DE", "GB", "GR", "HU",
@@ -118,6 +121,7 @@ const configFields = [
   "termsUrl",
   "testMode",
   "textMessage",
+  "theme",
 ];
 const requiredFields = ["privacyUrl", "termsUrl", "textMessage"];
 
@@ -133,7 +137,8 @@ export {
   cookieOptionsKeys,
   cookieTypes,
   countryCodeKey,
-  cssHref,
+  cssHrefTheme1,
+  cssHrefTheme2,
   defaultConfig,
   euCountries,
   expirationTime,
@@ -143,6 +148,7 @@ export {
   locales,
   positions,
   requiredFields,
+  themes,
   tokenKey,
   xbApiUrl,
   xcoobeeCookiesKey,
