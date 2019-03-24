@@ -261,9 +261,10 @@ $duration: .2s;
     }
 
     &__block--lg {
-      height: 75px;
-      width: 75px;
+      height: 80px;
+      width: 80px;
       font-size: 14px;
+      word-break: break-all;
 
       @media (max-width: 500px) {
         height: auto;
@@ -582,7 +583,8 @@ $duration: .2s;
 
         > .xb-cookie-kit-popup__logo {
           .xb-cookie-kit-popup__company-logo {
-            height: 40px;
+            width: 40px;
+            max-height: 40px;
             padding: 4px;
           }
         }

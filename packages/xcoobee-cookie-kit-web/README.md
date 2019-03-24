@@ -147,7 +147,7 @@ The XCK displays a floating cookie icon on the screen in a corner of your choice
 
 If the XCK determines that a user consent is needed it will go to the next step and open the XCK Pop-up dialog:
 
-#### The Pop up Dialog
+#### The Pop up Dialog or Overlay
 
 ![showing XCK cookie popup](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/cookie_popup.png)
 
@@ -157,7 +157,7 @@ When using the XCK you:
 
 - a) first determine which cookies you are currently using on your site
 - b) then select which XcooBee cookie type (classification) that best fits each cookie
-- c) display to your site visitors the XCK consent dialog popup to ask for permission
+- c) display to your site visitors the XCK consent dialog popup or overlay to ask for permission
 - d) after obtaining consent for a type of cookie, set the cookies in that group for your user using either a handler inside client JavaScript or target url pattern via server syntax (PHP, JSP, .net etc.) or both.
 
 If the cookie consent is already obtained, the XCK will not display another popup. You can query the status via JavaScript to set the cookies again, or track this on the backend side if you're using Request/Response type application.
@@ -880,13 +880,36 @@ textMessage: "This site uses cookies. Please select the cookie types that you wi
 Example of text entry in multiple languages:
 
 ```js
-{
+
+textMessage: {
   "en-us": "English text",
   "de-de": "German text",
   "es-419": "Spanish text",
   "fr-fr": "French text",
 }
 ```
+
+### theme `string` `optional`
+
+`popup` or `overlay`, default: `popup`
+
+The cookie kit supports two different interaction dialogs with users. The default is the colorful popup dialog.
+You can also use a more conservative overlay that opens at the bottom or top of your page. 
+
+Example declaration in initialization:
+
+```js
+  theme: "overlay"
+```
+
+_Example of Popup Theme:_
+
+![showing XCK cookie popup](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/cookie_popup.png)
+
+
+_Example of Overlay Theme:_
+
+![showing XCK cookie popup](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/cookie_overlay.png)
 
 
 ## Initialization Parameters with XcooBee Subscription
@@ -935,35 +958,6 @@ example:
 XcooBee.kit.setManagedCookie("usage", "myUserColor", "green");
 ```
 
-
-### setParam([parameter:string], [value:object])
-
-Use the `setParam()` method to set any valid parameter for the XCK. For example to set the `targetUrl` parameter to a different value. Where `parameter [string]` is any of the valid parameters, and `value [any]` is data for the parameter.
-
-```js
-XcooBee.kit.setParam("targetUrl", "https://newsite.com/cookieProcessor");
-```
-
-If you are using a `cookieHandler` JavaScript function that is not exposed in global scope, you will need to let the XCK know via a `setParam` call. You should do this after loading the XCK but before calling `XcooBee.kit.initialize()`.
-
-```js
-XcooBee.kit.setParam("cookieHandler", myCookieHandlerFunction);
-```
-
-Alternately, you can initialize with correct function reference.
-
-```HTML
-<script>
-  XcooBee.kit.initialize({
-    requestDataTypes: ["application", "usage"],
-    checkByDefaultTypes: ["application"],
-    cookieHandler: myCookieHandlerFunction,
-   ...
-  });
-</script>
-```
-
-This can be useful when you wish to turn off certain function during runtime, e.g. the `hideOnComplete` param can be used to hide the XCK after user has confirmed cookie selection.
 
 ### getParam([parameter:string]) `object`
 

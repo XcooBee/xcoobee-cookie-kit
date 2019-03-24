@@ -280,7 +280,7 @@ export default class CookieKitPopup extends React.PureComponent {
                     className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
                     onClick={this.handleCountrySelectToggle}
                   >
-                    <div className={`${BLOCK}__flag`}>
+                    <div className={`${BLOCK}__flag`} title={countryCode}>
                       <ReactCountryFlag code={countryCode} svg />
                     </div>
                   </button>
@@ -353,15 +353,17 @@ export default class CookieKitPopup extends React.PureComponent {
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          className={`xb-cookie-kit__button ${BLOCK}__check-all`}
-          onClick={this.handleCheckAll}
-        >
-          {isAllChecked
-            ? renderText("CookieKit.UncheckButton", selectedLocale)
-            : renderText("CookieKit.CheckAllButton", selectedLocale)}
-        </button>
+        { cookieDefns.length > 1 && (
+          <button
+            type="button"
+            className={`xb-cookie-kit__button ${BLOCK}__check-all`}
+            onClick={this.handleCheckAll}
+          >
+            {isAllChecked
+              ? renderText("CookieKit.UncheckButton", selectedLocale)
+              : renderText("CookieKit.CheckAllButton", selectedLocale)}
+          </button>
+        )}
         { displayFingerprint && (
           <div className={`${BLOCK}__fingerprint`}>
             <div className={`${BLOCK}__fingerprint-checkbox`}>
