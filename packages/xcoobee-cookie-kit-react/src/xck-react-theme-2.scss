@@ -24,11 +24,11 @@ $duration: .2s;
   width: 100%;
   transition: opacity 1s ease-out;
 
-  &.top {
+  &.top, &.left_top, &.right_top {
     top: 0;
   }
 
-  &.bottom {
+  &.bottom, &.left_bottom, &.right_bottom {
     bottom: 0;
   }
 

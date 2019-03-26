@@ -281,15 +281,13 @@ export default class CookieKit extends React.PureComponent {
 
     const renderResetButton = theme === "popup" && testMode && cookieConsentsCache.get();
 
-    const redefinedPosition = theme === "overlay" ? position.split("_")[1] : position;
-
     return (
       isShown && (
         <div
           className={
             cx(
               BLOCK,
-              redefinedPosition,
+              position,
               {
                 transparent,
               },
