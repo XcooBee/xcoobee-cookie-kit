@@ -27,7 +27,6 @@ export default class CookieKitPopup extends React.PureComponent {
   static propTypes = {
     companyLogo: PropTypes.string,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -55,7 +54,6 @@ export default class CookieKitPopup extends React.PureComponent {
 
   static defaultProps = {
     companyLogo: null,
-    detectCountry: false,
     displayFingerprint: false,
     fingerprintConsent: false,
     loginStatus: false,
@@ -197,7 +195,6 @@ export default class CookieKitPopup extends React.PureComponent {
     // console.log('CookieKitPopup#render');
     const {
       companyLogo,
-      detectCountry,
       displayFingerprint,
       hideBrandTag,
       loginStatus,
@@ -279,19 +276,17 @@ export default class CookieKitPopup extends React.PureComponent {
                 >
                   { selectedLocale }
                 </button>
-                { detectCountry && (
-                  <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
-                    <button
-                      type="button"
-                      className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
-                      onClick={this.handleCountrySelectToggle}
-                    >
-                      <div className={`${BLOCK}__flag`} title={countryCode}>
-                        <ReactCountryFlag code={countryCode} svg />
-                      </div>
-                    </button>
-                  </div>
-                )}
+                <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
+                  <button
+                    type="button"
+                    className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                    onClick={this.handleCountrySelectToggle}
+                  >
+                    <div className={`${BLOCK}__flag`} title={countryCode}>
+                      <ReactCountryFlag code={countryCode} svg />
+                    </div>
+                  </button>
+                </div>
               </div>
               { isLocaleSelectShown && (
                 <div className={`${BLOCK}__custom-select`}>
@@ -653,36 +648,34 @@ export default class CookieKitPopup extends React.PureComponent {
                 </div>
               )}
             </div>
-            { detectCountry ? (
-              <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
-                <button
-                  type="button"
-                  className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
-                  onClick={this.handleCountrySelectToggle}
-                >
-                  <div className={`${BLOCK}__flag`} title={countryCode}>
-                    <ReactCountryFlag code={countryCode} svg />
-                  </div>
-                </button>
-                { isCountrySelectShown && (
-                  <div className={`${BLOCK}__country-picker-select`}>
-                    { countryCodes.map(cCode => (
-                      <button
-                        type="button"
-                        key={`country-flag-${cCode}`}
-                        className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
-                        onClick={() => this.handleCountryChange(cCode)}
-                        title={cCode}
-                      >
-                        <div className={`${BLOCK}__flag`}>
-                          <ReactCountryFlag code={cCode} svg />
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : <div />}
+            <div className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}>
+              <button
+                type="button"
+                className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                onClick={this.handleCountrySelectToggle}
+              >
+                <div className={`${BLOCK}__flag`} title={countryCode}>
+                  <ReactCountryFlag code={countryCode} svg />
+                </div>
+              </button>
+              { isCountrySelectShown && (
+                <div className={`${BLOCK}__country-picker-select`}>
+                  { countryCodes.map(cCode => (
+                    <button
+                      type="button"
+                      key={`country-flag-${cCode}`}
+                      className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                      onClick={() => this.handleCountryChange(cCode)}
+                      title={cCode}
+                    >
+                      <div className={`${BLOCK}__flag`}>
+                        <ReactCountryFlag code={cCode} svg />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       );
