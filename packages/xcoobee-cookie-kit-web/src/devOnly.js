@@ -29,7 +29,6 @@ XcooBee.kit.setParam("cookieHandler", "theCookieHandler");
 // });
 
 XcooBee.kit.setParam("cssAutoLoad", true);
-XcooBee.kit.setParam("theme", "overlay");
 
 XcooBee.kit.setParam("displayOnlyForEU", true);
 
