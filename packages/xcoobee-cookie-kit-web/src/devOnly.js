@@ -38,10 +38,12 @@ XcooBee.kit.setParam("expirationTime", 0);
 
 // XcooBee.kit.setParam("hideOnComplete", true);
 
+// XcooBee.kit.setParam("position", "bottom");
 XcooBee.kit.setParam("position", "left_bottom");
 // XcooBee.kit.setParam("position", "left_top");
 // XcooBee.kit.setParam("position", "right_bottom");
 // XcooBee.kit.setParam("position", "right_top");
+// XcooBee.kit.setParam("position", "top");
 
 XcooBee.kit.setParam("privacyUrl", "https://xcoobee.com/privacy");
 
@@ -62,6 +64,9 @@ XcooBee.kit.setParam("textMessage", {
   "es-419": "La descripción.",
   "fr-fr": "La description.",
 });
+
+XcooBee.kit.setParam("theme", "popup");
+// XcooBee.kit.setParam("theme", "overlay");
 
 // const config = {
 //   campaignReference: "abcdefgh1234567890",

@@ -22,7 +22,9 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && node-sass src/xck-react.scss dist/xck-react.css && babel src --out-dir dist --ignore src/xck-react.scss --copy-files && rimraf dist/xck-react.scss",
+    "build": "npm run clean && npm run build-theme-popup-styles && npm runbuild-theme-overlay-styles",
+    "build-theme-popup-styles": "node-sass src/xck-react-theme-popup.scss dist/xck-react-theme-popup.css && babel src --out-dir dist --ignore src/xck-react-theme-popup.scss --copy-files && rimraf dist/xck-react-theme-popup.scss",
+    "build-theme-overlay-styles": "node-sass src/xck-react-theme-overlay.scss dist/xck-react-theme-overlay.css && babel src --out-dir dist --ignore src/xck-react-theme-overlay.scss --copy-files && rimraf dist/xck-react-theme-overlay.scss",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
     "lint": "eslint src",

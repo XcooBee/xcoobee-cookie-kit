@@ -5,9 +5,11 @@ import {
   cookieOptionsKeys,
   consentStatuses,
   cookieTypes,
-  cssHref,
+  cssHrefTheme1,
+  cssHrefTheme2,
   euCountries,
   positions,
+  themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
 import {
@@ -119,6 +121,7 @@ export default class CookieKitContainer extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    theme: PropTypes.oneOf(themes),
   };
 
   static defaultProps = {
@@ -137,6 +140,7 @@ export default class CookieKitContainer extends React.PureComponent {
     requestDataTypes: ["application"],
     targetUrl: null,
     testMode: false,
+    theme: "popup",
   };
 
   constructor(props) {
@@ -157,6 +161,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     if (props.cssAutoLoad) {
       const linkDom = document.createElement("link");
+      const cssHref = props.theme === "popup" ? cssHrefTheme1 : cssHrefTheme2;
 
       linkDom.setAttribute("rel", "stylesheet");
       linkDom.setAttribute("href", `${xckDomain}/${cssHref}`);
@@ -420,6 +425,7 @@ export default class CookieKitContainer extends React.PureComponent {
       termsUrl,
       testMode,
       textMessage,
+      theme,
     } = this.props;
 
     const {
@@ -432,7 +438,8 @@ export default class CookieKitContainer extends React.PureComponent {
       loginStatus,
     } = this.state;
 
-    const redefinedPosition = positions.includes(position) ? position : positions[0];
+    const defaultPositionIndex = theme === "overlay" ? 4 : 0;
+    const redefinedPosition = positions.includes(position) ? position : positions[defaultPositionIndex];
 
     const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerprint") : null;
     const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerprint") : null;
@@ -467,6 +474,7 @@ export default class CookieKitContainer extends React.PureComponent {
               termsUrl={termsUrl}
               testMode={testMode}
               textMessage={textMessage}
+              theme={theme}
             />
           </React.Fragment>
         )}
