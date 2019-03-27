@@ -71,8 +71,8 @@ const animations = {
   unknown: "default",
 };
 
-const cssHrefTheme1 = "xcoobee-cookie-kit-theme-1.min.css";
-const cssHrefTheme2 = "xcoobee-cookie-kit-theme-2.min.css";
+const cssHrefTheme1 = "xcoobee-cookie-kit-theme-popup.min.css";
+const cssHrefTheme2 = "xcoobee-cookie-kit-theme-overlay.min.css";
 
 const themes = ["popup", "overlay"];
 
