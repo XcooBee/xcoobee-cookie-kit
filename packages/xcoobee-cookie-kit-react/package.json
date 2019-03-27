@@ -22,9 +22,9 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && npm run build-theme-1-styles && npm runbuild-theme-2-styles",
-    "build-theme-1-styles": "node-sass src/xck-react-theme-1.scss dist/xck-react-theme-1.css && babel src --out-dir dist --ignore src/xck-react-theme-1.scss --copy-files && rimraf dist/xck-react-theme-1.scss",
-    "build-theme-2-styles": "node-sass src/xck-react-theme-2.scss dist/xck-react-theme-2.css && babel src --out-dir dist --ignore src/xck-react-theme-2.scss --copy-files && rimraf dist/xck-react-theme-2.scss",
+    "build": "npm run clean && npm run build-theme-popup-styles && npm run build-theme-overlay-styles",
+    "build-theme-popup-styles": "node-sass src/xck-react-theme-popup.scss dist/xck-react-theme-popup.css && babel src --out-dir dist --ignore src/xck-react-theme-popup.scss --copy-files && rimraf dist/xck-react-theme-popup.scss",
+    "build-theme-overlay-styles": "node-sass src/xck-react-theme-overlay.scss dist/xck-react-theme-overlay.css && babel src --out-dir dist --ignore src/xck-react-theme-overlay.scss --copy-files && rimraf dist/xck-react-theme-overlay.scss",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
     "lint": "eslint src",
