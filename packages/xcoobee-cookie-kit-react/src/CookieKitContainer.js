@@ -99,7 +99,7 @@ export default class CookieKitContainer extends React.PureComponent {
       PropTypes.string,
     ]),
     cssAutoLoad: PropTypes.bool,
-    defaultCountryCode: PropTypes.string,
+    defaultCountryCode: PropTypes.oneOf(countryCodes),
     detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
