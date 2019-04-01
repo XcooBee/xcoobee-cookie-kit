@@ -103,13 +103,14 @@ const cookieOptionsKeys = {
 };
 
 const configFields = [
-  "displayFingerprint",
   "campaignReference",
   "checkByDefaultTypes",
   "companyLogo",
   "cookieHandler",
   "cssAutoLoad",
+  "defaultCountryCode",
   "detectCountry",
+  "displayFingerprint",
   "displayOnlyForEU",
   "expirationTime",
   "hideBrandTag",
