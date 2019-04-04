@@ -35,6 +35,8 @@ const SAVED_PREFERENCES = cookieOptionsKeys.savedPreferences;
 const USER_SETTINGS = cookieOptionsKeys.userSettings;
 const CROWD_AI = cookieOptionsKeys.crowdAi;
 
+const DEFAULT_COUNTRY_CODE = "EU";
+
 function callCookieManagingFunctions(consentSettings) {
   CookieManager.xckClearCookies(consentSettings);
   CookieManager.xckHandleXbeeScriptTags(consentSettings);
@@ -100,7 +102,7 @@ export default class CookieKitContainer extends React.PureComponent {
       PropTypes.string,
     ]),
     cssAutoLoad: PropTypes.bool,
-    defaultCountryCode: PropTypes.oneOf(countryCodes),
+    defaultCountryCode: PropTypes.oneOf([...countryCodes, DEFAULT_COUNTRY_CODE]),
     detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
@@ -133,7 +135,7 @@ export default class CookieKitContainer extends React.PureComponent {
     companyLogo: null,
     cookieHandler: () => {},
     cssAutoLoad: true,
-    defaultCountryCode: "EU",
+    defaultCountryCode: DEFAULT_COUNTRY_CODE,
     detectCountry: false,
     displayFingerprint: false,
     displayOnlyForEU: false,
@@ -157,7 +159,7 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus: OPEN,
       cookieConsents: null,
       countryCode: getCountryCode(),
-      defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : "EU",
+      defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : DEFAULT_COUNTRY_CODE,
       initializing: true,
       isConsentCached: false,
       isLoginStatusChecked: false,
