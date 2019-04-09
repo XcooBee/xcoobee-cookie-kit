@@ -20,16 +20,29 @@ $duration: .2s;
 .xb-cookie-kit {
   font-family: Arial, Helvetica, sans-serif;
   position: fixed;
+  display: flex;
   z-index: 100000;
   width: 100%;
   transition: opacity 1s ease-out;
-  left: 0;
+  bottom: 0;
 
-  &.top, &.left_top, &.right_top {
+  &.top, &.right_top {
     top: 0;
+    align-items: flex-start;
+    justify-content: flex-end;
   }
 
-  &.bottom, &.left_bottom, &.right_bottom {
+  &.left_top {
+    top: 0;
+    align-items: flex-start;
+  }
+
+  &.bottom, &.right_bottom {
+    bottom: 0;
+    justify-content: flex-end;
+  }
+
+  &.left_bottom {
     bottom: 0;
   }
 
@@ -417,18 +430,41 @@ $duration: .2s;
       position: relative;
     }
 
-    &__country-picker-select {
-      max-width: 120px;
+    &__country-picker-container {
       display: flex;
+      flex-direction: column;
+      align-items: center;
       position: absolute;
+      bottom: 20px;
+      right: -3px;
+
+      > button {
+        height: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > img {
+          height: 15px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    &__country-picker-select {
+      max-height: 68px;
+      display: flex;
+      flex-direction: column;
+      //position: absolute;
       background: #fff;
-      top: -2px;
-      right: 28px;
+      //bottom: 20px;
+      //right: -3px;
       overflow: scroll;
       border-radius: 4px;
       z-index: 10;
       -ms-overflow-style: none;
       scrollbar-width: none;
+      box-shadow: 0 8px 8px -8px rgba(0, 0, 0, 0.65) inset, 0 -8px 8px -8px rgba(0, 0, 0, 0.65) inset;
 
       &::-webkit-scrollbar {
         width: 0;
@@ -437,7 +473,7 @@ $duration: .2s;
       }
 
       > * {
-        padding: 2px 4px 4px;
+        padding: 0 4px;
 
         &:hover {
           background: $hover-color;

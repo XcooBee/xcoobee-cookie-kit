@@ -16,6 +16,8 @@ import { getLocale, saveLocale, getCountryCode, saveCountryCode } from "xcoobee-
 
 import closeIcon from "./assets/close-icon.svg";
 import xbLogo from "./assets/xcoobee-logo.svg";
+import caretUp from "./assets/caret-arrow-up.png";
+import caretDown from "./assets/caret-down.png";
 
 import CookieConsentShape from "./lib/CookieConsentShape";
 
@@ -171,6 +173,18 @@ export default class CookieKitPopup extends React.PureComponent {
     const { consentSettings, fingerprintConsent } = this.state;
 
     onSubmit(consentSettings, fingerprintConsent);
+  };
+
+  handleScroll = (e, direction) => {
+    e.stopPropagation();
+
+    const currentScrollPosition = this.countryPicker.scrollTop;
+
+    if (direction === "up") {
+      this.countryPicker.scrollTop = currentScrollPosition - 22;
+    } else {
+      this.countryPicker.scrollTop = currentScrollPosition + 22;
+    }
   };
 
   renderTextMessage(textMessage) {
@@ -665,20 +679,47 @@ export default class CookieKitPopup extends React.PureComponent {
                 </div>
               </button>
               { isCountrySelectShown && (
-                <div className={`${BLOCK}__country-picker-select`}>
-                  { countryCodes.map(cCode => (
-                    <button
-                      type="button"
-                      key={`country-flag-${cCode}`}
-                      className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
-                      onClick={() => this.handleCountryChange(cCode)}
-                      title={cCode}
-                    >
-                      <div className={`${BLOCK}__flag`}>
-                        <ReactCountryFlag code={cCode} svg />
-                      </div>
-                    </button>
-                  ))}
+                <div className={`${BLOCK}__country-picker-container`}>
+                  <button
+                    type="button"
+                    className="xb-cookie-kit__button"
+                    onClick={e => this.handleScroll(e, "up")}
+                  >
+                    <img
+                      src={caretUp}
+                      alt="caret-up"
+                    />
+                  </button>
+                  <div
+                    ref={(countryPicker) => {
+                      this.countryPicker = countryPicker;
+                    }}
+                    className={`${BLOCK}__country-picker-select`}
+                  >
+                    { countryCodes.map(cCode => (
+                      <button
+                        type="button"
+                        key={`country-flag-${cCode}`}
+                        className={`xb-cookie-kit__button ${BLOCK}__country-picker-button`}
+                        onClick={() => this.handleCountryChange(cCode)}
+                        title={cCode}
+                      >
+                        <div className={`${BLOCK}__flag`}>
+                          <ReactCountryFlag code={cCode} svg />
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="xb-cookie-kit__button"
+                    onClick={e => this.handleScroll(e, "bottom")}
+                  >
+                    <img
+                      src={caretDown}
+                      alt="caret-down"
+                    />
+                  </button>
                 </div>
               )}
             </div>
