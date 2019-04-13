@@ -1,3 +1,5 @@
+import fetch from "isomorphic-fetch";
+
 import { localeKey, countryCodeKey, xbApiUrl } from "./configs";
 
 export function clearLocale() {

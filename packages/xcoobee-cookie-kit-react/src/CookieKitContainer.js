@@ -1,13 +1,16 @@
 import PropTypes from "prop-types";
 import React from "react";
+import fetch from "isomorphic-fetch";
 
 import {
   cookieOptionsKeys,
   consentStatuses,
   cookieTypes,
-  cssHref,
+  cssHrefTheme1,
+  cssHrefTheme2,
   euCountries,
   positions,
+  themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
 import {
@@ -18,6 +21,7 @@ import {
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
+import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
 
 import { xckDomain } from "./configs";
 
@@ -30,6 +34,8 @@ const OPEN = consentStatuses.open;
 const SAVED_PREFERENCES = cookieOptionsKeys.savedPreferences;
 const USER_SETTINGS = cookieOptionsKeys.userSettings;
 const CROWD_AI = cookieOptionsKeys.crowdAi;
+
+const DEFAULT_COUNTRY_CODE = "EU";
 
 function callCookieManagingFunctions(consentSettings) {
   CookieManager.xckClearCookies(consentSettings);
@@ -96,6 +102,7 @@ export default class CookieKitContainer extends React.PureComponent {
       PropTypes.string,
     ]),
     cssAutoLoad: PropTypes.bool,
+    defaultCountryCode: PropTypes.oneOf([...countryCodes, DEFAULT_COUNTRY_CODE]),
     detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
@@ -119,6 +126,7 @@ export default class CookieKitContainer extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    theme: PropTypes.oneOf(themes),
   };
 
   static defaultProps = {
@@ -127,6 +135,7 @@ export default class CookieKitContainer extends React.PureComponent {
     companyLogo: null,
     cookieHandler: () => {},
     cssAutoLoad: true,
+    defaultCountryCode: DEFAULT_COUNTRY_CODE,
     detectCountry: false,
     displayFingerprint: false,
     displayOnlyForEU: false,
@@ -137,6 +146,7 @@ export default class CookieKitContainer extends React.PureComponent {
     requestDataTypes: ["application"],
     targetUrl: null,
     testMode: false,
+    theme: "popup",
   };
 
   constructor(props) {
@@ -149,6 +159,7 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus: OPEN,
       cookieConsents: null,
       countryCode: getCountryCode(),
+      defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : DEFAULT_COUNTRY_CODE,
       initializing: true,
       isConsentCached: false,
       isLoginStatusChecked: false,
@@ -157,6 +168,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     if (props.cssAutoLoad) {
       const linkDom = document.createElement("link");
+      const cssHref = props.theme === "popup" ? cssHrefTheme1 : cssHrefTheme2;
 
       linkDom.setAttribute("rel", "stylesheet");
       linkDom.setAttribute("href", `${xckDomain}/${cssHref}`);
@@ -203,9 +215,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
   getCountryCode() {
     const { campaignReference, detectCountry } = this.props;
-    const { countryCode } = this.state;
-
-    const defaultCountryCode = "EU";
+    const { countryCode, defaultCountryCode } = this.state;
 
     if (countryCode) {
       return Promise.resolve(countryCode);
@@ -221,19 +231,22 @@ export default class CookieKitContainer extends React.PureComponent {
       }
 
       return promise
-        .catch((error) => {
-          console.error(error);
-          this.setState({ countryCode: defaultCountryCode });
-
-          return defaultCountryCode;
-        })
         .then((cCode) => {
           saveCountryCode(cCode);
           this.setState({ countryCode: cCode });
 
           return cCode;
+        })
+        .catch((error) => {
+          console.error(error);
+          this.setState({ countryCode: defaultCountryCode });
+
+          return defaultCountryCode;
         });
     }
+
+    this.setState({ countryCode: defaultCountryCode });
+    saveCountryCode(defaultCountryCode);
 
     return Promise.resolve(defaultCountryCode);
   }
@@ -409,7 +422,6 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#render");
     const {
       companyLogo,
-      detectCountry,
       displayFingerprint,
       expirationTime,
       hideBrandTag,
@@ -420,6 +432,7 @@ export default class CookieKitContainer extends React.PureComponent {
       termsUrl,
       testMode,
       textMessage,
+      theme,
     } = this.props;
 
     const {
@@ -432,7 +445,8 @@ export default class CookieKitContainer extends React.PureComponent {
       loginStatus,
     } = this.state;
 
-    const redefinedPosition = positions.includes(position) ? position : positions[0];
+    const defaultPositionIndex = theme === "overlay" ? 4 : 0;
+    const redefinedPosition = positions.includes(position) ? position : positions[defaultPositionIndex];
 
     const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerprint") : null;
     const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerprint") : null;
@@ -452,7 +466,6 @@ export default class CookieKitContainer extends React.PureComponent {
               consentStatus={consentStatus}
               cookieConsents={cookies}
               countryCode={countryCode}
-              detectCountry={detectCountry}
               displayFingerprint={displayFingerprint}
               expirationTime={expirationTime}
               fingerprintConsent={fingerprintConsent}
@@ -467,6 +480,7 @@ export default class CookieKitContainer extends React.PureComponent {
               termsUrl={termsUrl}
               testMode={testMode}
               textMessage={textMessage}
+              theme={theme}
             />
           </React.Fragment>
         )}

@@ -36,6 +36,8 @@ const webpackConfig = {
       "core-js/modules/es7.object.values", // Needed for IE 11
       isEnvDevelopment ? `${__dirname}/src/devOnly.js` : config.entry,
     ],
+    "xcoobee-cookie-kit-theme-popup": "react-cookie-kit/src/xck-react-theme-popup.scss",
+    "xcoobee-cookie-kit-theme-overlay": "react-cookie-kit/src/xck-react-theme-overlay.scss",
   },
   output: {
     chunkFilename: "[chunkhash].min.js",
@@ -93,7 +95,7 @@ const webpackConfig = {
       "XCK_DOMAIN",
     ]),
     new MiniCssExtractPlugin({
-      filename: "xcoobee-cookie-kit.min.css",
+      filename: "[name].min.css",
     }),
     new DuplicatePackageCheckerPlugin({
       emitError: true,

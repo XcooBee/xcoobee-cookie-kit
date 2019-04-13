@@ -1,6 +1,6 @@
 {
   "name": "react-cookie-kit",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Cookie Consent Management for Websites using ReactJS.",
   "keywords": [
     "consent",
@@ -22,7 +22,9 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run clean && node-sass src/xck-react.scss dist/xck-react.css && babel src --out-dir dist --ignore src/xck-react.scss --copy-files && rimraf dist/xck-react.scss",
+    "build": "npm run clean && npm run build-theme-popup-styles && npm run build-theme-overlay-styles",
+    "build-theme-popup-styles": "node-sass src/xck-react-theme-popup.scss dist/xck-react-theme-popup.css && babel src --out-dir dist --ignore src/xck-react-theme-popup.scss --copy-files && rimraf dist/xck-react-theme-popup.scss",
+    "build-theme-overlay-styles": "node-sass src/xck-react-theme-overlay.scss dist/xck-react-theme-overlay.css && babel src --out-dir dist --ignore src/xck-react-theme-overlay.scss --copy-files && rimraf dist/xck-react-theme-overlay.scss",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
     "lint": "eslint src",
@@ -31,9 +33,10 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "isomorphic-fetch": "^2.2.1",
     "prop-types": "^15.6.0",
     "react-country-flag": "^1.0.1",
-    "xcoobee-cookie-kit-core": "^1.0.9"
+    "xcoobee-cookie-kit-core": "^1.0.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

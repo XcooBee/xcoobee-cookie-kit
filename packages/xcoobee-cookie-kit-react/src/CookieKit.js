@@ -7,6 +7,7 @@ import {
   consentStatuses,
   cookieTypes,
   positions,
+  themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 
 import {
@@ -46,7 +47,6 @@ export default class CookieKit extends React.PureComponent {
     consentsSource: PropTypes.oneOf(consentsSources).isRequired,
     consentStatus: PropTypes.oneOf(Object.values(consentStatuses)).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
-    detectCountry: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     expirationTime: PropTypes.number,
     fingerprintConsent: PropTypes.bool,
@@ -71,17 +71,18 @@ export default class CookieKit extends React.PureComponent {
         "fr-fr": PropTypes.string,
       }),
     ]).isRequired,
+    theme: PropTypes.oneOf(themes),
   };
 
   static defaultProps = {
     campaignReference: null,
     companyLogo: null,
-    detectCountry: false,
     displayFingerprint: false,
     expirationTime: 0,
     fingerprintConsent: false,
     loginStatus: false,
     testMode: false,
+    theme: "popup",
   };
 
   constructor(props) {
@@ -92,7 +93,7 @@ export default class CookieKit extends React.PureComponent {
     this.state = {
       animated: true,
       hasClosed: false,
-      isOpen,
+      isOpen: false,
       isShown: true,
       pulsing: false,
       transparent: false,
@@ -256,7 +257,6 @@ export default class CookieKit extends React.PureComponent {
       companyLogo,
       consentsSource,
       cookieConsents,
-      detectCountry,
       displayFingerprint,
       fingerprintConsent,
       hideBrandTag,
@@ -267,6 +267,7 @@ export default class CookieKit extends React.PureComponent {
       termsUrl,
       testMode,
       textMessage,
+      theme,
     } = this.props;
     const { animated, hasClosed, isOpen, isShown, pulsing, transparent } = this.state;
 
@@ -275,7 +276,7 @@ export default class CookieKit extends React.PureComponent {
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
-    const renderResetButton = testMode && cookieConsentsCache.get();
+    const renderResetButton = theme === "popup" && testMode && cookieConsentsCache.get();
 
     return (
       isShown && (
@@ -297,7 +298,6 @@ export default class CookieKit extends React.PureComponent {
             <CookieKitPopup
               companyLogo={companyLogo}
               cookieConsents={cookieConsents}
-              detectCountry={detectCountry}
               displayFingerprint={displayFingerprint}
               fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}
@@ -310,6 +310,7 @@ export default class CookieKit extends React.PureComponent {
               requestDataTypes={requestDataTypes}
               termsUrl={termsUrl}
               textMessage={textMessage}
+              theme={theme}
             />
           )}
           {renderButton && (

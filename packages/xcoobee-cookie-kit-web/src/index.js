@@ -9,8 +9,6 @@ import {
 } from "xcoobee-cookie-kit-core/src/configs";
 import CookieKitContainer from "react-cookie-kit/src";
 
-import "react-cookie-kit/src/xck-react.scss";
-
 function checkRequiredFields(config) {
   const errors = [];
 
