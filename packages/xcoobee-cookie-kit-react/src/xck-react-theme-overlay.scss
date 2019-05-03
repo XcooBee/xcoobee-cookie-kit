@@ -27,19 +27,11 @@ $duration: .2s;
   bottom: 0;
   line-height: 1.5;
 
-  .button,
-  button,
-  input[type="button"],
-  input[type="reset"],
-  input[type="submit"] {
+  .button, button {
     border-radius: 0;
   }
 
-  .button:hover,
-  button:hover,
-  input[type="button"]:hover,
-  input[type="reset"]:hover,
-  input[type="submit"]:hover {
+  .button:hover, button:hover {
     background: none;
   }
 
