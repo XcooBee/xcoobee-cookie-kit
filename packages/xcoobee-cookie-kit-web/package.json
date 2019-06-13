@@ -1,7 +1,7 @@
 {
   "name": "xcoobee-cookie-kit-web",
-  "version": "1.0.8",
-  "description": "Cookie Consent Management for Websites",
+  "version": "1.0.9",
+  "description": "GDPR / CCPA Easy Cookie and Fingerprint Consent Management for Websites",
   "keywords": [
     "consent",
     "cookie",
@@ -32,8 +32,8 @@
   },
   "dependencies": {
     "core-js": "^2.6.1",
-    "xcoobee-cookie-kit-core": "^1.0.13",
-    "react-cookie-kit": "^1.0.13"
+    "xcoobee-cookie-kit-core": "^1.0.15",
+    "react-cookie-kit": "^1.0.15"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
