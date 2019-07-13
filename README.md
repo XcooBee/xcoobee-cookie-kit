@@ -2,21 +2,27 @@
 
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
-The XcooBee Cookie Kit project is maintained as a monorepo with several NPM
-packages. Lerna is used with this monorepo. Checkout the `packages`
+The XcooBee Cookie Kit is an active GDPR/CCPA cookie & fingerprint and consent-manager for your site.
+
+The XcooBee Cookie Kit project is maintained as a monorepo (one repo with multiple projects) with several NPM
+packages. Lerna is the tool we use to maintain the monorepo. Checkout the `packages`
 sub-directory for specific packages.
 
 There are three packages we maintain in the monorepo.
 
-- xcoobee-cookie-kit-core
-- xcoobee-cookie-kit-web
-- react-cookie-kit
+- [XcooBee Cookie Kit Core](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-core) - core services managing browser cookies
+- [XcooBee Cookie Kit Web](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web) - javascript based plugin into any website 
+- [React JS Cookie Kit](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-react) - prepackaged react js implementation of cookie management
 
+## Using the Cookie Kit
 
-The packages are also published individually to npm.
+The packages are also published individually to npm. This is where you should look if you wish to use the Cookie Kit. You can also install the core libraries using `npm i xcoobee-cookie-kit-core`, but most likely you will only need the web or react versions:
 
+- [npm i xcoobee-cookie-kit-web](https://www.npmjs.com/package/xcoobee-cookie-kit-web)
+- [npm i react-cookie-kit](https://www.npmjs.com/package/react-cookie-kit)
 
-## To Install all Packages in Monorepo
+## To Install all Packages in Monorepo for contribution purposes
+This is where you should look if you want to contribute and make changes and submit Pull Requests.
 
 Please run the following commands from the root project folder
 
@@ -44,7 +50,7 @@ All repos are published individually in npm. You can review each package's sourc
 
 ## Video
 
-[Cookie Kit Tutorial](https://youtu.be/gKYNoARNXRo)
+[Cookie Kit Tutorial](https://youtu.be/gKYNoARNXRo) - shows the programming and usage in a plain HTML single-page application.
 
 
 
