@@ -472,7 +472,6 @@ export default class CookieKitContainer extends React.PureComponent {
               consentStatus={consentStatus}
               cookieConsents={cookies}
               countryCode={countryCode}
-              display={display}
               displayFingerprint={displayFingerprint}
               expirationTime={expirationTime}
               fingerprintConsent={fingerprintConsent}
