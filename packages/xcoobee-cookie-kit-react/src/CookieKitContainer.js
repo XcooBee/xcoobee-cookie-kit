@@ -160,6 +160,7 @@ export default class CookieKitContainer extends React.PureComponent {
       cookieConsents: null,
       countryCode: getCountryCode(),
       defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : DEFAULT_COUNTRY_CODE,
+      display: true,
       initializing: true,
       isConsentCached: false,
       isLoginStatusChecked: false,
@@ -418,6 +419,10 @@ export default class CookieKitContainer extends React.PureComponent {
     }
   }
 
+  display(value) {
+    this.setState({ display: value });
+  }
+
   render() {
     // console.log("CookieKitContainer#render");
     const {
@@ -441,6 +446,7 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus,
       cookieConsents,
       countryCode,
+      display,
       initializing,
       loginStatus,
     } = this.state;
@@ -457,7 +463,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     return (
       <React.Fragment>
-        {!initializing && (
+        {!initializing && display && (
           <React.Fragment>
             <CookieKit
               campaignReference={campaignReference}
@@ -466,6 +472,7 @@ export default class CookieKitContainer extends React.PureComponent {
               consentStatus={consentStatus}
               cookieConsents={cookies}
               countryCode={countryCode}
+              display={display}
               displayFingerprint={displayFingerprint}
               expirationTime={expirationTime}
               fingerprintConsent={fingerprintConsent}

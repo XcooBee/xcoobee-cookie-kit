@@ -114,6 +114,12 @@ class CookitKitInitializer {
     document.body.appendChild(managedCookie);
   }
 
+  display(value) {
+    if (this._compRef.current) {
+      this._compRef.current.display(value);
+    }
+  }
+
   _render(dom = document.body) {
     const appendCookieKit = () => {
       if (!checkRequiredFields(this._config)) {
