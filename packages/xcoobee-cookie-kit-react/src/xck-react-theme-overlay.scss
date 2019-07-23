@@ -69,6 +69,10 @@ $duration: .2s;
     opacity: 0;
   }
 
+  &.hide {
+    display: none;
+  }
+
   &__cookie-button {
     width: 4vw;
     margin: 4px;

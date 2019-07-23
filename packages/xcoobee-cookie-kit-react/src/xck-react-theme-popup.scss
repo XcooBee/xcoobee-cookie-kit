@@ -65,6 +65,10 @@ $duration: .2s;
     overflow: auto;
   }
 
+  &.hide {
+    display: none;
+  }
+
   &__button {
     background: none;
     color: inherit;
