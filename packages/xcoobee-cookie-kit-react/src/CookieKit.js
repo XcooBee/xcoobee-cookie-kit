@@ -295,7 +295,7 @@ export default class CookieKit extends React.PureComponent {
                 scroll: isOpen,
               },
               {
-                hide: !display,
+                "d-none": !display,
               },
             )
           }
