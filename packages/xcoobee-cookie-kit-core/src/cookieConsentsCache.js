@@ -35,12 +35,16 @@ const cookieConsentsCache = {
   get() {
     // console.log("cookieConsentsCache#get");
     let cookieConsents = null;
+    let lastUpdated = null;
 
-    if (localStorage[xcoobeeCookiesKey]) {
+    const xcoobeeCookies = localStorage[xcoobeeCookiesKey] && JSON.parse(localStorage[xcoobeeCookiesKey]);
+
+    if (xcoobeeCookies) {
+      const { cookies: consents, fingerprintConsent, timestamp } = xcoobeeCookies;
+
+      lastUpdated = timestamp;
+
       try {
-        const xcoobeeCookies = JSON.parse(localStorage[xcoobeeCookiesKey]);
-        const { cookies: consents, fingerprintConsent, timestamp } = xcoobeeCookies;
-
         // If the cached cookie consents have not expired, then extract it.
         if ((Date.now() - timestamp) < expirationTime) {
           cookieConsents = cookieDefns.map(cookieDefn => ({
@@ -55,7 +59,7 @@ const cookieConsentsCache = {
       }
     }
 
-    return cookieConsents;
+    return { cookieConsents, lastUpdated };
   },
 };
 

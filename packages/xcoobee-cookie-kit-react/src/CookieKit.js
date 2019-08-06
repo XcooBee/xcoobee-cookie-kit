@@ -53,6 +53,7 @@ export default class CookieKit extends React.PureComponent {
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
     hideOnComplete: PropTypes.bool.isRequired,
+    isAnimated: PropTypes.bool,
     loginStatus: PropTypes.bool,
     onConsentStatusChange: PropTypes.func.isRequired,
     onCookieConsentsChange: PropTypes.func.isRequired,
@@ -82,6 +83,7 @@ export default class CookieKit extends React.PureComponent {
     displayFingerprint: false,
     expirationTime: 0,
     fingerprintConsent: false,
+    isAnimated: true,
     loginStatus: false,
     testMode: false,
     theme: "popup",
@@ -103,7 +105,10 @@ export default class CookieKit extends React.PureComponent {
 
     this.timers = [];
 
-    this.startPulsing();
+    if (props.isAnimated) {
+      this.startPulsing();
+    }
+
     if (!isOpen) {
       this.startDismissTimer();
     }
@@ -233,7 +238,7 @@ export default class CookieKit extends React.PureComponent {
   }
 
   stopPulsing() {
-    // console.log("CookieKit#startPulsing");
+    // console.log("CookieKit#stopPulsing");
     this.setState({ pulsing: false });
   }
 
@@ -263,6 +268,7 @@ export default class CookieKit extends React.PureComponent {
       displayFingerprint,
       fingerprintConsent,
       hideBrandTag,
+      isAnimated,
       loginStatus,
       position,
       privacyUrl,
@@ -274,12 +280,13 @@ export default class CookieKit extends React.PureComponent {
     } = this.props;
     const { animated, hasClosed, isOpen, isShown, pulsing, transparent } = this.state;
 
-    const animation = animated ? animations[consentsSource] : animations.unknown;
+    const animation = animated && isAnimated ? animations[consentsSource] : animations.unknown;
 
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
     const renderButton = !renderPopup;
 
-    const renderResetButton = theme === "popup" && testMode && cookieConsentsCache.get();
+    const cache = cookieConsentsCache.get();
+    const renderResetButton = theme === "popup" && testMode && cache.cookieConsents;
 
     return (
       isShown && (

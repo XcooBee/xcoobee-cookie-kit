@@ -114,6 +114,7 @@ export default class CookieKitContainer extends React.PureComponent {
     requestDataTypes: PropTypes.arrayOf(
       PropTypes.oneOf(cookieTypes).isRequired,
     ),
+    suspendAnimationTime: PropTypes.number,
     targetUrl: PropTypes.string,
     termsUrl: PropTypes.string.isRequired,
     testMode: PropTypes.bool,
@@ -144,6 +145,7 @@ export default class CookieKitContainer extends React.PureComponent {
     hideOnComplete: false,
     position: "right_bottom",
     requestDataTypes: ["application"],
+    suspendAnimationTime: 600,
     targetUrl: null,
     testMode: false,
     theme: "popup",
@@ -162,6 +164,7 @@ export default class CookieKitContainer extends React.PureComponent {
       defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : DEFAULT_COUNTRY_CODE,
       display: true,
       initializing: true,
+      isAnimated: true,
       isConsentCached: false,
       isLoginStatusChecked: false,
       loginStatus: false,
@@ -194,11 +197,16 @@ export default class CookieKitContainer extends React.PureComponent {
 
   getCookieConsents() {
     // console.log("CookieKitContainer#getCookieConsents");
-    const cachedCookieConsents = cookieConsentsCache.get();
+    const { suspendAnimationTime } = this.props;
+    const { cookieConsents, lastUpdated } = cookieConsentsCache.get();
 
-    if (cachedCookieConsents) {
+    if (lastUpdated && !!suspendAnimationTime && (Date.now() - lastUpdated) < suspendAnimationTime * 1000) {
+      this.setState({ isAnimated: false });
+    }
+
+    if (cookieConsents) {
       // console.log("Using cached cookie consents!");
-      this.setCookieConsents("cached", cachedCookieConsents);
+      this.setCookieConsents("cached", cookieConsents);
       this.setState({ isConsentCached: true });
 
       return;
@@ -448,6 +456,7 @@ export default class CookieKitContainer extends React.PureComponent {
       countryCode,
       display,
       initializing,
+      isAnimated,
       loginStatus,
     } = this.state;
 
@@ -478,6 +487,7 @@ export default class CookieKitContainer extends React.PureComponent {
               fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}
               hideOnComplete={hideOnComplete}
+              isAnimated={isAnimated}
               loginStatus={loginStatus}
               onConsentStatusChange={this.handleConsentStatusChange}
               onCookieConsentsChange={this.handleCookieConsentsChange}
