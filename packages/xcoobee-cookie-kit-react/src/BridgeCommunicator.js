@@ -27,6 +27,10 @@ export default class BridgeCommunicator extends React.PureComponent {
     const { onLoginStatusChange, onCookieOptionsLoad, handleBridgeError } = this.props;
 
     if (event.origin === xbOrigin) {
+      if (!event.data) {
+        return;
+      }
+
       const data = JSON.parse(event.data);
       const action = Object.keys(data)[0];
 
