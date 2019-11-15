@@ -1,7 +1,6 @@
 # Contributing to the XcooBee Cookie Kit Project
 
-The XcooBee Cookie Kit project is maintained as a monorepo with several NPM
-packages. Lerna is used with this monorepo.
+The XcooBee Cookie Kit project is maintained as a monorepo with several NPM packages. Lerna is used with this monorepo.
 
 
 ## Project Setup
@@ -12,8 +11,7 @@ After cloning the repo, run the following.
 yarn --no-lockfile
 ```
 
-This will only install the dependencies needed to manage/maintain this monorepo.
-For example, it will locally install Lerna.
+This will only install the dependencies needed to manage/maintain this monorepo. For example, it will locally install Lerna.
 
 Then run the following to install all the dependencies of the packages.
 
@@ -21,8 +19,7 @@ Then run the following to install all the dependencies of the packages.
 npx lerna bootstrap -- --no-lockfile
 ```
 
-Note: This command takes several minutes to run. It may appear to hang during
-the "Installing external dependencies" step.
+Note: This command takes several minutes to run. It may appear to hang during the "Installing external dependencies" step.
 
 
 ## Summary of Using Lerna
@@ -52,8 +49,7 @@ npx lerna add <package> --scope <glob>
 npx lerna add <package> --scope <glob> --dev
 ```
 
-The `lerna add` command is similar to `npm install` or `yarn add`. However, it
-will maintain the links between the packages of this monorepo.
+The `lerna add` command is similar to `npm install` or `yarn add`. However, it will maintain the links between the packages of this monorepo.
 
 **Running an NPM Script**
 

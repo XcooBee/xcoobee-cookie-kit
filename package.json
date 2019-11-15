@@ -1,6 +1,13 @@
 {
   "name": "root",
   "private": true,
+  "dependencies": {
+    "react": "16.3.2",
+    "react-dom": "16.3.3"
+  },
+  "devDependencies": {
+    "lerna": "^3.1.4"
+  },
   "scripts": {
     "build": "lerna run build",
     "lint": "lerna run lint",
@@ -9,12 +16,5 @@
     "web:clear": "lerna run clear --scope xcoobee-cookie-kit-web",
     "web:start": "lerna run dev --scope xcoobee-cookie-kit-web",
     "web:buildbeta": "lerna run build:beta --scope xcoobee-cookie-kit-web"
-  },
-  "dependencies": {
-    "react": "16.3.2",
-    "react-dom": "16.3.3"
-  },
-  "devDependencies": {
-    "lerna": "^3.1.4"
   }
 }
