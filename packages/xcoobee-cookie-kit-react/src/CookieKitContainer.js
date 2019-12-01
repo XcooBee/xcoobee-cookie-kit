@@ -1,6 +1,6 @@
+import fetch from "isomorphic-fetch";
 import PropTypes from "prop-types";
 import React from "react";
-import fetch from "isomorphic-fetch";
 
 import {
   cookieOptionsKeys,
@@ -13,20 +13,21 @@ import {
   themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
+import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
+
+import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import {
   getCountryCode,
   saveCountryCode,
   fetchCountryCode,
   fetchCountryCodeForSubscribers,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
-import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import NotAuthorizedError from "xcoobee-cookie-kit-core/src/NotAuthorizedError";
-import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
 
 import { xckDomain } from "./configs";
 
-import CookieKit from "./CookieKit";
 import BridgeCommunicator from "./BridgeCommunicator";
+import CookieKit from "./CookieKit";
 
 const COMPLETE = consentStatuses.complete;
 const OPEN = consentStatuses.open;

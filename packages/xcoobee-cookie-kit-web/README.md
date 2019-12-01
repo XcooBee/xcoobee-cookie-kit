@@ -9,7 +9,7 @@ https://www.npmjs.com/package/xcoobee-cookie-kit-web
 
 ## What is the Difference
 
-The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. 
+The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box.
 
 Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
 
@@ -43,7 +43,7 @@ Most current cookie GDPR notices for websites are just that: Overlays that displ
     privacyUrl: "#privacyUrl",
     requestDataTypes: ["application", "usage", "statistics"],
     termsUrl: "#termsUrl",
-    textMessage: "Welcome to our site. We manage cookies responsibly and listen to our users. You can check and uncheck which types are OK."    
+    textMessage: "Welcome to our site. We manage cookies responsibly and listen to our users. You can check and uncheck which types are OK."
   });
 </script>
 
@@ -85,18 +85,18 @@ With cookie kit you can:
   - share your privacy policy
   - determine cookie setter/unsetter interactions
   - integrate with backend-services for cookie notifications
-  - transparently determine whether notification is necessary    
+  - transparently determine whether notification is necessary
   - allow users to remove/add consent for cookies
   - set timing and position of information display
   - properly react to user consent grants and removal requests
 
-With subscription to XcooBee you can also:    
+With subscription to XcooBee you can also:
 
   - document your cookie consent interactions
   - remote manage user consent
   - document proper response time to user requests
   - set additional style and logo elements
-  - allows users to use crowd cookie intelligence 
+  - allows users to use crowd cookie intelligence
 
 
 ## Easy Cookie Classification
@@ -681,7 +681,7 @@ instead use this
 
 Additional Attributes:
 ```
-  action => one of "set" or "unset", you can provide clean up scripts with "unset" attribute 
+  action => one of "set" or "unset", you can provide clean up scripts with "unset" attribute
   category => one of the cookie categories: application, usage, statistics, advertising
 ```
 
@@ -690,21 +690,21 @@ Example:
 ```html
   <!-- Google Analytics example with cookie kit -->
   <xbee-script category="statistics" action="set">
-      
+
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      
+
       ga('create', 'UA-XXXXX-Y', 'auto');
       ga('send', 'pageview');
-      
+
   </xbee-script>
   <!-- End Google Analytics -->
 
 ```
 
-Since scripts that are loaded from different domains can create cookies that are not directly accessible by XDK due to same origin policy in browsers, the XDK allows you to create cleanup scripts that can be run for each domain. 
+Since scripts that are loaded from different domains can create cookies that are not directly accessible by XDK due to same origin policy in browsers, the XDK allows you to create cleanup scripts that can be run for each domain.
 
 In this case the `action` attribute of `unset` can be used to designate scripts that clean up cookies when users remove consent.
 
@@ -712,7 +712,7 @@ Example:
 
 ```html
   <!-- Example removal script call -->
-  <xbee-script category="statistics" action="unset" src="https://facebook/remove.js">        
+  <xbee-script category="statistics" action="unset" src="https://facebook/remove.js">
   </xbee-script>
 
 ```
@@ -894,7 +894,7 @@ textMessage: {
 `popup` or `overlay`, default: `popup`
 
 The cookie kit supports two different interaction dialogs with users. The default is the colorful popup dialog.
-You can also use a more conservative overlay that opens at the bottom or top of your page. 
+You can also use a more conservative overlay that opens at the bottom or top of your page.
 
 Example declaration in initialization:
 
@@ -939,9 +939,9 @@ For example if your site runs on this url "http://www.mysite.com/product/hello" 
 You can use public methods of the XCK to set and retrieve parameter information. These are found under the `XcooBee.kit` object.
 
 
-### setManagedCookie([category:string], [cookieName:string], [cookieValue:string], [days:integer]) 
+### setManagedCookie([category:string], [cookieName:string], [cookieValue:string], [days:integer])
 
-Create fully GDPR compliant cookies using the `setManagedCookie()` method. You are offloading all interaction and life-cylce management of the cookie to the XCK. The XCK will ensure that proper consent is obtained for the cookie from the user before setting it and also remove the cookies when user removes consent.
+Create fully GDPR compliant cookies using the `setManagedCookie()` method. You are offloading all interaction and life-cycle management of the cookie to the XCK. The XCK will ensure that proper consent is obtained for the cookie from the user before setting it and also remove the cookies when user removes consent.
 This is the JavaScript equivalent to using the `<xbee-cookie>` tag in your HTML. You will be automatically compliant with all GDPR interactions when using managed cookies.
 
 options:
@@ -949,8 +949,8 @@ options:
 ```
   category    => required: one of: application, usage, statistics, advertising
   cookieName  => required: name of your cookie
-  cookieValue => require: the value of your cookie
-  days        => optional: days to perist, default is 0 = session
+  cookieValue => required: the value of your cookie
+  days        => optional: days to persist, default is 0 = session
 ```
 
 example:
@@ -1027,7 +1027,7 @@ You need to place this in the HTML of your site in between `<head>` and `<body>`
     termsUrl: "https://mysite.com/terms",
     textMessage: "This site uses cookies to make your experience better. Please let us know which type of cookies we may use."
   });
- 
+
 </script>
 ```
 
