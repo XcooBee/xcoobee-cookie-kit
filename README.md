@@ -11,7 +11,7 @@ sub-directory for specific packages.
 There are three packages we maintain in the monorepo.
 
 - [XcooBee Cookie Kit Core](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-core) - core services managing browser cookies
-- [XcooBee Cookie Kit Web](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web) - javascript based plugin into any website 
+- [XcooBee Cookie Kit Web](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-web) - javascript based plugin into any website
 - [React JS Cookie Kit](https://github.com/XcooBee/xcoobee-cookie-kit/tree/master/packages/xcoobee-cookie-kit-react) - prepackaged react js implementation of cookie management
 
 ## Using the Cookie Kit
@@ -27,9 +27,8 @@ This is where you should look if you want to contribute and make changes and sub
 Please run the following commands from the root project folder
 
 ```
-yarn --no-lockfile
-
-npx lerna bootstrap -- --no-lockfile
+npm install
+npm run bootstrap
 ```
 
 
