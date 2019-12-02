@@ -10,6 +10,7 @@ module.exports = {
         "max-len": ["error", { code: 120, ignoreUrls: true }],
         "no-console": ["error", { allow: ["error"] }],
         "no-param-reassign": "off",
+        "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
         "no-underscore-dangle": "off",
         "object-curly-newline": "off",
         quotes: ["error", "double", { avoidEscape: true }],

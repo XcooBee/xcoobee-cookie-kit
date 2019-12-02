@@ -162,7 +162,9 @@ export default class CookieKitContainer extends React.PureComponent {
       consentStatus: OPEN,
       cookieConsents: null,
       countryCode: getCountryCode(),
-      defaultCountryCode: countryCodes.includes(props.defaultCountryCode) ? props.defaultCountryCode : DEFAULT_COUNTRY_CODE,
+      defaultCountryCode: countryCodes.includes(props.defaultCountryCode)
+        ? props.defaultCountryCode
+        : DEFAULT_COUNTRY_CODE,
       display: true,
       initializing: true,
       isAnimated: true,
