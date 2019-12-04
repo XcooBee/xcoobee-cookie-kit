@@ -29,11 +29,11 @@ const webpackConfig = {
   mode: isEnvProduction ? "production" : "development",
   entry: {
     "xcoobee-cookie-kit": [
-      "core-js/modules/es6.array.find", // Needed for IE 11
-      "core-js/modules/es6.promise", // Needed for IE 11
-      "core-js/modules/es6.string.from-code-point", // Needed for IE 11
-      "core-js/modules/es7.array.includes", // Needed for IE 11
-      "core-js/modules/es7.object.values", // Needed for IE 11
+      "core-js/modules/es.array.find", // Needed for IE 11
+      "core-js/modules/es.promise", // Needed for IE 11
+      "core-js/modules/es.string.from-code-point", // Needed for IE 11
+      "core-js/modules/es.array.includes", // Needed for IE 11
+      "core-js/modules/es.object.values", // Needed for IE 11
       isEnvDevelopment ? `${__dirname}/src/devOnly.js` : config.entry,
     ],
     "xcoobee-cookie-kit-theme-popup": "react-cookie-kit/src/xck-react-theme-popup.scss",

@@ -1,3 +1,4 @@
+/* global XcooBee */
 /**
  * Sets cookies
  *
@@ -111,8 +112,9 @@ function xckLoadJs(loadScripts, category) {
         script.async = true; // we always load async
         script.src = item.src;
         // After script is loaded we need to process the cookie state
-        script.onload = function () {
+        script.onload = function onload() {
           if (XcooBee.kit.getParam("testMode") && (item.src !== "")) {
+            // eslint-disable-next-line no-console
             console.log(`Cookie script from ${item.src} is ready!`);
           }
           xckSaveCookieState(aInitialCookies, category);
@@ -229,9 +231,10 @@ function xckHandleXbeeScriptTags(cookieTypes) {
         }
       } catch (error) {
         // Error happened
-        console.log("Tag caused error, please make sure you have supplied required attributes:", script.substr(0, 40));
+        const msg = "Tag caused error, please make sure you have supplied required attributes:";
+        console.error(msg, script.substr(0, 40));
         if (XcooBee.kit.getParam("testMode")) {
-          console.log(error);
+          console.error(error);
         }
       }
     }
@@ -264,7 +267,7 @@ function xckHandleXbeeCookieTags(cookieTypes) {
 
         // Days is optional so we use this notation to retrieve it
         if (item.attributes.getNamedItem("days") !== null) {
-          cookieDays = parseInt(item.attributes("days"));
+          cookieDays = parseInt(item.attributes("days"), 10);
         }
         // Set or erase this cookie based on whether category is allowed
         if (cookieTypes[cookieCategory]) {
@@ -276,9 +279,9 @@ function xckHandleXbeeCookieTags(cookieTypes) {
         }
       } catch (error) {
         // Error happened
-        console.log("error in cookie definition in tag:", itemOuter.substr(0, 30));
+        console.error("error in cookie definition in tag:", itemOuter.substr(0, 30));
         if (XcooBee.kit.getParam("testMode")) {
-          console.log(error);
+          console.error(error);
         }
       }
     }

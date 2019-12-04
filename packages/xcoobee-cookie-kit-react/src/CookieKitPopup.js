@@ -247,9 +247,13 @@ export default class CookieKitPopup extends React.PureComponent {
 
     if (theme === "popup") {
       layout = (
+        // eslint-disable-next-line max-len
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
         <div
           className={BLOCK}
           onClick={() => this.setState({ isCountrySelectShown: false, isLocaleSelectShown: false })}
+          role="dialog"
+          tabIndex="-1"
         >
           <div className={`${BLOCK}__header`}>
             <div className={`${BLOCK}__logo`}>
@@ -447,7 +451,9 @@ export default class CookieKitPopup extends React.PureComponent {
                 <button
                   className={`xb-cookie-kit__button ${BLOCK}__link`}
                   type="button"
-                  onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures)}
+                  onClick={() => window.open(
+                    `${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures,
+                  )}
                 >
                   {renderText("CookieKit.LoginLink", selectedLocale)}
                 </button>
@@ -487,9 +493,13 @@ export default class CookieKitPopup extends React.PureComponent {
       );
     } else {
       layout = (
+        // eslint-disable-next-line max-len
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
         <div
           className={BLOCK}
           onClick={() => this.setState({ isCountrySelectShown: false, isLocaleSelectShown: false })}
+          role="dialog"
+          tabIndex="-1"
         >
           <div className={`${BLOCK}__content`}>
             <div className={`${BLOCK}__text`}>
@@ -547,7 +557,9 @@ export default class CookieKitPopup extends React.PureComponent {
                         <button
                           className={`xb-cookie-kit__button ${BLOCK}__link`}
                           type="button"
-                          onClick={() => window.open(`${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures)}
+                          onClick={() => window.open(
+                            `${xbOrigin}${links.login}?targetUrl=${targetUrl}`, "", loginModalFeatures,
+                          )}
                         >
                           {renderText("CookieKit.LoginLink", selectedLocale)}
                         </button>
