@@ -12,7 +12,6 @@ phases:
     commands:
       - echo Bootstrap source code
       - npm install
-      - npm run bootstrap
 
   build:
     commands:
