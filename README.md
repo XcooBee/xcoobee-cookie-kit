@@ -30,9 +30,8 @@ This is where you should look if you want to contribute and make changes and sub
 Please run the following commands from the root project folder
 
 ```
-yarn --no-lockfile
-
-npx lerna bootstrap -- --no-lockfile
+npm install
+npm run bootstrap
 ```
 
 
