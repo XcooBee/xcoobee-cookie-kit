@@ -105,6 +105,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: PropTypes.bool,
     defaultCountryCode: PropTypes.oneOf([...countryCodes, DEFAULT_COUNTRY_CODE]),
     detectCountry: PropTypes.bool,
+    displayDoNotSell: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
     displayOnlyForEU: PropTypes.bool,
     expirationTime: PropTypes.number,
@@ -139,6 +140,7 @@ export default class CookieKitContainer extends React.PureComponent {
     cssAutoLoad: true,
     defaultCountryCode: DEFAULT_COUNTRY_CODE,
     detectCountry: false,
+    displayDoNotSell: false,
     displayFingerprint: false,
     displayOnlyForEU: false,
     expirationTime: 0,
@@ -303,7 +305,7 @@ export default class CookieKitContainer extends React.PureComponent {
     this.setState({ consentStatus: nextConsentStatus });
   };
 
-  handleCookieConsentsChange = (consentSettings, fingerprintConsent) => {
+  handleCookieConsentsChange = (consentSettings, doNotSellConsent, fingerprintConsent) => {
     // console.log("CookieKitContainer#handleCookieConsentsChange");
     const { campaignReference, loginStatus } = this.state;
 
@@ -311,6 +313,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: !!consentSettings[type],
     }));
+    cookieConsents.push({ type: "donotsell", checked: doNotSellConsent });
     cookieConsents.push({ type: "fingerprint", checked: fingerprintConsent });
 
     this.setCookieConsents("usersSaved", cookieConsents);
@@ -397,6 +400,7 @@ export default class CookieKitContainer extends React.PureComponent {
       type,
       checked: checkByDefaultTypes.includes(type),
     }));
+    hostsDefaultCookieConsents.push({ type: "donotsell", checked: false });
     hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });
     // If we were unable to resolve the user's country code, then assume it is in
     // the EU.
@@ -413,6 +417,10 @@ export default class CookieKitContainer extends React.PureComponent {
   callCallbacks(cookieConsents) {
     // console.log("CookieKitContainer#callCallbacks");
     const { cookieHandler, targetUrl } = this.props;
+
+    // type ConsentSettings = {
+    //   [ConsentType]: bool,
+    // }
 
     const consentSettings = {};
     cookieConsents.forEach((cookieConsent) => {
@@ -438,6 +446,7 @@ export default class CookieKitContainer extends React.PureComponent {
     // console.log("CookieKitContainer#render");
     const {
       companyLogo,
+      displayDoNotSell,
       displayFingerprint,
       expirationTime,
       hideBrandTag,
@@ -466,9 +475,13 @@ export default class CookieKitContainer extends React.PureComponent {
     const defaultPositionIndex = theme === "overlay" ? 4 : 0;
     const redefinedPosition = positions.includes(position) ? position : positions[defaultPositionIndex];
 
-    const cookies = cookieConsents ? cookieConsents.filter(consent => consent.type !== "fingerprint") : null;
+    const cookies = cookieConsents
+      ? cookieConsents.filter(consent => consent.type !== "fingerprint" && consent.type !== "donotsell")
+      : null;
+    const donotsell = cookieConsents ? cookieConsents.find(consent => consent.type === "donotsell") : null;
     const fingerprint = cookieConsents ? cookieConsents.find(consent => consent.type === "fingerprint") : null;
 
+    const doNotSellConsent = donotsell ? donotsell.checked : false;
     const fingerprintConsent = fingerprint ? fingerprint.checked : false;
 
     // console.log("initializing:", initializing);
@@ -485,7 +498,9 @@ export default class CookieKitContainer extends React.PureComponent {
               cookieConsents={cookies}
               countryCode={countryCode}
               display={display}
+              displayDoNotSell={displayDoNotSell}
               displayFingerprint={displayFingerprint}
+              doNotSellConsent={doNotSellConsent}
               expirationTime={expirationTime}
               fingerprintConsent={fingerprintConsent}
               hideBrandTag={hideBrandTag}

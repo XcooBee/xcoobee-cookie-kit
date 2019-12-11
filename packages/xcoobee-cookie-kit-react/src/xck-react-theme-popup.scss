@@ -518,7 +518,7 @@ $duration: .2s;
       }
     }
 
-    &__fingerprint {
+    &__consent {
       background: #fdb81a;
       margin: 8px auto;
       border-radius: 10px;
@@ -526,7 +526,7 @@ $duration: .2s;
       color: #fff;
       display: flex;
 
-      > .xb-cookie-kit-popup__fingerprint-label {
+      > .xb-cookie-kit-popup__consent-label {
         margin-top: 2px;
         margin-left: 8px;
         font-size: 14px;
@@ -537,6 +537,11 @@ $duration: .2s;
         padding: 6px 6px 2px;
         margin: 4px auto;
       }
+    }
+
+    &__consents-container {
+      display: flex;
+      justify-content: space-around;
     }
 
     &__actions {
@@ -854,6 +859,7 @@ $duration: .2s;
       height: $checkbox-height * 1.2;
     }
   }
+
   @-webkit-keyframes dothatopcheck {
     0% {
       height: 0;
@@ -865,6 +871,7 @@ $duration: .2s;
       height: $checkbox-height * 1.2;
     }
   }
+
   @-moz-keyframes dothatopcheck {
     0% {
       height: 0;

@@ -584,6 +584,14 @@ You need to define your handler in JS. We are including a few helper functions t
       // remove advertising and marketing and tracking cookies here
       // ...
     };
+
+    if (consentSettings.donotsell) {
+    } else {
+    };
+
+    if (consentSettings.fingerprint) {
+    } else {
+    };
   }
 ```
 

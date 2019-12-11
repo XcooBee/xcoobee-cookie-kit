@@ -110,6 +110,7 @@ const configFields = [
   "cssAutoLoad",
   "defaultCountryCode",
   "detectCountry",
+  "displayDoNotSell",
   "displayFingerprint",
   "displayOnlyForEU",
   "expirationTime",
