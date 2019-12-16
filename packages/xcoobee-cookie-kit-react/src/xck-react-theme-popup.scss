@@ -542,6 +542,11 @@ $duration: .2s;
     &__consents-container {
       display: flex;
       justify-content: space-around;
+
+
+      > * {
+        margin: 4px;
+      }
     }
 
     &__actions {
