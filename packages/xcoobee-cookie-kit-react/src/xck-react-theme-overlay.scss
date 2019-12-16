@@ -43,7 +43,19 @@ $duration: .2s;
     background: none;
   }
 
-  &.top, &.right_top {
+  &.top,
+  &.left_top,
+  &.right_top {
+
+    .xb-cookie-kit-overlay {
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.top,
+  &.right_top {
     top: 0;
     align-items: flex-start;
     justify-content: flex-end;
@@ -54,7 +66,19 @@ $duration: .2s;
     align-items: flex-start;
   }
 
-  &.bottom, &.right_bottom {
+  &.bottom,
+  &.left_bottom,
+  &.right_bottom {
+
+    .xb-cookie-kit-overlay {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.bottom,
+  &.right_bottom {
     bottom: 0;
     justify-content: flex-end;
   }
@@ -239,6 +263,7 @@ $duration: .2s;
   }
 
   .xb-cookie-kit-overlay {
+    position: fixed;
     opacity: 0.9;
     color: #3a3a3a;
     background: $primary-color;
