@@ -110,7 +110,11 @@ const webpackConfig = {
         target: `localhost:${devServerPort}`,
       },
     }),
-    isEnvDevelopment && new HtmlWebpackPlugin(),
+    isEnvDevelopment && new HtmlWebpackPlugin({
+      meta: {
+        viewport: "width=device-width, initial-scale=1",
+      },
+    }),
     isEnvDevelopment && new HtmlWebpackInlineSourcePlugin(),
     analyze && new BundleAnalyzerPlugin(),
   ].filter(Boolean),
