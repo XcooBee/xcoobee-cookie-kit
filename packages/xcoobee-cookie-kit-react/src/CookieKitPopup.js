@@ -606,88 +606,90 @@ export default class CookieKitPopup extends React.PureComponent {
                   )}
                 </div>
               </div>
-              <div className={`${BLOCK}__cookie-container`}>
-                <div className={`${BLOCK}__cookie-list`}>
-                  { cookieDefns.map(cookieDefn => (
-                    <div key={cookieDefn.type} className={`${BLOCK}__cookie`}>
-                      <div className={`${BLOCK}__checkbox-container`}>
-                        <input
-                          id={`xbCheckbox_${cookieDefn.id}`}
-                          type="checkbox"
-                          checked={consentSettings[cookieDefn.type]}
-                          onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
-                        />
-                        <label
-                          htmlFor={`xbCheckbox_${cookieDefn.id}`}
-                          className={`${BLOCK}__checkbox`}
-                        />
-                      </div>
-                      <div
-                        className={`${BLOCK}__cookie-title`}
-                        title={renderText("CookieKit.MoreInfo", selectedLocale)}
-                      >
-                        <a
-                          className={`${BLOCK}__cookie-title-link`}
-                          href={cookieDefn.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+              <div className={`${BLOCK}__consents-container`}>
+                <div className={`${BLOCK}__cookie-container`}>
+                  <div className={`${BLOCK}__cookie-list`}>
+                    { cookieDefns.map(cookieDefn => (
+                      <div key={cookieDefn.type} className={`${BLOCK}__cookie`}>
+                        <div className={`${BLOCK}__checkbox-container`}>
+                          <input
+                            id={`xbCheckbox_${cookieDefn.id}`}
+                            type="checkbox"
+                            checked={consentSettings[cookieDefn.type]}
+                            onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
+                          />
+                          <label
+                            htmlFor={`xbCheckbox_${cookieDefn.id}`}
+                            className={`${BLOCK}__checkbox`}
+                          />
+                        </div>
+                        <div
+                          className={`${BLOCK}__cookie-title`}
+                          title={renderText("CookieKit.MoreInfo", selectedLocale)}
                         >
-                          {renderText(cookieDefn.localeKey, selectedLocale)}
-                        </a>
+                          <a
+                            className={`${BLOCK}__cookie-title-link`}
+                            href={cookieDefn.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {renderText(cookieDefn.localeKey, selectedLocale)}
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  { cookieDefns.length > 1 && (
+                    <button
+                      type="button"
+                      className={`xb-cookie-kit__button ${BLOCK}__check-all`}
+                      onClick={this.handleCheckAll}
+                    >
+                      {isAllChecked
+                        ? renderText("CookieKit.UncheckButton", selectedLocale)
+                        : renderText("CookieKit.CheckAllButton", selectedLocale)}
+                    </button>
+                  )}
                 </div>
-                { cookieDefns.length > 1 && (
-                  <button
-                    type="button"
-                    className={`xb-cookie-kit__button ${BLOCK}__check-all`}
-                    onClick={this.handleCheckAll}
-                  >
-                    {isAllChecked
-                      ? renderText("CookieKit.UncheckButton", selectedLocale)
-                      : renderText("CookieKit.CheckAllButton", selectedLocale)}
-                  </button>
+                { displayFingerprint && (
+                  <div className={`${BLOCK}__fingerprint`}>
+                    <div className={`${BLOCK}__fingerprint-checkbox`}>
+                      <input
+                        id="xbCheckbox_fingerprint"
+                        type="checkbox"
+                        checked={fingerprintConsent}
+                        onChange={this.handleFingerprintCheck}
+                      />
+                      <label
+                        htmlFor="xbCheckbox_fingerprint"
+                        className={`${BLOCK}__checkbox`}
+                      />
+                    </div>
+                    <div className={`${BLOCK}__fingerprint-label`}>
+                      {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                    </div>
+                  </div>
+                )}
+                { displayDoNotSell && (
+                  <div className={`${BLOCK}__donotsell`}>
+                    <div className={`${BLOCK}__donotsell-checkbox`}>
+                      <input
+                        id="xbCheckbox_donotsell"
+                        type="checkbox"
+                        checked={doNotSellConsent}
+                        onChange={this.handleDoNotSellCheck}
+                      />
+                      <label
+                        htmlFor="xbCheckbox_donotsell"
+                        className={`${BLOCK}__checkbox`}
+                      />
+                    </div>
+                    <div className={`${BLOCK}__donotsell-label`}>
+                      {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                    </div>
+                  </div>
                 )}
               </div>
-              { displayFingerprint && (
-                <div className={`${BLOCK}__fingerprint`}>
-                  <div className={`${BLOCK}__fingerprint-checkbox`}>
-                    <input
-                      id="xbCheckbox_fingerprint"
-                      type="checkbox"
-                      checked={fingerprintConsent}
-                      onChange={this.handleFingerprintCheck}
-                    />
-                    <label
-                      htmlFor="xbCheckbox_fingerprint"
-                      className={`${BLOCK}__checkbox`}
-                    />
-                  </div>
-                  <div className={`${BLOCK}__fingerprint-label`}>
-                    {renderText("CookieKit.FingerprintLabel", selectedLocale)}
-                  </div>
-                </div>
-              )}
-              { displayDoNotSell && (
-                <div className={`${BLOCK}__donotsell`}>
-                  <div className={`${BLOCK}__donotsell-checkbox`}>
-                    <input
-                      id="xbCheckbox_donotsell"
-                      type="checkbox"
-                      checked={doNotSellConsent}
-                      onChange={this.handleDoNotSellCheck}
-                    />
-                    <label
-                      htmlFor="xbCheckbox_donotsell"
-                      className={`${BLOCK}__checkbox`}
-                    />
-                  </div>
-                  <div className={`${BLOCK}__donotsell-label`}>
-                    {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
-                  </div>
-                </div>
-              )}
               <div className={`${BLOCK}__button-container`}>
                 <button
                   type="button"

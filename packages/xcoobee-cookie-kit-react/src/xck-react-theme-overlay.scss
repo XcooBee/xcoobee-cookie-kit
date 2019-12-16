@@ -282,23 +282,25 @@ $duration: .2s;
     &__main {
       display: flex;
       margin-top: 12px;
+      flex-wrap: wrap;
+
+      > * {
+        margin: 0 4px;
+      }
     }
 
     &__links-container {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      min-width: 280px;
-      flex: 0.3;
+      justify-content: space-evenly;
     }
 
     &__links {
       display: flex;
       justify-content: space-around;
 
-      * {
+      > * {
         margin: 4px;
-        flex: 1;
       }
     }
 
@@ -306,9 +308,8 @@ $duration: .2s;
       display: flex;
       justify-content: space-around;
 
-      * {
+      > * {
         margin: 4px;
-        flex: 1;
       }
     }
 
@@ -346,17 +347,30 @@ $duration: .2s;
       }
     }
 
+    &__consents-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      flex: 1;
+
+      > * {
+        margin: 4px;
+      }
+    }
+
     &__cookie-container {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      min-width: 280px;
     }
 
     &__cookie-list {
       display: flex;
       justify-content: space-around;
       align-items: center;
+
+      > * {
+        margin: 4px;
+      }
     }
 
     &__checkbox-container {
@@ -376,16 +390,18 @@ $duration: .2s;
       cursor: pointer;
     }
 
-    &__fingerprint {
-      padding: 0 16px;
-    }
+    // &__fingerprint {
+    //   padding: 0 16px;
+    // }
 
+    &__donotsell-checkbox,
     &__fingerprint-checkbox {
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
+    &__donotsell-label,
     &__fingerprint-label {
       text-align: center;
     }
@@ -406,8 +422,6 @@ $duration: .2s;
     &__button-container {
       display: flex;
       justify-content: center;
-      padding: 0 16px;
-      flex: 0.2;
     }
 
     &__button {
