@@ -111,17 +111,14 @@ $duration: .2s;
   }
 
   &__reset-button {
-    background: #fdb81a;
+    align-self: center;
+    background: $secondary-color;
     color: #fff;
     font-size: 12px;
-    padding: 3px;
+    padding: 8px;
     border-radius: 4px !important;
     margin-left: 5px;
     margin-top: 5px;
-
-    &:hover {
-      background: #fdb81a !important;
-    }
   }
 
   &__cookie-icon {
@@ -250,16 +247,6 @@ $duration: .2s;
         opacity: 0;
       }
     }
-  }
-
-  &__reset-button {
-    background: $secondary-color;
-    color: #fff;
-    font-size: 12px;
-    padding: 3px;
-    border-radius: 4px;
-    margin-left: 5px;
-    margin-top: 5px;
   }
 
   .xb-cookie-kit-overlay {

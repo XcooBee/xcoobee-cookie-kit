@@ -290,8 +290,7 @@ export default class CookieKit extends React.PureComponent {
 
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
 
-    const cache = cookieConsentsCache.get();
-    const renderResetButton = theme === "popup" && testMode && cache.cookieConsents;
+    const renderResetButton = testMode;
 
     return (
       isShown && (

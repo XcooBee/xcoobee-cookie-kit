@@ -88,10 +88,11 @@ $duration: .2s;
   }
 
   &__reset-button {
+    align-self: center;
     background: $secondary-color;
     color: #fff;
     font-size: 12px;
-    padding: 3px;
+    padding: 8px;
     border-radius: 4px !important;
     margin-left: 5px;
     margin-top: 5px;
