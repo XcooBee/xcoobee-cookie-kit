@@ -401,9 +401,12 @@ $duration: .2s;
       align-items: center;
     }
 
-    &__donotsell-label,
-    &__fingerprint-label {
+    &__consent-label {
       text-align: center;
+
+      &-link {
+        color: inherit;
+      }
     }
 
     &__check-all {

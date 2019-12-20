@@ -57,9 +57,11 @@ const localeKey = "xcoobeeLocale";
 const countryCodeKey = "xcoobeeCountryCode";
 
 const links = {
-  poweredBy: "https://www.xcoobee.com",
+  donotsell: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/do-not-sell-preference/",
+  fingerprinting: "https://www.xcoobee.com/docs/xcoobee-concepts/cookies/fingerprinting/",
   login: "/auth/minlogin",
   manage: "/user/consentCenter/cookies",
+  poweredBy: "https://www.xcoobee.com",
 };
 
 const animations = {

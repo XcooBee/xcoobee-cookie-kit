@@ -526,10 +526,14 @@ $duration: .2s;
       color: #fff;
       display: flex;
 
-      > .xb-cookie-kit-popup__consent-label {
+      .xb-cookie-kit-popup__consent-label {
         margin-top: 2px;
         margin-left: 8px;
         font-size: 14px;
+
+        &-link {
+          color: inherit;
+        }
       }
 
       @media (max-width: 500px) {

@@ -415,8 +415,18 @@ export default class CookieKitPopup extends React.PureComponent {
                         className={`${BLOCK}__checkbox`}
                       />
                     </div>
-                    <div className={`${BLOCK}__consent-label`}>
-                      {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                    <div
+                      className={`${BLOCK}__consent-label`}
+                      title={renderText("CookieKit.MoreInfo", selectedLocale)}
+                    >
+                      <a
+                        className={`${BLOCK}__consent-label-link`}
+                        href={links.fingerprinting}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                      </a>
                     </div>
                   </div>
                 )}
@@ -434,8 +444,18 @@ export default class CookieKitPopup extends React.PureComponent {
                         className={`${BLOCK}__checkbox`}
                       />
                     </div>
-                    <div className={`${BLOCK}__consent-label`}>
-                      {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                    <div
+                      className={`${BLOCK}__consent-label`}
+                      title={renderText("CookieKit.MoreInfo", selectedLocale)}
+                    >
+                      <a
+                        className={`${BLOCK}__consent-label-link`}
+                        href={links.donotsell}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                      </a>
                     </div>
                   </div>
                 )}
@@ -665,8 +685,15 @@ export default class CookieKitPopup extends React.PureComponent {
                         className={`${BLOCK}__checkbox`}
                       />
                     </div>
-                    <div className={`${BLOCK}__fingerprint-label`}>
-                      {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                    <div className={`${BLOCK}__consent-label`}>
+                      <a
+                        className={`${BLOCK}__consent-label-link`}
+                        href={links.donotsell}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                      </a>
                     </div>
                   </div>
                 )}
@@ -684,8 +711,15 @@ export default class CookieKitPopup extends React.PureComponent {
                         className={`${BLOCK}__checkbox`}
                       />
                     </div>
-                    <div className={`${BLOCK}__donotsell-label`}>
-                      {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                    <div className={`${BLOCK}__consent-label`}>
+                      <a
+                        className={`${BLOCK}__consent-label-link`}
+                        href={links.donotsell}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                      </a>
                     </div>
                   </div>
                 )}
