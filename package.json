@@ -13,6 +13,7 @@
     "build": "lerna run build",
     "postinstall": "npm run bootstrap",
     "lint": "lerna run lint",
+    "reinstall": "lerna clean --yes && npm install && lerna bootstrap --no-ci",
     "test": "lerna run test",
     "web:build": "lerna run build --scope xcoobee-cookie-kit-web",
     "web:clear": "lerna run clear --scope xcoobee-cookie-kit-web",
