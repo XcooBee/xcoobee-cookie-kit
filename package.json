@@ -1,22 +1,23 @@
 {
   "name": "root",
   "private": true,
-  "scripts": {
-    "bootstrap": "lerna bootstrap --no-ci",
-    "build": "lerna run build",
-    "postinstall": "npm run bootstrap",
-    "lint": "lerna run lint",
-    "test": "lerna run test",
-    "web:build": "lerna run build --scope xcoobee-cookie-kit-web",
-    "web:clear": "lerna run clear --scope xcoobee-cookie-kit-web",
-    "web:start": "lerna run dev --scope xcoobee-cookie-kit-web",
-    "web:buildbeta": "lerna run build:beta --scope xcoobee-cookie-kit-web"
-  },
   "dependencies": {
     "react": "^16.3.2",
     "react-dom": "^16.3.3"
   },
   "devDependencies": {
     "lerna": "^3.1.4"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap --no-ci",
+    "build": "lerna run build",
+    "postinstall": "npm run bootstrap",
+    "lint": "lerna run lint",
+    "reinstall": "lerna clean --yes && npm install && lerna bootstrap --no-ci",
+    "test": "lerna run test",
+    "web:build": "lerna run build --scope xcoobee-cookie-kit-web",
+    "web:clear": "lerna run clear --scope xcoobee-cookie-kit-web",
+    "web:start": "lerna run dev --scope xcoobee-cookie-kit-web",
+    "web:buildbeta": "lerna run build:beta --scope xcoobee-cookie-kit-web"
   }
 }

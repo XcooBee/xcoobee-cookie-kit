@@ -21,15 +21,13 @@
     "src/"
   ],
   "main": "dist/index.js",
-  "scripts": {
-    "build": "npm run clean && npm run build-theme-popup-styles && npm run build-theme-overlay-styles",
-    "build-theme-popup-styles": "node-sass src/xck-react-theme-popup.scss dist/xck-react-theme-popup.css && babel src --out-dir dist --ignore src/xck-react-theme-popup.scss --copy-files && rimraf dist/xck-react-theme-popup.scss",
-    "build-theme-overlay-styles": "node-sass src/xck-react-theme-overlay.scss dist/xck-react-theme-overlay.css && babel src --out-dir dist --ignore src/xck-react-theme-overlay.scss --copy-files && rimraf dist/xck-react-theme-overlay.scss",
-    "clean": "rimraf dist/",
-    "clear": "node scripts/clear.js",
-    "lint": "eslint src",
-    "solanobuild": "echo 'what should this be?'",
-    "test": "node scripts/test-not-implemented.js"
+  "bugs": {
+    "url": "https://github.com/XcooBee/xcoobee-cookie-kit/issues"
+  },
+  "homepage": "https://www.xcoobee.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
   },
   "dependencies": {
     "classnames": "^2.2.6",
@@ -62,12 +60,14 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.3"
   },
-  "bugs": {
-    "url": "https://github.com/XcooBee/xcoobee-cookie-kit/issues"
-  },
-  "homepage": "https://www.xcoobee.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
+  "scripts": {
+    "build": "npm run clean && npm run build-theme-popup-styles && npm run build-theme-overlay-styles",
+    "build-theme-popup-styles": "node-sass src/xck-react-theme-popup.scss dist/xck-react-theme-popup.css && babel src --out-dir dist --ignore src/xck-react-theme-popup.scss --copy-files && rimraf dist/xck-react-theme-popup.scss",
+    "build-theme-overlay-styles": "node-sass src/xck-react-theme-overlay.scss dist/xck-react-theme-overlay.css && babel src --out-dir dist --ignore src/xck-react-theme-overlay.scss --copy-files && rimraf dist/xck-react-theme-overlay.scss",
+    "clean": "rimraf dist/",
+    "clear": "node scripts/clear.js",
+    "lint": "eslint src",
+    "solanobuild": "echo 'what should this be?'",
+    "test": "node scripts/test-not-implemented.js"
   }
 }

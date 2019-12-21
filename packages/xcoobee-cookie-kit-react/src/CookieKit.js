@@ -48,7 +48,9 @@ export default class CookieKit extends React.PureComponent {
     consentStatus: PropTypes.oneOf(Object.values(consentStatuses)).isRequired,
     cookieConsents: PropTypes.arrayOf(CookieConsentShape.isRequired).isRequired,
     display: PropTypes.bool,
+    displayDoNotSell: PropTypes.bool,
     displayFingerprint: PropTypes.bool,
+    doNotSellConsent: PropTypes.bool,
     expirationTime: PropTypes.number,
     fingerprintConsent: PropTypes.bool,
     hideBrandTag: PropTypes.bool.isRequired,
@@ -80,7 +82,9 @@ export default class CookieKit extends React.PureComponent {
     campaignReference: null,
     companyLogo: null,
     display: true,
+    displayDoNotSell: false,
     displayFingerprint: false,
+    doNotSellConsent: false,
     expirationTime: 0,
     fingerprintConsent: false,
     isAnimated: true,
@@ -180,7 +184,7 @@ export default class CookieKit extends React.PureComponent {
     }, 1);
   };
 
-  handlePopupSubmit = (nextConsentSettings, fingerprintConsent) => {
+  handlePopupSubmit = (nextConsentSettings, doNotSellConsent, fingerprintConsent) => {
     // console.log("CookieKit#handlePopupSubmit");
     // console.dir(nextConsentSettings);
     const {
@@ -188,7 +192,7 @@ export default class CookieKit extends React.PureComponent {
       onCookieConsentsChange,
     } = this.props;
 
-    onCookieConsentsChange(nextConsentSettings, fingerprintConsent);
+    onCookieConsentsChange(nextConsentSettings, doNotSellConsent, fingerprintConsent);
 
     this.clearTimers();
     this.setState({ isOpen: false });
@@ -264,7 +268,9 @@ export default class CookieKit extends React.PureComponent {
       companyLogo,
       consentsSource,
       cookieConsents,
+      doNotSellConsent,
       display,
+      displayDoNotSell,
       displayFingerprint,
       fingerprintConsent,
       hideBrandTag,
@@ -283,10 +289,8 @@ export default class CookieKit extends React.PureComponent {
     const animation = animated && isAnimated ? animations[consentsSource] : animations.unknown;
 
     const renderPopup = isOpen || (consentsSource === "unknown" && !hasClosed);
-    const renderButton = !renderPopup;
 
-    const cache = cookieConsentsCache.get();
-    const renderResetButton = theme === "popup" && testMode && cache.cookieConsents;
+    const renderResetButton = testMode;
 
     return (
       isShown && (
@@ -307,44 +311,47 @@ export default class CookieKit extends React.PureComponent {
             )
           }
         >
-          {renderPopup && (
-            <CookieKitPopup
-              companyLogo={companyLogo}
-              cookieConsents={cookieConsents}
-              displayFingerprint={displayFingerprint}
-              fingerprintConsent={fingerprintConsent}
-              hideBrandTag={hideBrandTag}
-              loginStatus={loginStatus}
-              isConnected={!!campaignReference}
-              onClose={this.handlePopupClose}
-              onLogin={this.handlePopupLogin}
-              onSubmit={this.handlePopupSubmit}
-              privacyUrl={privacyUrl}
-              requestDataTypes={requestDataTypes}
-              termsUrl={termsUrl}
-              textMessage={textMessage}
-              theme={theme}
-            />
-          )}
-          {renderButton && (
-            <button
-              type="button"
-              className={`${BLOCK}__button ${BLOCK}__cookie-button`}
-              onClick={this.handleOpen}
-            >
-              <div
-                className={
-                  cx(
-                    `${BLOCK}__cookie-icon`,
-                    `${BLOCK}__cookie-icon--${animation}`,
-                    {
-                      [`${BLOCK}__pulsing`]: pulsing,
-                    },
-                  )
-                }
+          {renderPopup
+            ? (
+              <CookieKitPopup
+                companyLogo={companyLogo}
+                cookieConsents={cookieConsents}
+                displayDoNotSell={displayDoNotSell}
+                displayFingerprint={displayFingerprint}
+                doNotSellConsent={doNotSellConsent}
+                fingerprintConsent={fingerprintConsent}
+                hideBrandTag={hideBrandTag}
+                loginStatus={loginStatus}
+                isConnected={!!campaignReference}
+                onClose={this.handlePopupClose}
+                onLogin={this.handlePopupLogin}
+                onSubmit={this.handlePopupSubmit}
+                privacyUrl={privacyUrl}
+                requestDataTypes={requestDataTypes}
+                termsUrl={termsUrl}
+                textMessage={textMessage}
+                theme={theme}
               />
-            </button>
-          )}
+            )
+            : (
+              <button
+                type="button"
+                className={`${BLOCK}__button ${BLOCK}__cookie-button`}
+                onClick={this.handleOpen}
+              >
+                <div
+                  className={
+                    cx(
+                      `${BLOCK}__cookie-icon`,
+                      `${BLOCK}__cookie-icon--${animation}`,
+                      {
+                        [`${BLOCK}__pulsing`]: pulsing,
+                      },
+                    )
+                  }
+                />
+              </button>
+            )}
           {renderResetButton && (<ResetButton />)}
         </div>
       )

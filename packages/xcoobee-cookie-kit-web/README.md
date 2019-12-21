@@ -290,7 +290,7 @@ XCK will call your JavaScript handler with a JavaScript object. The user prefere
 
 You can find [an example of an SPA](https://github.com/XcooBee/example-spa-xck-app) on github.
 
-Here is and example object.
+Here is an example object.
 
 ```json
 {
@@ -583,6 +583,14 @@ You need to define your handler in JS. We are including a few helper functions t
     } else {
       // remove advertising and marketing and tracking cookies here
       // ...
+    };
+
+    if (consentSettings.donotsell) {
+    } else {
+    };
+
+    if (consentSettings.fingerprint) {
+    } else {
     };
   }
 ```

@@ -32,7 +32,6 @@ $duration: .2s;
   z-index: 100000;
   width: 100%;
   transition: opacity 1s ease-out;
-  bottom: 0;
   line-height: 1.5;
 
   .button, button {
@@ -43,7 +42,19 @@ $duration: .2s;
     background: none;
   }
 
-  &.top, &.right_top {
+  &.top,
+  &.left_top,
+  &.right_top {
+
+    .xb-cookie-kit-overlay {
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.top,
+  &.right_top {
     top: 0;
     align-items: flex-start;
     justify-content: flex-end;
@@ -54,7 +65,19 @@ $duration: .2s;
     align-items: flex-start;
   }
 
-  &.bottom, &.right_bottom {
+  &.bottom,
+  &.left_bottom,
+  &.right_bottom {
+
+    .xb-cookie-kit-overlay {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.bottom,
+  &.right_bottom {
     bottom: 0;
     justify-content: flex-end;
   }
@@ -87,17 +110,14 @@ $duration: .2s;
   }
 
   &__reset-button {
-    background: #fdb81a;
+    align-self: center;
+    background: $secondary-color;
     color: #fff;
     font-size: 12px;
-    padding: 3px;
+    padding: 8px;
     border-radius: 4px !important;
     margin-left: 5px;
     margin-top: 5px;
-
-    &:hover {
-      background: #fdb81a !important;
-    }
   }
 
   &__cookie-icon {
@@ -228,17 +248,8 @@ $duration: .2s;
     }
   }
 
-  &__reset-button {
-    background: $secondary-color;
-    color: #fff;
-    font-size: 12px;
-    padding: 3px;
-    border-radius: 4px;
-    margin-left: 5px;
-    margin-top: 5px;
-  }
-
   .xb-cookie-kit-overlay {
+    position: fixed;
     opacity: 0.9;
     color: #3a3a3a;
     background: $primary-color;
@@ -257,23 +268,25 @@ $duration: .2s;
     &__main {
       display: flex;
       margin-top: 12px;
+      flex-wrap: wrap;
+
+      > * {
+        margin: 0 4px;
+      }
     }
 
     &__links-container {
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      min-width: 280px;
-      flex: 0.3;
+      justify-content: space-evenly;
     }
 
     &__links {
       display: flex;
       justify-content: space-around;
 
-      * {
+      > * {
         margin: 4px;
-        flex: 1;
       }
     }
 
@@ -281,9 +294,8 @@ $duration: .2s;
       display: flex;
       justify-content: space-around;
 
-      * {
+      > * {
         margin: 4px;
-        flex: 1;
       }
     }
 
@@ -321,17 +333,30 @@ $duration: .2s;
       }
     }
 
+    &__consents-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      flex: 1;
+
+      > * {
+        margin: 4px;
+      }
+    }
+
     &__cookie-container {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      min-width: 280px;
     }
 
     &__cookie-list {
       display: flex;
       justify-content: space-around;
       align-items: center;
+
+      > * {
+        margin: 4px;
+      }
     }
 
     &__checkbox-container {
@@ -351,18 +376,23 @@ $duration: .2s;
       cursor: pointer;
     }
 
-    &__fingerprint {
-      padding: 0 16px;
-    }
+    // &__fingerprint {
+    //   padding: 0 16px;
+    // }
 
+    &__donotsell-checkbox,
     &__fingerprint-checkbox {
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    &__fingerprint-label {
+    &__consent-label {
       text-align: center;
+
+      &-link {
+        color: inherit;
+      }
     }
 
     &__check-all {
@@ -381,8 +411,6 @@ $duration: .2s;
     &__button-container {
       display: flex;
       justify-content: center;
-      padding: 0 16px;
-      flex: 0.2;
     }
 
     &__button {

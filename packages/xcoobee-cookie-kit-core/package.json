@@ -20,13 +20,13 @@
     "src/"
   ],
   "main": "dist/index.js",
-  "scripts": {
-    "build": "npm run clean && babel src --out-dir dist --copy-files",
-    "clean": "rimraf dist/",
-    "clear": "node scripts/clear.js",
-    "lint": "eslint src",
-    "solanobuild": "echo 'what should this be?'",
-    "test": "node scripts/test-not-implemented.js"
+  "bugs": {
+    "url": "https://github.com/XcooBee/xcoobee-cookie-kit/issues"
+  },
+  "homepage": "https://www.xcoobee.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
   },
   "dependencies": {
     "graphql": "^14.0.2",
@@ -50,12 +50,12 @@
     "fs-extra": "^7.0.1",
     "rimraf": "^2.6.2"
   },
-  "bugs": {
-    "url": "https://github.com/XcooBee/xcoobee-cookie-kit/issues"
-  },
-  "homepage": "https://www.xcoobee.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
+  "scripts": {
+    "build": "npm run clean && babel src --out-dir dist --copy-files",
+    "clean": "rimraf dist/",
+    "clear": "node scripts/clear.js",
+    "lint": "eslint src",
+    "solanobuild": "echo 'what should this be?'",
+    "test": "node scripts/test-not-implemented.js"
   }
 }
