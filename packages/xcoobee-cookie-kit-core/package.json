@@ -1,6 +1,6 @@
 {
   "name": "xcoobee-cookie-kit-core",
-  "version": "1.0.16",
+  "version": "1.0.18",
   "description": "GDPR / CCPA Easy Cookie and Fingerprint Consent Management for Websites",
   "keywords": [
     "consent",
@@ -54,8 +54,7 @@
     "build": "npm run clean && babel src --out-dir dist --copy-files",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "lint": "eslint src",
-    "solanobuild": "echo 'what should this be?'",
+    "lint": "eslint src",    
     "test": "node scripts/test-not-implemented.js"
   }
 }
