@@ -17,7 +17,7 @@ if (fs.existsSync(checkPath)) {
     console.log(files[item]);
   }
 } else {
-  console.log("NO node modules. `yarn` must have failed");
+  console.log("NO node_modules. `npm install` or `npm run bootstrap` must have failed.");
 
   console.log(__dirname);
 

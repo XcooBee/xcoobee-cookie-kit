@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import CookieKitContainer from "react-cookie-kit/src";
 import {
   consentStatuses,
   configFields,
@@ -7,7 +8,6 @@ import {
   defaultConfig,
   requiredFields,
 } from "xcoobee-cookie-kit-core/src/configs";
-import CookieKitContainer from "react-cookie-kit/src";
 
 function checkRequiredFields(config) {
   const errors = [];
@@ -35,7 +35,7 @@ function checkRequiredFields(config) {
   return true;
 }
 
-class CookitKitInitializer {
+class CookieKitInitializer {
   _compRef = React.createRef();
 
   _config = {
@@ -90,6 +90,7 @@ class CookitKitInitializer {
     return consentSettings || {};
   }
 
+  // eslint-disable-next-line class-methods-use-this
   setManagedCookie(category, name, value, days) {
     if (!category || !name || !value) {
       throw Error("Please provide all required parameters: category, name, value.");
@@ -151,5 +152,5 @@ if (!window.XcooBee) {
   window.XcooBee = {};
 }
 if (!window.XcooBee.kit) {
-  window.XcooBee.kit = new CookitKitInitializer();
+  window.XcooBee.kit = new CookieKitInitializer();
 }
