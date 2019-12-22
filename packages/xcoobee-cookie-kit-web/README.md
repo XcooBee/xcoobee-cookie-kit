@@ -778,6 +778,18 @@ detectCountry: true
 
 This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.
 
+### displayDoNotSell 
+
+The CCPA “Do Not Sell My Personal Information” rule gives those based in California the right to tell businesses not to sell their personal data.
+XcooBee has included the option of users to opt out of selling their personal information to help websites to comply easily with the requirement to make the option available.
+
+Users are presented with this option upon first visit and can pull this up from the cookie preferences on subsequent visits. A simple tick on the check-mark to indicate their preference is sufficient. The preference is then transmitted to cookie handler script or backend. You can then mark the user as having opted out to the CCPA "Do Not Sell" consent.
+
+Because it is available from Cookie preferences, visitors can access this from any page of the site and make changes at any time without needing an account or navigating away from the page they are visiting.
+
+### displayFingerprint
+
+You can ask the user for explicit permission to use a browser fingerprint. This allows you to process the response in the same manner as cookies via Cookie handler script or your backend. 
 
 ### expirationTime `integer`
 
@@ -1054,8 +1066,10 @@ Here is an example of parameters and values types for the initialization:
     requestDataTypes: <Array>[application|usage|statistics|advertising],
     targetUrl: <String>,
     termsUrl: <String>,
-    testMode: <Boolean>,
-    textMessage: <String>, <Object>
+    testMode: <Boolean>,    
+    textMessage: <String>, <Object>,
+    displayFingerprint: <Boolean>, 
+    displayDoNotSell: <Boolean>
   });
 
 </script>
