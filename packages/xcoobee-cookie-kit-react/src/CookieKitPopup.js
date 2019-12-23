@@ -148,22 +148,32 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleCheckAll = () => {
     // console.log('CookieKitPopup#handleCheckAll');
+    const { displayDoNotSell, displayFingerprint } = this.props;
+
     const { consentSettings } = this.state;
 
-    const isAllChecked = Object.values(consentSettings).every(checked => checked);
+    const isAllConsentsChecked = this.areAllConsentsChecked();
 
-    if (isAllChecked) {
+    if (isAllConsentsChecked) {
       const noneChecked = {};
       Object.keys(consentSettings).forEach((cookieName) => {
         noneChecked[cookieName] = false;
       });
-      this.setState({ consentSettings: noneChecked });
+      this.setState({
+        consentSettings: noneChecked,
+        doNotSellConsent: false,
+        fingerprintConsent: false,
+      });
     } else {
       const allChecked = {};
       Object.keys(consentSettings).forEach((cookieName) => {
         allChecked[cookieName] = true;
       });
-      this.setState({ consentSettings: allChecked });
+      this.setState({
+        consentSettings: allChecked,
+        doNotSellConsent: displayDoNotSell,
+        fingerprintConsent: displayFingerprint,
+      });
     }
   };
 
@@ -196,6 +206,22 @@ export default class CookieKitPopup extends React.PureComponent {
       this.countryPicker.scrollTop = currentScrollPosition + 22;
     }
   };
+
+  areAllConsentsChecked() {
+    const { displayDoNotSell, displayFingerprint } = this.props;
+    const { consentSettings, doNotSellConsent, fingerprintConsent } = this.state;
+
+    const isAllCookiesChecked = Object.values(consentSettings).every(checked => checked);
+
+    let isAllConsentsChecked = isAllCookiesChecked;
+    if (isAllConsentsChecked && displayDoNotSell) {
+      isAllConsentsChecked = doNotSellConsent;
+    }
+    if (isAllConsentsChecked && displayFingerprint) {
+      isAllConsentsChecked = fingerprintConsent;
+    }
+    return isAllConsentsChecked;
+  }
 
   renderTextMessage(textMessage) {
     // console.log('CookieKitPopup#renderTextMessage');
@@ -246,7 +272,7 @@ export default class CookieKitPopup extends React.PureComponent {
     const appearsToBeLoggedIn = loginStatus;
     const targetUrl = encodeURIComponent(window.location.origin);
 
-    const isAllChecked = Object.values(consentSettings).every(checked => checked);
+    const isAllConsentsChecked = this.areAllConsentsChecked();
 
     const cookieDefns = allAvailCookieDefns.filter(
       defn => requestDataTypes.includes(defn.type),
@@ -254,6 +280,14 @@ export default class CookieKitPopup extends React.PureComponent {
 
     const BLOCK = theme === "popup" ? "xb-cookie-kit-popup" : "xb-cookie-kit-overlay";
     const loginModalFeatures = "left=400, top=100, width=500, height=600";
+
+    let consentCount = cookieDefns.length;
+    if (displayFingerprint) {
+      consentCount += 1;
+    }
+    if (displayDoNotSell) {
+      consentCount += 1;
+    }
 
     let layout;
 
@@ -371,11 +405,11 @@ export default class CookieKitPopup extends React.PureComponent {
                     />
                   </div>
                   <div
-                    className={`${BLOCK}__cookie-title`}
+                    className={`${BLOCK}__consent-label`}
                     title={renderText("CookieKit.MoreInfo", selectedLocale)}
                   >
                     <a
-                      className={`${BLOCK}__cookie-title-link`}
+                      className={`${BLOCK}__consent-label-link`}
                       href={cookieDefn.url}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -387,17 +421,6 @@ export default class CookieKitPopup extends React.PureComponent {
               </div>
             ))}
           </div>
-          { cookieDefns.length > 1 && (
-            <button
-              type="button"
-              className={`xb-cookie-kit__button ${BLOCK}__check-all`}
-              onClick={this.handleCheckAll}
-            >
-              {isAllChecked
-                ? renderText("CookieKit.UncheckButton", selectedLocale)
-                : renderText("CookieKit.CheckAllButton", selectedLocale)}
-            </button>
-          )}
           { displayFingerprint || displayDoNotSell
             ? (
               <div className={`${BLOCK}__consents-container`}>
@@ -463,6 +486,17 @@ export default class CookieKitPopup extends React.PureComponent {
             )
             : null
           }
+          { consentCount > 1 && (
+            <button
+              type="button"
+              className={`xb-cookie-kit__button ${BLOCK}__check-all`}
+              onClick={this.handleCheckAll}
+            >
+              {isAllConsentsChecked
+                ? renderText("CookieKit.UncheckButton", selectedLocale)
+                : renderText("CookieKit.CheckAllButton", selectedLocale)}
+            </button>
+          )}
           <div className={`${BLOCK}__actions`}>
             { !hideBrandTag && (
               <div className={`${BLOCK}__privacy-partner-container`}>
@@ -627,100 +661,100 @@ export default class CookieKitPopup extends React.PureComponent {
                 </div>
               </div>
               <div className={`${BLOCK}__consents-container`}>
-                <div className={`${BLOCK}__cookie-container`}>
-                  <div className={`${BLOCK}__cookie-list`}>
-                    { cookieDefns.map(cookieDefn => (
-                      <div key={cookieDefn.type} className={`${BLOCK}__cookie`}>
-                        <div className={`${BLOCK}__checkbox-container`}>
-                          <input
-                            id={`xbCheckbox_${cookieDefn.id}`}
-                            type="checkbox"
-                            checked={consentSettings[cookieDefn.type]}
-                            onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
-                          />
-                          <label
-                            htmlFor={`xbCheckbox_${cookieDefn.id}`}
-                            className={`${BLOCK}__checkbox`}
-                          />
-                        </div>
-                        <div
-                          className={`${BLOCK}__cookie-title`}
-                          title={renderText("CookieKit.MoreInfo", selectedLocale)}
-                        >
-                          <a
-                            className={`${BLOCK}__cookie-title-link`}
-                            href={cookieDefn.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {renderText(cookieDefn.localeKey, selectedLocale)}
-                          </a>
-                        </div>
+                <div className={`${BLOCK}__consents-container-body`}>
+                  { cookieDefns.map(cookieDefn => (
+                    <div key={cookieDefn.type} className={`${BLOCK}__consent ${BLOCK}__cookie`}>
+                      <div className={`${BLOCK}__checkbox-container`}>
+                        <input
+                          id={`xbCheckbox_${cookieDefn.id}`}
+                          type="checkbox"
+                          checked={consentSettings[cookieDefn.type]}
+                          onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
+                        />
+                        <label
+                          htmlFor={`xbCheckbox_${cookieDefn.id}`}
+                          className={`${BLOCK}__checkbox`}
+                        />
                       </div>
-                    ))}
-                  </div>
-                  { cookieDefns.length > 1 && (
+                      <div
+                        className={`${BLOCK}__consent-label`}
+                        title={renderText("CookieKit.MoreInfo", selectedLocale)}
+                      >
+                        <a
+                          className={`${BLOCK}__consent-label-link`}
+                          href={cookieDefn.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {renderText(cookieDefn.localeKey, selectedLocale)}
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                  { displayFingerprint && (
+                    <div className={`${BLOCK}__consent ${BLOCK}__fingerprint`}>
+                      <div className={`${BLOCK}__checkbox-container ${BLOCK}__fingerprint-checkbox`}>
+                        <input
+                          id="xbCheckbox_fingerprint"
+                          type="checkbox"
+                          checked={fingerprintConsent}
+                          onChange={this.handleFingerprintCheck}
+                        />
+                        <label
+                          htmlFor="xbCheckbox_fingerprint"
+                          className={`${BLOCK}__checkbox`}
+                        />
+                      </div>
+                      <div className={`${BLOCK}__consent-label`}>
+                        <a
+                          className={`${BLOCK}__consent-label-link`}
+                          href={links.donotsell}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {renderText("CookieKit.FingerprintLabel", selectedLocale)}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  { displayDoNotSell && (
+                    <div className={`${BLOCK}__consent ${BLOCK}__donotsell`}>
+                      <div className={`${BLOCK}__checkbox-container ${BLOCK}__donotsell-checkbox`}>
+                        <input
+                          id="xbCheckbox_donotsell"
+                          type="checkbox"
+                          checked={doNotSellConsent}
+                          onChange={this.handleDoNotSellCheck}
+                        />
+                        <label
+                          htmlFor="xbCheckbox_donotsell"
+                          className={`${BLOCK}__checkbox`}
+                        />
+                      </div>
+                      <div className={`${BLOCK}__consent-label`}>
+                        <a
+                          className={`${BLOCK}__consent-label-link`}
+                          href={links.donotsell}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                { consentCount > 1 && (
+                  <div className={`${BLOCK}__consents-container-foot`}>
                     <button
                       type="button"
                       className={`xb-cookie-kit__button ${BLOCK}__check-all`}
                       onClick={this.handleCheckAll}
                     >
-                      {isAllChecked
+                      {isAllConsentsChecked
                         ? renderText("CookieKit.UncheckButton", selectedLocale)
                         : renderText("CookieKit.CheckAllButton", selectedLocale)}
                     </button>
-                  )}
-                </div>
-                { displayFingerprint && (
-                  <div className={`${BLOCK}__fingerprint`}>
-                    <div className={`${BLOCK}__fingerprint-checkbox`}>
-                      <input
-                        id="xbCheckbox_fingerprint"
-                        type="checkbox"
-                        checked={fingerprintConsent}
-                        onChange={this.handleFingerprintCheck}
-                      />
-                      <label
-                        htmlFor="xbCheckbox_fingerprint"
-                        className={`${BLOCK}__checkbox`}
-                      />
-                    </div>
-                    <div className={`${BLOCK}__consent-label`}>
-                      <a
-                        className={`${BLOCK}__consent-label-link`}
-                        href={links.donotsell}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {renderText("CookieKit.FingerprintLabel", selectedLocale)}
-                      </a>
-                    </div>
-                  </div>
-                )}
-                { displayDoNotSell && (
-                  <div className={`${BLOCK}__donotsell`}>
-                    <div className={`${BLOCK}__donotsell-checkbox`}>
-                      <input
-                        id="xbCheckbox_donotsell"
-                        type="checkbox"
-                        checked={doNotSellConsent}
-                        onChange={this.handleDoNotSellCheck}
-                      />
-                      <label
-                        htmlFor="xbCheckbox_donotsell"
-                        className={`${BLOCK}__checkbox`}
-                      />
-                    </div>
-                    <div className={`${BLOCK}__consent-label`}>
-                      <a
-                        className={`${BLOCK}__consent-label-link`}
-                        href={links.donotsell}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {renderText("CookieKit.DoNotSellLabel", selectedLocale)}
-                      </a>
-                    </div>
                   </div>
                 )}
               </div>
