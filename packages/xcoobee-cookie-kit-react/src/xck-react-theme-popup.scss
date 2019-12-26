@@ -493,13 +493,11 @@ $duration: .2s;
         flex-direction: column;
         align-items: center;
 
-        .xb-cookie-kit-popup__cookie-title {
-          font-size: 14px;
+        .xb-cookie-kit-popup__consent-label {
           text-align: center;
 
-          .xb-cookie-kit-popup__cookie-title-link {
+          .xb-cookie-kit-popup__consent-label-link {
             color: inherit;
-            cursor: pointer;
           }
         }
       }
@@ -690,8 +688,7 @@ $duration: .2s;
         flex-direction: column;
         margin-top: 10px;
 
-        .xb-cookie-kit-popup__cookie-title {
-          font-size: 14px !important;
+        .xb-cookie-kit-popup__consent-label {
           margin-left: 8px;
         }
       }
