@@ -335,53 +335,31 @@ $duration: .2s;
 
     &__consents-container {
       display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
       justify-content: space-around;
       flex: 1;
 
-      > * {
+      &-body,
+      &-foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
         margin: 4px;
       }
     }
 
-    &__cookie-container {
-      display: flex;
-      flex-direction: column;
+    &__consent {
+      margin: 4px;
     }
 
     &__cookie-list {
       display: flex;
       justify-content: space-around;
       align-items: center;
-
-      > * {
-        margin: 4px;
-      }
     }
 
     &__checkbox-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    &__cookie-title {
-      font-size: 14px;
-      text-align: center;
-      color: $secondary-color;
-    }
-
-    &__cookie-title-link {
-      color: inherit;
-      cursor: pointer;
-    }
-
-    // &__fingerprint {
-    //   padding: 0 16px;
-    // }
-
-    &__donotsell-checkbox,
-    &__fingerprint-checkbox {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -397,9 +375,6 @@ $duration: .2s;
 
     &__check-all {
       margin-top: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       cursor: pointer;
       text-decoration: underline;
 
