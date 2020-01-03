@@ -9,9 +9,13 @@ https://www.npmjs.com/package/xcoobee-cookie-kit-web
 
 ## What is the Difference
 
-The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box.
+The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. The XCK can help you implement things correctly for GDPR and CCCPA (California Consumer Protection Act).
 
-Most current cookie GDPR notices for websites are just that: Overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR and European e-directive correctly.
+Most current cookie plugins are focusing on displaying notices for websites. In short, they are overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR, European e-directive, and CCPA correctly.
+
+For CCPA the Do-Not-Sell opt-out pattern has been intergrated and users can indicate to you at any your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed. 
+
+The overall scope of the XCK is broad. Please take a minute to review this documet and programming samples.
 
 
 ## Super Quick Start Example
