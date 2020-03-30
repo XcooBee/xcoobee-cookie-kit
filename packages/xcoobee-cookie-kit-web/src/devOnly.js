@@ -31,6 +31,7 @@ XcooBee.kit.setParam("cookieHandler", "theCookieHandler");
 
 XcooBee.kit.setParam("cssAutoLoad", true);
 
+// XcooBee.kit.setParam("displayOnlyForEU", false);
 XcooBee.kit.setParam("displayOnlyForEU", true);
 
 XcooBee.kit.setParam("expirationTime", 0);
