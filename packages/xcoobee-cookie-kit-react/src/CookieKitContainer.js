@@ -387,8 +387,8 @@ export default class CookieKitContainer extends React.PureComponent {
   fallBackToHostDefaults() {
     // console.log("CookieKitContainer#fallBackToHostDefaults");
     const {
-      checkByDefaultTypes,
       displayOnlyForEU,
+      requestDataTypes,
     } = this.props;
     const { countryCode, isConsentCached } = this.state;
 
@@ -398,7 +398,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     const hostsDefaultCookieConsents = cookieTypes.map(type => ({
       type,
-      checked: checkByDefaultTypes.includes(type),
+      checked: requestDataTypes.includes(type),
     }));
     hostsDefaultCookieConsents.push({ type: "donotsell", checked: false });
     hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });

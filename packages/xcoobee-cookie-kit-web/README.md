@@ -9,13 +9,13 @@ https://www.npmjs.com/package/xcoobee-cookie-kit-web
 
 ## What is the Difference
 
-The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. The XCK can help you implement things correctly for GDPR and CCCPA (California Consumer Protection Act).
+The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. The XCK can help you implement things correctly for GDPR and CCPA (California Consumer Protection Act).
 
 Most current cookie plugins are focusing on displaying notices for websites. In short, they are overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR, European e-directive, and CCPA correctly.
 
-For CCPA the Do-Not-Sell opt-out pattern has been intergrated and users can indicate to you at any your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed. 
+For CCPA the Do-Not-Sell opt-out pattern has been integrated and users can indicate to you at any your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed.
 
-The overall scope of the XCK is broad. Please take a minute to review this documet and programming samples.
+The overall scope of the XCK is broad. Please take a minute to review this document and programming samples.
 
 
 ## Super Quick Start Example
@@ -743,7 +743,7 @@ The following is a list of parameters the XCK can process:
 
 ### checkByDefaultTypes `array`
 
-This is an array of strings of cookie types used on your sites by default. This is one or more of [application|usage|statistics|advertising]. The default is empty array.
+The cookie types checked by default. It must be a subset of the cookie types listed in `requestDataType`. The default is empty array.
 
 Example:
 
@@ -780,9 +780,9 @@ detectCountry: true
 
 ### displayOnlyForEU `boolean`
 
-This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `checkByDefaultTypes` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.
+This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `requestDataType` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.
 
-### displayDoNotSell 
+### displayDoNotSell
 
 The CCPA “Do Not Sell My Personal Information” rule gives those based in California the right to tell businesses not to sell their personal data.
 XcooBee has included the option of users to opt out of selling their personal information to help websites to comply easily with the requirement to make the option available.
@@ -793,7 +793,7 @@ Because it is available from Cookie preferences, visitors can access this from a
 
 ### displayFingerprint
 
-You can ask the user for explicit permission to use a browser fingerprint. This allows you to process the response in the same manner as cookies via Cookie handler script or your backend. 
+You can ask the user for explicit permission to use a browser fingerprint. This allows you to process the response in the same manner as cookies via Cookie handler script or your backend.
 
 ### expirationTime `integer`
 
@@ -841,7 +841,7 @@ privacyUrl: "https://mysite.com/privacy"
 
 ### requestDataTypes `array`
 
-This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`.
+This is an array of strings of cookie types used on your sites for which you wish to obtain the users' consent before creating. This is one or more of [application|usage|statistics|advertising]. The default is `application`. It determines the cookie types that are allowed to be declared in `checkByDefaultTypes`.
 
 ```js
 requestDataTypes: ["application"]
@@ -1070,9 +1070,9 @@ Here is an example of parameters and values types for the initialization:
     requestDataTypes: <Array>[application|usage|statistics|advertising],
     targetUrl: <String>,
     termsUrl: <String>,
-    testMode: <Boolean>,    
+    testMode: <Boolean>,
     textMessage: <String>, <Object>,
-    displayFingerprint: <Boolean>, 
+    displayFingerprint: <Boolean>,
     displayDoNotSell: <Boolean>
   });
 
