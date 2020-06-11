@@ -2,7 +2,9 @@
 
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
 
-The XcooBee Cookie Kit is an active GDPR/CCPA cookie & fingerprint and consent-manager for your site.
+The XcooBee Cookie Kit is an active GDPR/CCPA cookie & fingerprint and consent as well as script-loading manager for your site.
+
+In a world where websites are constructed from many different pre-build components and scripts, the XCK uses smart script and cookie loading **and** removal to help you remain compliant with regulations even when you have poorly written scripts and cookies.
 
 The XcooBee Cookie Kit project is maintained as a monorepo (one repo with multiple projects) with several NPM
 packages. Lerna is the tool we use to maintain the monorepo. Checkout the `packages`
