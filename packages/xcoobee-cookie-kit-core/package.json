@@ -1,7 +1,7 @@
 {
   "name": "xcoobee-cookie-kit-core",
-  "version": "1.0.18",
-  "description": "GDPR / CCPA Easy Cookie and Fingerprint Consent Management for Websites",
+  "version": "1.0.19",
+  "description": "GDPR / CCPA Easy Cookie, Script, and Fingerprint Consent Management for Websites",
   "keywords": [
     "consent",
     "cookie",
@@ -29,24 +29,24 @@
     "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
   },
   "dependencies": {
-    "graphql": "^14.0.2",
+    "graphql": "^14.6.0",
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.7.2",
-    "@babel/plugin-proposal-class-properties": "^7.7.0",
-    "@babel/preset-env": "^7.7.1",
-    "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6",
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
     "babel-plugin-tailcall-optimization": "^2.0.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.3",
     "fs-extra": "^7.0.1",
     "rimraf": "^2.6.2"
   },
@@ -54,7 +54,7 @@
     "build": "npm run clean && babel src --out-dir dist --copy-files",
     "clean": "rimraf dist/",
     "clear": "node scripts/clear.js",
-    "lint": "eslint src",    
+    "lint": "eslint src",
     "test": "node scripts/test-not-implemented.js"
   }
 }

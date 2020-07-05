@@ -1,7 +1,7 @@
 {
   "name": "xcoobee-cookie-kit-web",
-  "version": "1.0.14",
-  "description": "GDPR / CCPA Easy Cookie and Fingerprint Consent Management for Websites",
+  "version": "1.0.15",
+  "description": "GDPR / CCPA Easy Cookie, Script, Do-Not-Sell, and Fingerprint Consent Management for Websites",
   "keywords": [
     "consent",
     "cookie",
@@ -67,7 +67,7 @@
     "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.19.1",
     "mini-css-extract-plugin": "^0.5.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.14.1",
     "postcss-loader": "^3.0.0",
     "resolve-url-loader": "^3.0.0",
     "rimraf": "^2.6.2",
@@ -77,7 +77,7 @@
     "webpack": "^4.41.2",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "webpack-dev-server": "^3.11.0"
   },
   "peerDependencies": {
     "react": "^16.3.2",

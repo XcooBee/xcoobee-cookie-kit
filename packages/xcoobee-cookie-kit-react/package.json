@@ -1,7 +1,7 @@
 {
   "name": "react-cookie-kit",
-  "version": "1.0.19",
-  "description": "GDPR / CCPA Easy Cookie and Fingerprint Consent Management for Websites.",
+  "version": "1.0.20",
+  "description": "GDPR / CCPA Easy Cookie, Script, Do-Not-Sell, and Fingerprint Consent Management for Websites.",
   "keywords": [
     "consent",
     "cookie",
@@ -53,7 +53,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.14.1",
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
