@@ -761,6 +761,10 @@ $duration: .2s;
     transition: border-color ease $duration/2;
     cursor: pointer;
 
+    &[disabled] {
+      cursor: default;
+    }
+
     &::before, &::after {
       -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;

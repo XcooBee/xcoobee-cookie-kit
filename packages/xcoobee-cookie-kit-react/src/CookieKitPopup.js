@@ -396,12 +396,17 @@ export default class CookieKitPopup extends React.PureComponent {
                     <input
                       id={`xbCheckbox_${cookieDefn.id}`}
                       type="checkbox"
-                      checked={consentSettings[cookieDefn.type]}
+                      // Application cookies are always checked.
+                      checked={cookieDefn.type === "application" || consentSettings[cookieDefn.type]}
+                      // Application cookies are always disabled.
+                      disabled={cookieDefn.type === "application"}
                       onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
                     />
                     <label
                       htmlFor={`xbCheckbox_${cookieDefn.id}`}
                       className={`${BLOCK}__checkbox`}
+                      // Application cookies are always disabled.
+                      disabled={cookieDefn.type === "application"}
                     />
                   </div>
                   <div
@@ -668,12 +673,17 @@ export default class CookieKitPopup extends React.PureComponent {
                         <input
                           id={`xbCheckbox_${cookieDefn.id}`}
                           type="checkbox"
-                          checked={consentSettings[cookieDefn.type]}
+                          // Application cookies are always checked.
+                          checked={cookieDefn.type === "application" || consentSettings[cookieDefn.type]}
+                          // Application cookies are always disabled.
+                          disabled={cookieDefn.type === "application"}
                           onChange={e => this.handleCookieCheck(e, cookieDefn.type)}
                         />
                         <label
                           htmlFor={`xbCheckbox_${cookieDefn.id}`}
                           className={`${BLOCK}__checkbox`}
+                          // Application cookies are always disabled.
+                          disabled={cookieDefn.type === "application"}
                         />
                       </div>
                       <div
