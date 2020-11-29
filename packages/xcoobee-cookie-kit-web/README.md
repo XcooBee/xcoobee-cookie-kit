@@ -111,7 +111,7 @@ The XCK uses a classification system for cookies rather than listing each indivi
 
 The XcooBee classification system broadly places cookies into one of the following types:
 
-- Required or Application Cookies
+- Required or Application Cookies (always loaded)
 - Personalization Cookies
 - Statistics Cookies
 - Advertising and Marketing Cookies
