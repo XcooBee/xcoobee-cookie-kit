@@ -9,11 +9,13 @@ https://www.npmjs.com/package/xcoobee-cookie-kit-web
 
 ## What is the Difference
 
-The XCK is an active cookie and consent management framework for your site. This is different from a cookie-notification only based text box. The XCK can help you implement things correctly for GDPR and CCPA (California Consumer Protection Act).
+The XCK is an active cookie and script consent management framework for your site. This is different from a cookie-notification only based text box. The XCK can help you implement things correctly for GDPR and CCPA (California Consumer Protection Act).
 
-Most current cookie plugins are focusing on displaying notices for websites. In short, they are overlays that display information but do not actively manage cookie creation and life-cycles. You are still responsible for handling cookies and fingerprinting correctly. In contrast to this, the XcooBee Cookie Kit is a true cookie-consent and life-cycle manager. It will help you implement the premises of the GDPR, European e-directive, and CCPA correctly.
+The XcooBee Cookie Kit (XCK) is **both** a cookie and script consent manager. It will load scripts and set cookies only when consent is verified and also automatically clean up when consent is removed. It makes coding and managing easier for developers who only need to focus on providing the hooks for scripts and cookies rather than baby-sitting every script and cookie.
 
-For CCPA the Do-Not-Sell opt-out pattern has been integrated and users can indicate to you at any your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed.
+The XCK will help you implement the premises of the CCPA, GDPR, European e-directive correctly.
+
+For CCPA the Do-Not-Sell opt-out pattern has been integrated and users can indicate to you at any of your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed.
 
 The overall scope of the XCK is broad. Please take a minute to review this document and programming samples.
 
@@ -109,7 +111,7 @@ The XCK uses a classification system for cookies rather than listing each indivi
 
 The XcooBee classification system broadly places cookies into one of the following types:
 
-- Required or Application Cookies
+- Required or Application Cookies (always loaded)
 - Personalization Cookies
 - Statistics Cookies
 - Advertising and Marketing Cookies
