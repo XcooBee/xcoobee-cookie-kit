@@ -765,6 +765,19 @@ See more information in section [`How to Use the XcooBee Cookie Kit`](#how-to-us
 cookieHandler: handleCookies
 ```
 
+### defaultCountryCode `string[2]`
+
+This parameter can set to default country code for your site if you do not have a way to determine it. You will need to supply a two letter country code. You can also use `EU` as a generic one. 
+
+This is the initial country. Users are still able to change the country in the UI to represent a different country.
+
+
+Default is `EU`. 
+
+```js
+defaultCountryCode: 'FR'
+```
+
 ### detectCountry `boolean`
 
 This flag tells the XCK how to determine the country of the user. Currently an IP based country lookup is used. This helps to set the initial language as well as works in concert with other flags such as `displayOnlyForEU`.
@@ -774,6 +787,8 @@ If you are using the XCK without a XcooBee subscription the XCK will use the ser
 If you are using the XCK with XcooBee Network subscription, the IP lookup is internal to the network and does not require CORS changes and is part of your subscription service.
 
 Default is `false`. If `false` the XCK will set country generically as `EU`.
+
+You can also supply a default country using the `defaultCountryCode` parameter (see above).
 
 ```js
 detectCountry: true
