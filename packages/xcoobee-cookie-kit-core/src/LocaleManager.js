@@ -2,6 +2,13 @@ import fetch from "isomorphic-fetch";
 
 import { localeKey, countryCodeKey, xbApiUrl } from "./configs";
 
+const LOCALE_TO_LOCALE = {
+  de: "de-de",
+  en: "en-us",
+  es: "es-419",
+  fr: "fr-fr",
+};
+
 export function clearLocale() {
   localStorage.removeItem(localeKey);
 }
@@ -11,7 +18,10 @@ export function clearCountryCode() {
 }
 
 export function getLocale() {
-  const locale = localStorage[localeKey];
+  let locale = localStorage[localeKey];
+  // We used to store "DE", "EN", "ES", and "FR" for locales. Convert to expected
+  // value if necessary. This is done for backwards compatibility.
+  locale = LOCALE_TO_LOCALE[(locale || "").toLowerCase()] || locale;
   return locale;
 }
 

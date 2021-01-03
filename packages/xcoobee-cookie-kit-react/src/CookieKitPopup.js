@@ -84,7 +84,7 @@ export default class CookieKitPopup extends React.PureComponent {
       fingerprintConsent,
       isCountrySelectShown: false,
       isLocaleSelectShown: false,
-      selectedLocale: getLocale() || "EN",
+      selectedLocale: getLocale() || "en-us",
     };
 
     window.addEventListener("message", this.onMessage);
@@ -110,8 +110,8 @@ export default class CookieKitPopup extends React.PureComponent {
 
   handleLocaleChange = (locale) => {
     // console.log('CookieKitPopup#handleLocaleChange');
-    this.setState({ selectedLocale: locale, isLocaleSelectShown: false });
-    saveLocale(locale);
+    this.setState({ selectedLocale: locale.code, isLocaleSelectShown: false });
+    saveLocale(locale.code);
   };
 
   handleCountryChange = (countryCode) => {
@@ -225,20 +225,14 @@ export default class CookieKitPopup extends React.PureComponent {
 
   renderTextMessage(textMessage) {
     // console.log('CookieKitPopup#renderTextMessage');
+
+    if (typeof textMessage === "string") {
+      return textMessage;
+    }
+
     const { selectedLocale } = this.state;
 
-    switch (selectedLocale) {
-      case "EN":
-        return textMessage["en-us"];
-      case "DE":
-        return textMessage["de-de"] || textMessage["en-us"];
-      case "ES":
-        return textMessage["es-419"] || textMessage["en-us"];
-      case "FR":
-        return textMessage["fr-fr"] || textMessage["en-us"];
-      default:
-        return textMessage["en-us"];
-    }
+    return textMessage[selectedLocale] || textMessage["en-us"];
   }
 
   render() {
@@ -328,8 +322,7 @@ export default class CookieKitPopup extends React.PureComponent {
           </div>
           <div className={`${BLOCK}__text-container`}>
             <div className={`${BLOCK}__text`}>
-              { typeof textMessage === "string"
-                ? textMessage : this.renderTextMessage(textMessage) }
+              { this.renderTextMessage(textMessage) }
             </div>
             <div className={`${BLOCK}__locale-container`}>
               <div className={`${BLOCK}__locale`}>
@@ -338,7 +331,7 @@ export default class CookieKitPopup extends React.PureComponent {
                   className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
                   onClick={this.handleLocaleSelectToggle}
                 >
-                  { selectedLocale }
+                  { locales.find(locale => locale.code === selectedLocale)?.text || "?" }
                 </button>
                 <div
                   className={`${BLOCK}__block ${BLOCK}__block--sm ${BLOCK}__country-picker`}
@@ -359,12 +352,12 @@ export default class CookieKitPopup extends React.PureComponent {
                 <div className={`${BLOCK}__custom-select`}>
                   { locales.map(locale => (
                     <button
-                      key={locale}
+                      key={locale.code}
                       className={`xb-cookie-kit__button ${BLOCK}__language-picker-button`}
                       type="button"
                       onClick={() => this.handleLocaleChange(locale)}
                     >
-                      {locale}
+                      {locale.text}
                     </button>
                   ))}
                 </div>
@@ -600,8 +593,7 @@ export default class CookieKitPopup extends React.PureComponent {
         >
           <div className={`${BLOCK}__content`}>
             <div className={`${BLOCK}__text`}>
-              { typeof textMessage === "string"
-                ? textMessage : this.renderTextMessage(textMessage) }
+              { this.renderTextMessage(textMessage) }
             </div>
             <div className={`${BLOCK}__main`}>
               <div className={`${BLOCK}__links-container`}>
@@ -797,18 +789,18 @@ export default class CookieKitPopup extends React.PureComponent {
                 className={`xb-cookie-kit__button ${BLOCK}__language-picker`}
                 onClick={this.handleLocaleSelectToggle}
               >
-                { selectedLocale }
+                { locales.find(locale => locale.code === selectedLocale)?.text || "?" }
               </button>
               { isLocaleSelectShown && (
                 <div className={`${BLOCK}__custom-select`}>
                   { locales.map(locale => (
                     <button
-                      key={locale}
+                      key={locale.code}
                       className={`xb-cookie-kit__button ${BLOCK}__language-picker-button`}
                       type="button"
                       onClick={() => this.handleLocaleChange(locale)}
                     >
-                      {locale}
+                      {locale.text}
                     </button>
                   ))}
                 </div>
