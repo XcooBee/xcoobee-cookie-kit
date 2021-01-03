@@ -19,6 +19,7 @@ import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import {
   getCountryCode,
   saveCountryCode,
+  saveLocale,
   fetchCountryCode,
   fetchCountryCodeForSubscribers,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
@@ -261,6 +262,8 @@ export default class CookieKitContainer extends React.PureComponent {
 
     this.setState({ countryCode: defaultCountryCode });
     saveCountryCode(defaultCountryCode);
+    // EU is not a valid locale. So, convert it to English.
+    saveLocale(defaultCountryCode === "EU" ? "EN" : defaultCountryCode);
 
     return Promise.resolve(defaultCountryCode);
   }

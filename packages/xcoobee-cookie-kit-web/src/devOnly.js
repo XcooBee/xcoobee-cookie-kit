@@ -12,7 +12,17 @@ XcooBee.kit.setParam("campaignReference", "37b.ag1g6caae7");
 XcooBee.kit.setParam("displayFingerprint", true);
 XcooBee.kit.setParam("displayDoNotSell", true);
 
-XcooBee.kit.setParam("detectCountry", true);
+// a)
+// XcooBee.kit.setParam("detectCountry", true);
+
+// b)
+// XcooBee.kit.setParam("detectCountry", false);
+// XcooBee.kit.setParam("defaultCountryCode", "DE");
+
+// c)
+XcooBee.kit.setParam("detectCountry", false);
+// With unrecognized country code should fallback to EN.
+XcooBee.kit.setParam("defaultCountryCode", "QQ");
 
 XcooBee.kit.setParam("checkByDefaultTypes", [
   // "advertising",
@@ -64,7 +74,7 @@ XcooBee.kit.setParam("textMessage", {
   "de-de": "Die Beschreibung.",
   "en-us": "The description. This site uses cookies. Use this panel to adjust your preferences.",
   "es-419": "La descripción.",
-  "fr-fr": "La description.",
+  // "fr-fr": "La description.",
 });
 
 XcooBee.kit.setParam("theme", "popup");
