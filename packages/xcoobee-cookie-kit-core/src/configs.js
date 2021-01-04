@@ -49,7 +49,14 @@ const fingerprintConsentKey = "device_identifiers";
 
 const cookieTypes = cookieDefns.map(defn => defn.type);
 
-const locales = ["EN", "DE", "FR", "ES"];
+const locales = [
+  { code: "de-de", order: 1, text: "DE" },
+  { code: "en-us", order: 0, text: "EN" },
+  { code: "es-419", order: 3, text: "ES" },
+  { code: "fr-fr", order: 2, text: "FR" },
+];
+// Note: Don't need to check the equals state because it should never happen.
+locales.sort((a, b) => (a.order < b.order ? -1 : 1));
 
 const tokenKey = "xcoobeeAccessToken";
 const xcoobeeCookiesKey = "xcoobeeCookies";

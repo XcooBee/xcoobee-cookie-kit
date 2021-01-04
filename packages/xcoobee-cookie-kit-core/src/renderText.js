@@ -5,13 +5,13 @@ import fr from "./l10n/messages.fr-fr.json";
 
 export default function renderText(key, locale) {
   switch (locale) {
-    case "EN":
+    case "en-us":
       return en[key];
-    case "DE":
+    case "de-de":
       return de[key];
-    case "ES":
+    case "es-419":
       return es[key];
-    case "FR":
+    case "fr-fr":
       return fr[key];
     default:
       return en[key];
