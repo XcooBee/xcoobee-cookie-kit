@@ -36,6 +36,16 @@ npm install
 npm run bootstrap
 ```
 
+## To Build
+
+Run the following to build all distribution packages simultaneously
+
+`npm run build`
+
+To build web distribution for XcooBee production:
+
+`npm run web:buildbeta`
+
 
 ## To Contribute
 

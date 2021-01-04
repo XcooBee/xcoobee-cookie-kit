@@ -1,6 +1,6 @@
 {
   "name": "react-cookie-kit",
-  "version": "1.0.21",
+  "version": "1.0.23",
   "description": "GDPR / CCPA Easy Cookie, Script, Do-Not-Sell, and Fingerprint Consent Management for Websites.",
   "keywords": [
     "consent",
@@ -34,7 +34,7 @@
     "isomorphic-fetch": "^2.2.1",
     "prop-types": "^15.6.0",
     "react-country-flag": "^1.0.1",
-    "xcoobee-cookie-kit-core": "^1.0.18"
+    "xcoobee-cookie-kit-core": "^1.0.20"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
