@@ -13,12 +13,13 @@ import {
   themes,
 } from "xcoobee-cookie-kit-core/src/configs";
 import cookieConsentsCache from "xcoobee-cookie-kit-core/src/cookieConsentsCache";
-import { countryCodes } from "xcoobee-cookie-kit-core/src/countryData";
+import { countryCodes, countryMapping } from "xcoobee-cookie-kit-core/src/countryData";
 
 import CookieManager from "xcoobee-cookie-kit-core/src/CookieManager";
 import {
   getCountryCode,
   saveCountryCode,
+  saveLocale,
   fetchCountryCode,
   fetchCountryCodeForSubscribers,
 } from "xcoobee-cookie-kit-core/src/LocaleManager";
@@ -261,6 +262,7 @@ export default class CookieKitContainer extends React.PureComponent {
 
     this.setState({ countryCode: defaultCountryCode });
     saveCountryCode(defaultCountryCode);
+    saveLocale(countryMapping[defaultCountryCode]?.locale || "en-us");
 
     return Promise.resolve(defaultCountryCode);
   }
