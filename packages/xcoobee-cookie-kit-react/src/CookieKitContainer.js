@@ -399,20 +399,24 @@ export default class CookieKitContainer extends React.PureComponent {
       return;
     }
 
-    const hostsDefaultCookieConsents = checkByDefaultTypes.map(type => ({
-      type,
-      checked: requestDataTypes.includes(type),
-    }));
-    hostsDefaultCookieConsents.push({ type: "donotsell", checked: false });
-    hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });
     // If we were unable to resolve the user's country code, then assume it is in
     // the EU.
     const cCode = countryCode || euCountries[0];
     if (displayOnlyForEU && !euCountries.includes(cCode)) {
+      const hostsDefaultCookieConsents = checkByDefaultTypes.map(type => ({
+        type,
+        checked: requestDataTypes.includes(type),
+      }));
+      hostsDefaultCookieConsents.push({ type: "donotsell", checked: false });
+      hostsDefaultCookieConsents.push({ type: "fingerprint", checked: false });
       this.setCookieConsents("hostsDefaults", hostsDefaultCookieConsents);
     } else {
       const consentsSource = "unknown";
-      const cookieConsents = hostsDefaultCookieConsents;
+      // Note: We can always set "application" to checked even if it is not in
+      // requestDataTypes because CookieKitPopup will filter everything based on
+      // requestDataTypes. Alternatively, we can pre-filter here too. We opted for the
+      // former.
+      const cookieConsents = { type: "application", checked: true };
       this.setState({ consentsSource, cookieConsents, initializing: false });
     }
   }
