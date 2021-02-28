@@ -416,7 +416,7 @@ export default class CookieKitContainer extends React.PureComponent {
       // requestDataTypes because CookieKitPopup will filter everything based on
       // requestDataTypes. Alternatively, we can pre-filter here too. We opted for the
       // former.
-      const cookieConsents = { type: "application", checked: true };
+      const cookieConsents = [{ type: "application", checked: true }];
       this.setState({ consentsSource, cookieConsents, initializing: false });
     }
   }
