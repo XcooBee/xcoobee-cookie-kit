@@ -219,7 +219,6 @@ export default class CookieKitPopup extends React.PureComponent {
     const { displayDoNotSell, displayFingerprint } = this.props;
     const { consentSettings, doNotSellConsent, fingerprintConsent } = this.state;
 
-    console.log('areAllConsentsChecked: areAllConsentsChecked:', consentSettings);
     const isAllCookiesChecked = Object.values(consentSettings).every(checked => checked);
 
     let isAllConsentsChecked = isAllCookiesChecked;
