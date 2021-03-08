@@ -389,7 +389,6 @@ export default class CookieKitContainer extends React.PureComponent {
   fallBackToHostDefaults() {
     // console.log("CookieKitContainer#fallBackToHostDefaults");
     const {
-      checkByDefaultTypes,
       displayOnlyForEU,
       requestDataTypes,
     } = this.props;
