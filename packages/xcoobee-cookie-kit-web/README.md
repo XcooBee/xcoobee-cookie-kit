@@ -13,6 +13,8 @@ The XCK is an active cookie and script consent management framework for your sit
 
 The XcooBee Cookie Kit (XCK) is **both** a cookie and script consent manager. It will load scripts and set cookies only when consent is verified and also automatically clean up when consent is removed. It makes coding and managing easier for developers who only need to focus on providing the hooks for scripts and cookies rather than baby-sitting every script and cookie.
 
+It will also go further than current requirements and allow you to ask and verify fingerprint consent at the same time.
+
 The XCK will help you implement the premises of the CCPA, GDPR, European e-directive correctly.
 
 For CCPA the Do-Not-Sell opt-out pattern has been integrated and users can indicate to you at any of your pages that they wish to opt out without creating an account. When you combine the XCK with an active XcooBee Platform subscription you can automatically exempt users from data-sharing and data-sales when needed.
@@ -23,12 +25,13 @@ The overall scope of the XCK is broad. Please take a minute to review this docum
 ## Super Quick Start Example
 
 1. Load the library from the CDN using script tag:
+(Add this code anywhere in your HTML  header)
 
 ```html
 <script id="xcoobee-cookie-kit" src="https://app.xcoobee.net/scripts/kit/xcoobee-cookie-kit.min.js"></script>
 ```
 
-2. Set your managed cookies with `<xbee-cookie>` tag in your HTML DOM like so:
+2. Set your managed cookies with `<xbee-cookie>` tag in anywhere in your HTML DOM like so:
 
 ```html
 <xbee-cookie category="application" name="usersess">abhchkshsdh</xbee-cookie>
@@ -36,7 +39,7 @@ The overall scope of the XCK is broad. Please take a minute to review this docum
 
 ```
 
-3. Initialize the Cookie kit to manage things at the end of your page rendering:
+3. Initialize the Cookie kit to manage things at the end of your page rendering before end `</body>` tag:
 
 ```html
 <script>
@@ -216,7 +219,7 @@ The yellow pulse indicates that the user has elected to participate in the XcooB
 
 ![red cookie pulse](https://raw.githubusercontent.com/XcooBee/xcoobee-cookie-kit/master/packages/xcoobee-cookie-kit-web/docs/assets/red.png)
 
-The red pulse indicates that we do not have any information directly from the user. In such a case, the website owner can select to use the website preference for cookies instead of user preferences. This can only be done if website and user are located outside the EU.
+The red pulse indicates that we do not have any information directly from the user. Or, the website and user is outside any known privacy jurisdiction. In such a case, the website owner can select to use their own website preference for cookies instead of user preferences. This can only be done if website and user are located outside the EU.
 
 
 ## Install
@@ -797,7 +800,13 @@ detectCountry: true
 
 ### displayOnlyForEU `boolean`
 
-This lets the XCK know to do quick evaluation of the call context for the XCK if the users are outside the EU. If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can automatically apply company standard cookies using the `requestDataType` setting. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. Default is: false.
+
+Setting this to `true` indicates that your website is outside the EU and/or outside common privacy jurisdiction.
+If your site visitors are also visiting you from outside the EU you can elect to use slightly different behavior. For example, the initial visitor display of popup or overlay can be hidden.
+
+If the XCK determines that it is being loaded outside the EU (28 nation block) and there are no user defaults or other guidance, the XCK can also automatically apply company standard cookies by using the `requestDataType` and `checkByDefaultTypes` settings. When doing so it will inform the user by pulsing red. The visiting user can still change the decisions at any time. 
+
+Default is: false.
 
 ### displayDoNotSell
 

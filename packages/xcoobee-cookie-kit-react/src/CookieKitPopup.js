@@ -77,6 +77,14 @@ export default class CookieKitPopup extends React.PureComponent {
       consentSettings[cookieConsent.type] = cookieConsent.checked;
     });
 
+    // Ensure all requested data types are in consent settings. Otherwise logic using
+    // state.consentSettings doesn't work correctly.
+    requestDataTypes.forEach((dataType) => {
+      if (!(dataType in consentSettings)) {
+        consentSettings[dataType] = false;
+      }
+    });
+
     this.state = {
       consentSettings,
       countryCode: getCountryCode() || "EU",

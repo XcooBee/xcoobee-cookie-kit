@@ -16,13 +16,13 @@ XcooBee.kit.setParam("displayDoNotSell", true);
 // XcooBee.kit.setParam("detectCountry", true);
 
 // b)
-// XcooBee.kit.setParam("detectCountry", false);
-// XcooBee.kit.setParam("defaultCountryCode", "DE");
+XcooBee.kit.setParam("detectCountry", false);
+XcooBee.kit.setParam("defaultCountryCode", "DE");
 
 // c)
-XcooBee.kit.setParam("detectCountry", false);
-// With unrecognized country code should fallback to EN.
-XcooBee.kit.setParam("defaultCountryCode", "QQ");
+// XcooBee.kit.setParam("detectCountry", false);
+// // With unrecognized country code should fallback to EN.
+// XcooBee.kit.setParam("defaultCountryCode", "QQ");
 
 XcooBee.kit.setParam("checkByDefaultTypes", [
   // "advertising",
