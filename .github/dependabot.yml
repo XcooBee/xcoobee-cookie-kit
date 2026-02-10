@@ -19,14 +19,11 @@ updates:
       include: "scope"
     pull-request-branch-name:
       separator: "/"
-    reviewers:
-      - "Bilal-S"
-    assignees:
-      - "Bilal-S"
     labels:
       - "dependencies"
       - "javascript"
     versioning-strategy: "auto"
+    auto-merge: true
 
   # xcoobee-cookie-kit-web package
   - package-ecosystem: "npm"
@@ -42,15 +39,12 @@ updates:
       include: "scope"
     pull-request-branch-name:
       separator: "/"
-    reviewers:
-      - "Bilal-S"
-    assignees:
-      - "Bilal-S"
     labels:
       - "dependencies"
       - "javascript"
       - "web"
     versioning-strategy: "auto"
+    auto-merge: true
 
   # xcoobee-cookie-kit-react package
   - package-ecosystem: "npm"
@@ -66,15 +60,12 @@ updates:
       include: "scope"
     pull-request-branch-name:
       separator: "/"
-    reviewers:
-      - "Bilal-S"
-    assignees:
-      - "Bilal-S"
     labels:
       - "dependencies"
       - "javascript"
       - "react"
     versioning-strategy: "auto"
+    auto-merge: true
 
   # xcoobee-cookie-kit-core package
   - package-ecosystem: "npm"
@@ -90,12 +81,9 @@ updates:
       include: "scope"
     pull-request-branch-name:
       separator: "/"
-    reviewers:
-      - "Bilal-S"
-    assignees:
-      - "Bilal-S"
     labels:
       - "dependencies"
       - "javascript"
       - "core"
     versioning-strategy: "auto"
+    auto-merge: true
