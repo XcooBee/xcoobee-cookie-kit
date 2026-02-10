@@ -1,0 +1,101 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Root package.json
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "/"
+    reviewers:
+      - "Bilal-S"
+    assignees:
+      - "Bilal-S"
+    labels:
+      - "dependencies"
+      - "javascript"
+    versioning-strategy: "auto"
+
+  # xcoobee-cookie-kit-web package
+  - package-ecosystem: "npm"
+    directory: "/packages/xcoobee-cookie-kit-web"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "/"
+    reviewers:
+      - "Bilal-S"
+    assignees:
+      - "Bilal-S"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "web"
+    versioning-strategy: "auto"
+
+  # xcoobee-cookie-kit-react package
+  - package-ecosystem: "npm"
+    directory: "/packages/xcoobee-cookie-kit-react"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "/"
+    reviewers:
+      - "Bilal-S"
+    assignees:
+      - "Bilal-S"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "react"
+    versioning-strategy: "auto"
+
+  # xcoobee-cookie-kit-core package
+  - package-ecosystem: "npm"
+    directory: "/packages/xcoobee-cookie-kit-core"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    pull-request-branch-name:
+      separator: "/"
+    reviewers:
+      - "Bilal-S"
+    assignees:
+      - "Bilal-S"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "core"
+    versioning-strategy: "auto"
