@@ -29,7 +29,7 @@
     "url": "git+https://github.com/XcooBee/xcoobee-cookie-kit.git"
   },
   "dependencies": {
-    "graphql": "^14.6.0",
+    "graphql": "^16.12.0",
     "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
