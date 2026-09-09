@@ -1,5 +1,7 @@
 # XcooBee Cookie Kit Project Monorepo
 
+## THIS CODE IS NO LONGER MAINTAINED. IT IS HERE FOR LEARNING AND EXAMPLE PURPOSES.
+
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 The XcooBee Cookie Kit is an active GDPR/CCPA cookie & fingerprint and consent as well as script-loading manager for your site.
