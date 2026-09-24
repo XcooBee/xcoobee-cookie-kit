@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "react": "^16.3.2",
+    "react": "^19.2.4",
     "react-dom": "^16.3.3"
   },
   "devDependencies": {
